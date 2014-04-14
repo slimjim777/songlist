@@ -5,29 +5,25 @@
 <table class="table table-striped">
   <thead>
     <tr>
-        <th>Title</th><th></th>
+        <th>Title</th>
     </tr>
   </thead>
   <tbody>
     {% for index, song in songs %}
     <tr class="collapse-group">
-        <td>{{ song }}
-            <div id="viewdetails{{ index }}" class="collapse">
-            <hr />
+        <td><button class="btn btn-default" data-toggle="collapse" data-target="#viewdetails{{ index }}">{{ song }} &raquo;</button>
+            <div id="viewdetails{{ index }}" class="collapse"><br />
             {% for f in files[song]%}
             <p>
                 <a href="https://docs.google.com/uc?id={{ f.id }}&export=download" title="Download">{{ f.filename }}</a>
-                <a href="https://docs.google.com/uc?id={{ f.id }}&export=download" title="Download"><span class="glyphicon glyphicon-download"></span></a>
                 <a href="{{ f.url }}"><span class="glyphicon glyphicon-eye-open" title="View"></span></a>
             </p>
             {% endfor %}
             </div>
         </td>
-        <td class="row-action"><button class="btn" data-toggle="collapse" data-target="#viewdetails{{ index }}">View details &raquo;</button></td>
     </tr>
     {%  endfor %}
   </tbody>
 </table>
-
 
 {% endblock %}
