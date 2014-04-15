@@ -15,8 +15,17 @@
             <div id="viewdetails{{ index }}" class="collapse"><br />
             {% for f in files[song]%}
             <p>
-                <a href="https://docs.google.com/uc?id={{ f.id }}&export=download" title="Download">{{ f.filename }}</a>
-                <a href="{{ f.url }}"><span class="glyphicon glyphicon-eye-open" title="View"></span></a>
+                <a href="{{ f.url }}?dl=1" title="Download">{{ f.name }} ({{ f.size }})</a>
+                <button class="btn btn-default" title="View">
+                    <a href="{{ f.url }}">
+                        {% if 'audio' in f.mime_type or 'video' in f.mime_type %}
+                        <span class="glyphicon glyphicon-play">
+                        {% else %}
+                        <span class="glyphicon glyphicon-eye-open">
+                        {% endif %}
+                        </span>
+                    </a>
+                </button>
             </p>
             {% endfor %}
             </div>

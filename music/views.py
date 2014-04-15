@@ -8,5 +8,4 @@ def index():
     store = Drive()
     files = store.files()
 
-    return render_template('index.html', songs=enumerate((files.keys())), files=files)
-
+    return render_template('index.html', songs=enumerate(sorted(files.keys())), files=files)
