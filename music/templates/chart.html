@@ -17,7 +17,7 @@
         <div class="cnl_line">
             {% for ly in line.lyrics %}
             <div class="cnl">
-                <div class="chord">{{ line.chords[loop.index] }}&nbsp;</div>
+                <div class="chord">{{ line.chords[loop.index0] }}&nbsp;</div>
                 <div class="lyric">{{ ly.decode('utf8') }}&nbsp;</div>
             </div>
             {% endfor %}
