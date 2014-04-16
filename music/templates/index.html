@@ -17,6 +17,9 @@
             <p>
                 <a href="{{ f.url }}?dl=1" title="Download">{{ f.name }} ({{ f.size }})</a>
                 <button class="btn btn-default" title="View">
+                    {% if f.extension == 'onsong' %}
+                    <a href="/chart/{{ f.path.replace('/','__') }}"><span class="glyphicon glyphicon-music"></span></a>
+                    {% else %}
                     <a href="{{ f.url }}">
                         {% if 'audio' in f.mime_type or 'video' in f.mime_type %}
                         <span class="glyphicon glyphicon-play">
@@ -25,6 +28,7 @@
                         {% endif %}
                         </span>
                     </a>
+                    {% endif %}
                 </button>
             </p>
             {% endfor %}

@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block body %}
+
+<h2 class="sub-header">{{ song.Title }}</h2>
+
+<dl class="dl-horizontal song-desc">
+  <dt>By</dt><dd>{{ song.Artist }}</dd>
+  <dt>Key</dt><dd>{{ song.Key }}</dd>
+  <dt>Tempo</dt><dd>{{ song.Tempo }}</dd>
+</dl>
+<br />
+
+{% for s in sections %}
+    <h3>{{ s }}</h3>
+
+    {% for line in song[s] %}
+        <div class="cnl_line">
+            {% for ly in line.lyrics %}
+            <div class="cnl">
+                <div class="chord">{{ line.chords[loop.index] }}&nbsp;</div>
+                <div class="lyric">{{ ly.decode('utf8') }}&nbsp;</div>
+            </div>
+            {% endfor %}
+        </div>
+    {% endfor %}
+<br />
+{% endfor %}
+
+{% endblock %}

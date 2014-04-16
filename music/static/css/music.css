@@ -1,3 +1,22 @@
-.table .row-action {
-    width: 10%;
+.chord {
+    font-weight: bold;
+    color: #888;
+    font-size: 1.2em;
+}
+
+.lyric {
+    font-size: 1.2em;
+}
+
+.cnl {
+    display: table-cell;
+    float: left;
+}
+
+.cnl_line {
+    display: table-row;
+}
+
+.song-desc {
+    padding-left: 0;
 }
