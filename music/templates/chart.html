@@ -1,14 +1,12 @@
 {% extends "base.html" %}
 {% block body %}
 
-<h2 class="sub-header">{{ song.Title }}</h2>
 
-<dl class="dl-horizontal song-desc">
-  <dt>By</dt><dd>{{ song.Artist }}</dd>
-  <dt>Key</dt><dd>{{ song.Key }}</dd>
-  <dt>Tempo</dt><dd>{{ song.Tempo }}</dd>
-</dl>
-<br />
+<div class="btn-group" data-toggle="buttons-radio">
+    <button id="light" name="state" type="button" class="btn btn-default active" value="light" onclick="changeTheme('light')">Light</button>    
+    <button id="dark" name="state" type="button" class="btn btn-default" value="dark" onclick="changeTheme('dark')">Dark</button>       
+</div>
+
 
 {% for s in sections %}
     <h3>{{ s }}</h3>
@@ -26,4 +24,26 @@
 <br />
 {% endfor %}
 
+<br />
+<p class="footer">{{ song.Copyright.decode('utf8') }} (CCLI: {{ song.CCLI }})</p>
+{% endblock %}
+
+{% block jumbotron %}
+<div class="jumbotron">
+  <div class="container">
+    <h2 class="sub-header">{{ song.Title }}</h2>
+        
+    <div>
+        <div>
+            <div class="metalabel">By</div><div class="metadata">{{ song.Artist.decode('utf8') }}</div>
+        </div>
+        <div>
+            <div class="metalabel">Tempo</div><div class="metadata">{{ song.Tempo }}</div>
+        </div>
+        <div>
+            <div class="metalabel">Key</div><div class="metadata">{{ song.Key }}</div>
+        </div>
+    </div>
+  </div>
+</div>
 {% endblock %}

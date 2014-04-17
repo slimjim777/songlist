@@ -1,6 +1,6 @@
 .chord {
     font-weight: bold;
-    color: #888;
+    color: red;
     font-size: 1.2em;
 }
 
@@ -19,4 +19,28 @@
 
 .song-desc {
     padding-left: 0;
+}
+
+.metalabel, .metadata {
+    display: table-cell;
+    padding: 5px;
+}
+
+.metalabel {
+    width: 80px;
+    color: #666;
+    font-weight: bold;
+}
+
+.footer {
+    font-size: x-small;
+}
+
+.body-dark {
+    background: black;
+    color: white;
+}
+
+.body-dark .jumbotron {
+    background: #333;
 }
