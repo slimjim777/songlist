@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from music import app
 import dropbox
 import re
