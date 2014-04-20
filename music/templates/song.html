@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block body %}
+
+<script>
+    var song = {{ song|tojson|safe }};
+
+    $( document ).ready(function() {
+        renderSong();
+        
+        $("#key-select > button.btn").on("click", function(){
+            keySelectClick(this);
+        });
+        
+    });
+</script>
+{% endblock %}
+
+
+{% block jumbotron %}
+<div class="jumbotron">
+  <div class="container">
+    <h2 class="sub-header">{{ song.Title.decode('utf8') }}</h2>
+
+    <div>
+        <div>
+            <div class="metalabel">By</div><div class="metadata">{{ song.Artist.decode('utf8') }}</div>
+        </div>
+        <div>
+            <div class="metalabel">Tempo</div><div class="metadata">{{ song.Tempo }}</div>
+        </div>
+        <div>
+            <div class="metalabel">Key</div>
+            <div class="metadata">
+              <form id="transpose" method="post">
+                <input id="key" type='hidden' name="key" value='Submit form' />
+                <div id="key-select" class="btn-group" data-toggle="buttons-radio">
+                    <button id="key-C" name="key" type="button" class="btn {{ 'btn-primary'  if song.Key=='C' else 'btn-default'}}" >C</button>    
+                    <button id="key-Db" name="key" type="button" class="btn {{ 'btn-primary' if song.Key=='Db' else 'btn-default'}}">Db</button>       
+                    <button id="key-D" name="key" type="button" class="btn {{ 'btn-primary'  if song.Key=='D' else 'btn-default'}}" >D</button>       
+                    <button id="key-Eb" name="key" type="button" class="btn {{ 'btn-primary' if song.Key=='Eb' else 'btn-default'}}">Eb</button>       
+                    <button id="key-E" name="key" type="button" class="btn {{ 'btn-primary'  if song.Key=='E' else 'btn-default'}}" >E</button>       
+                    <button id="key-F" name="key" type="button" class="btn {{ 'btn-primary'  if song.Key=='F' else 'btn-default'}}" >F</button>       
+                    <button id="key-Fsharp" name="key" type="button" class="btn {{ 'btn-primary' if song.Key=='F#' else 'btn-default'}}">F#</button>       
+                    <button id="key-G" name="key" type="button" class="btn {{ 'btn-primary'  if song.Key=='G' else 'btn-default'}}" >G</button>       
+                    <button id="key-Ab" name="key" type="button" class="btn {{ 'btn-primary' if song.Key=='Ab' else 'btn-default'}}">Ab</button>       
+                    <button id="key-A" name="key" type="button" class="btn {{ 'btn-primary'  if song.Key=='A' else 'btn-default'}}" >A</button>       
+                    <button id="key-Bb" name="key" type="button" class="btn {{ 'btn-primary' if song.Key=='Bb' else 'btn-default'}}">Bb</button>       
+                    <button id="key-B" name="key" type="button" class="btn {{ 'btn-primary'  if song.Key=='B' else 'btn-default'}}" >B</button>       
+                </div>
+               </form>
+            </div>
+        </div>
+        <div>
+            <div class="metalabel">Theme</div>
+                <div class="metadata">
+                <div class="btn-group" data-toggle="buttons-radio">
+                    <button id="light" name="state" type="button" class="btn btn-primary" onclick="changeTheme('light')">Light</button>    
+                    <button id="dark" name="state" type="button" class="btn btn-default" onclick="changeTheme('dark')">Dark</button>       
+                </div>                
+            </div>
+        </div>        
+    </div>
+ 
+  </div>
+</div>
+{% endblock %}

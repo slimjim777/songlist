@@ -2,9 +2,9 @@
 from music import app
 from flask import render_template
 from flask import request
+from flask import abort
 from music.model.drive import Drive
 from music.model.onsong import Onsong
-from music.model.onsong import Transpose
 from music.model.database import Database
 import json
 
@@ -30,28 +30,20 @@ def index():
     return render_template('index.html', songs=enumerate(sorted(files.keys())), files=files)
 
 
-@app.route('/chart/<file_path>', methods=['GET', 'POST'])
-def chart(file_path):
-    song_path = file_path.replace('__', '/')
-
-    # Get the new key, if requested
-    new_key = None
-    if request.method == 'POST':
-        new_key = request.form.get('key')
+@app.route('/song')
+def song():
+    # Get the file path of the song
+    file_path = request.args.get('file_path')
+    app.logger.debug(file_path)
+    if not file_path:
+        abort(404)
 
     # Get the Onsong file contents from the file store
     store = Drive()
-    contents = store.file_contents(song_path)
+    contents = store.file_contents(file_path)
 
     # Parse the Onsong file
     songon = Onsong(contents)
     song_chart = songon.parse()
 
-    # Transpose the song
-    transpose = Transpose()
-    song_chart = transpose.transpose(song_chart, new_key)
-
-    # Use the song flow to define the order to display the song sections
-    sections = transpose.song_sections()
-
-    return render_template('chart.html', song=song_chart, sections=sections)
+    return render_template('song.html', song=song_chart)

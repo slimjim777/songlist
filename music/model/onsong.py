@@ -60,6 +60,9 @@ class Onsong(object):
         if len(self.song.get('Flow', [])) == 0:
             self.song['Flow'] = derived_flow
 
+        # Define the sections for the display
+        self.song['display_order'] = self.song_sections()
+        
         app.logger.debug(self.song)
         return self.song
 
@@ -96,6 +99,16 @@ class Onsong(object):
 
     def is_odd(self, num):
         return num & 0x1
+
+    def song_sections(self):
+        """
+        Get the unique sections (verse1, chorus...) of the song from the 'flow'.
+        """
+        sections = []
+        for f in self.song['Flow']:
+            if f not in sections:
+                sections.append(f)
+        return sections
 
 
 class Transpose(object):

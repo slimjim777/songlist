@@ -14,3 +14,4 @@ app.config['DROPBOX_ACCESS_TOKEN'] = os.environ['DROPBOX_ACCESS_TOKEN']
 app.config['REDIS'] = os.environ['REDISCLOUD_URL']
 
 import music.views
+import music.rest
