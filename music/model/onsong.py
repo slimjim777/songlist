@@ -8,29 +8,45 @@ class Onsong(object):
     """
     Parser for the Onsong Chord Chart file format.
     """
-    SECTIONS = ['Intro', 'Verse1', 'Verse2', 'Verse3', 'Verse4', 'PreChorus', 'Chorus', 'ShortPreChorus', 'Link', 'Instrumental']
+    NOT_SECTIONS = ['Title', 'Artist', 'Copyright', 'CCLI', 'Key', 'Capo', 'Tempo', 'Time',
+                    'Duration', 'Flow', 'Book', 'Number', 'Keywords', 'Topic', 'Restrictions']
     PATTERN = re.compile(r'\[([^]]+)\]')
 
     def __init__(self, contents):
         self.stream = StringIO(contents)
-        self.song = {}
+        self.song = {
+            'Title': '',
+            'Artist': '',
+            'Copyright': '',
+            'CCLI': '',
+        }
 
     def parse(self):
         section = ''
         lines = []
+        derived_flow = []
 
-        for line in self.stream.readlines():
+        for index, line in enumerate(self.stream.readlines()):
             if len(line.strip()) == 0:
                 continue
             elif ':' in line:
                 key = self.name_pair(line)
-                if key in self.SECTIONS:
-                    # TODO: save previous section
+                if key not in self.NOT_SECTIONS:
+                    # Must be a section of the song e.g. Verse 1, Chorus etc.
                     if len(section) > 0:
                         self.song[section] = lines
                     section = key
                     lines = []
+                    derived_flow.append(key)
                 continue
+            elif index == 0:
+                # Untagged title
+                self.song['Title'] = line.strip()
+                continue
+            elif index == 1:
+                # Untagged artist
+                self.song['Artist'] = line.strip()
+                continue                
 
             # Must be a line for the current section
             l = self.song_line(line)
@@ -38,9 +54,13 @@ class Onsong(object):
 
         if len(section) > 0:
             self.song[section] = lines
-        app.logger.debug(self.song)
-
         self.stream.close()
+
+        # If the file didn't provide a flow, then use our derived flow
+        if len(self.song.get('Flow', [])) == 0:
+            self.song['Flow'] = derived_flow
+
+        app.logger.debug(self.song)
         return self.song
 
     def name_pair(self, line):
