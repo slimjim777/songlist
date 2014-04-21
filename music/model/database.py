@@ -43,3 +43,28 @@ class Database(object):
 
     def delete(self, key):
         return self.r.delete(key)
+
+    def hset_cache_expiry(self, key):
+        # Set the cache expiry key
+        expiry_key = key + self.EXPIRY_SUFFIX
+        expiry_time = (datetime.datetime.now() + timedelta(hours=self.CACHE_HOURS))
+        self.r.set(expiry_key, expiry_time.strftime('%Y-%m-%dT%H:%M:%S'))
+
+    def hset_cache(self, key, field, value):
+        self.r.hset(key, field, value)
+
+    def hcache_valid(self, key):
+        """
+        Check if the files-cache hash has exists and is valid.
+        """
+        expiry_key = key + self.EXPIRY_SUFFIX
+        if self.r.get(expiry_key) and self.r.get(expiry_key) > datetime.datetime.now().strftime('%Y-%m-%dT%H:%M:%S'):
+            if len(self.r.keys(key)) > 0:
+                return True
+            else:
+                return False
+        else:
+            return False
+
+    def hget_cache(self, key, field):
+        return self.r.hget(key, field)
