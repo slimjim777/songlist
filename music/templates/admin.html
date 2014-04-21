@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block body %}
+<h3>Users</h3>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th></th><th>Firstname</th><th>Lastname</th><th>Email</th><th>Roles</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for u in users %}
+        <tr id="usr{{ u.id }}">
+            <td class="actions">
+                <button class="btn btn-default" title="Edit" onclick="userEdit({{ u.id }})"><span class="glyphicon glyphicon-edit"></span></button>
+                <button class="btn btn-default" title="Delete"><span class="glyphicon glyphicon-remove"></span></button>
+            </td>
+            <td>{{ u.firstname }}</td><td>{{ u.lastname }}</td><td>{{ u.email }}</td>
+            <td>{{ u.role }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}
+
+
+{% block jumbotron %}
+    <div class="jumbotron">
+      <div class="container">
+        <h2 class="sub-header">Site Admin</h2>
+      </div>
+    </div>
+{% endblock %}

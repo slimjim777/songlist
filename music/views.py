@@ -1,14 +1,19 @@
 # -*- coding: utf-8 -*-
 from music import app
+from music import db
 from flask import render_template
 from flask import request
 from flask import abort
 from flask import session
+from flask import jsonify
+from flask import redirect
+from flask import url_for
 from music.model.drive import Drive
 from music.model.onsong import Onsong
 from music.model.cache import Cache
 import json
 from music.authorize import login_required
+from music.model.database import Person
 
 
 PAGE_SIZE = int(app.config['PAGE_SIZE'])
@@ -92,3 +97,33 @@ def song():
 @app.route('/error')
 def error():
     return render_template('alerts.html')
+
+
+@app.route('/admin')
+@login_required
+def admin():
+    if 'admin' not in session['role']:
+        abort(403)
+
+    users = Person.query.all()
+    
+    return render_template('admin.html', users=users)
+
+
+@app.route('/admin/users/<int:user_id>', methods=['GET', 'POST'])
+@login_required
+def admin_user_edit(user_id):
+    """
+    Edit the user permissions.
+    """
+    user = Person.query.get(user_id)
+    if request.method == "GET":
+        return render_template('snippet_user.html', user=user)
+    elif request.method == "POST":
+        # Update the user record
+        for k, v in request.form.iteritems():
+            if k != 'id':
+                setattr(user, k, v)
+        db.session.commit()
+        return redirect(url_for('admin'))
+

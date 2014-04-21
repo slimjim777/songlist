@@ -6,7 +6,7 @@ from flask import session
 from flask import render_template
 from flask_oauthlib.client import OAuth
 from functools import wraps
-from music.model.database import User
+from music.model.database import Person
 
 
 # Prepare OAuth
@@ -52,7 +52,6 @@ def authorized(resp):
         )
     session['google_token'] = (resp['access_token'], '')
     me = google.get('userinfo')
-    app.logger.debug(me.data)
 
     # The user's email address
     result = check_user(me.data.get('email'))
@@ -74,7 +73,7 @@ def check_user(email):
     """
     session.pop('messages', None)
     
-    user = User.user_by_email(email)
+    user = Person.user_by_email(email)
     if not user:
         # Reset the Google token and forbid access
         session.pop('google_token', None)
@@ -85,6 +84,6 @@ def check_user(email):
     else:
         # Save the user details in the session
         session['user_id'] = user.id
-        session['roles'] = [r.name for r in user.user_roles]
+        session['role'] = user.role
         session['name'] = '%s %s' % (user.firstname, user.lastname)
         return True

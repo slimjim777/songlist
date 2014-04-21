@@ -44,3 +44,7 @@
 .body-dark .jumbotron {
     background: #333;
 }
+
+.actions {
+    width: 10%;
+}

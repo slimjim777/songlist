@@ -100,3 +100,45 @@ function renderSong() {
     main.empty();
     main.append(html);
 }
+
+function userEdit(userId) {
+    var request = $.ajax({
+      type: 'GET',
+      url: '/admin/users/' + userId,
+    }).done( function(data) { 
+        if (data) {
+            var row = $('#usr' + userId).hide();
+            $(row).after(data);
+        }
+    });
+}
+
+function userCancel(ev, userId) {
+    ev.preventDefault();
+    
+    // Remove the editable row and show the read-only row
+    $('#usredit' + userId).remove();
+    $('#usr' + userId).fadeIn(1000);
+}
+
+function userSave(userId) {
+    // Get the details of the updated fields from the form
+    var data = {
+        id: userId,
+        firstname: $("#usrfirst").val(),
+        lastname: $("#usrlast").val(),
+        email: $("#usremail").val(),
+        role: $("#usrrole option:selected").val(),
+    };
+
+    var request = $.ajax({
+      type: 'POST',
+      url: '/admin/users/' + userId,
+      data: data
+    }).done( function(data) { 
+        if (data) {
+            document.location.href = '/admin';
+            var row = $('#usr' + userId).hide();
+        }
+    });
+}

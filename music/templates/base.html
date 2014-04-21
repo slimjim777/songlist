@@ -31,6 +31,9 @@
             <li><a href="{{ config.NAV_rehearsal }}">Rehearsals</a></li>
             <li><a href="{{ config.NAV_spotify }}">Spotify</a></li>
             <li><a href="https://accounts.google.com">{{ session.name }}</a></li>
+            {% if 'admin' in session.role %}
+            <li><a href="/admin">Admin</a></li>
+            {% endif %}
           </ul>
         </div>
       </div>
