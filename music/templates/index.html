@@ -11,7 +11,7 @@
   <tbody>
     {% for index, song in songs %}
     <tr class="collapse-group">
-        <td><button class="btn btn-default" data-toggle="collapse" data-target="#viewdetails{{ index }}">{{ song }} &raquo;</button>
+        <td><button class="btn btn-default" data-toggle="collapse" data-target="#viewdetails{{ index }}">{{ song }} ({{ files[song]|length }}) &raquo;</button>
             <div id="viewdetails{{ index }}" class="collapse"><br />
             {% for f in files[song]%}
             <p>
