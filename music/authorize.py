@@ -3,8 +3,10 @@ from flask import redirect
 from flask import request
 from flask import url_for
 from flask import session
+from flask import render_template
 from flask_oauthlib.client import OAuth
 from functools import wraps
+from music.model.database import User
 
 
 # Prepare OAuth
@@ -30,6 +32,7 @@ def login_required(f):
     def decorated_function(*args, **kwargs):
         if session.get('google_token') is None:
             return redirect(url_for('login', next=request.url))
+        session.pop('messages', None)
         return f(*args, **kwargs)
     return decorated_function
 
@@ -51,11 +54,37 @@ def authorized(resp):
     me = google.get('userinfo')
     app.logger.debug(me.data)
 
-    # Check get the user permissions from the database
+    # The user's email address
+    result = check_user(me.data.get('email'))
 
-    return redirect(url_for('index'))
+    if result:
+        return redirect(url_for('index'))
+    else:
+        return redirect(url_for('error'))
 
 
 @google.tokengetter
 def get_google_oauth_token():
     return session.get('google_token')
+
+
+def check_user(email):
+    """
+    Check we have a valid app user for the Google user.
+    """
+    session.pop('messages', None)
+    
+    user = User.user_by_email(email)
+    if not user:
+        # Reset the Google token and forbid access
+        session.pop('google_token', None)
+        session['messages'] = """Your Email address (%s) is not registered with this site. 
+                If you know you have an account here, please logout of your Google Account 
+                and login with the account that has been registered with this site.""" % email
+        return False
+    else:
+        # Save the user details in the session
+        session['user_id'] = user.id
+        session['roles'] = [r.name for r in user.user_roles]
+        session['name'] = '%s %s' % (user.firstname, user.lastname)
+        return True

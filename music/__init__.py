@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from flask import Flask
+from flask.ext.sqlalchemy import SQLAlchemy
 import os
 
 
@@ -16,8 +17,11 @@ app.config['REDIS'] = os.environ['REDISCLOUD_URL']
 app.config['PAGE_SIZE'] = os.environ['PAGE_SIZE']
 app.config['GCLIENT_ID'] = os.environ['GCLIENT_ID']
 app.config['GCLIENT_SECRET'] = os.environ['GCLIENT_SECRET']
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ["DATABASE_URL"]
 app.secret_key = os.environ['APP_SECRET']
 
+
+db = SQLAlchemy(app)
 
 import music.authorize
 import music.views

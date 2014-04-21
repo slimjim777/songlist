@@ -37,7 +37,6 @@ def index():
     # Get the total number of pages
     total_pages = int((len(cache.r.hkeys('fileshash')) + PAGE_SIZE - 1)/PAGE_SIZE)
 
-    app.logger.debug(files)
     return render_template('index.html', songs=enumerate(sorted(files.keys())), files=files, page=page, pages=total_pages)
 
 
@@ -88,3 +87,8 @@ def song():
     song_chart = songon.parse()
 
     return render_template('song.html', song=song_chart)
+
+
+@app.route('/error')
+def error():
+    return render_template('alerts.html')
