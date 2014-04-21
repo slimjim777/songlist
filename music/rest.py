@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from music import app
+from music.authorize import login_required
 from flask import render_template
 from flask import request
 from flask import jsonify
@@ -8,6 +9,7 @@ import json
 
 
 @app.route('/song/transpose', methods=['POST'])
+@login_required
 def transpose():
     # Get the parameters from the JSON request
     if not 'song' in request.json or not 'key' in request.json:

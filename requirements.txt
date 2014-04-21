@@ -1,6 +1,9 @@
 Flask==0.10.1
+Flask-OAuthlib==0.4.3
+Flask-SQLAlchemy==1.0
 Jinja2==2.7.2
 MarkupSafe==0.19
+SQLAlchemy==0.9.4
 Werkzeug==0.9.4
 distribute==0.6.31
 dropbox==2.0.0
@@ -8,6 +11,7 @@ gunicorn==18.0
 httplib2==0.8
 itsdangerous==0.24
 newrelic==2.18.1.15
+oauthlib==0.6.1
 redis==2.9.1
 urllib3==1.8
 wsgiref==0.1.2
