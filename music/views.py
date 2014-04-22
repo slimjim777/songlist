@@ -20,6 +20,11 @@ PAGE_SIZE = int(app.config['PAGE_SIZE'])
 
 
 @app.route('/')
+def home():
+    return render_template('home.html')
+
+
+@app.route('/songs')
 @login_required
 def index():
     # Get the page number for pagination
@@ -109,21 +114,38 @@ def admin():
     
     return render_template('admin.html', users=users)
 
-
-@app.route('/admin/users/<int:user_id>', methods=['GET', 'POST'])
+@app.route('/admin/users', methods=['POST'])
+@app.route('/admin/users/<int:user_id>', methods=['GET', 'PUT'])
 @login_required
-def admin_user_edit(user_id):
+def admin_user_edit(user_id=None):
     """
     Edit the user permissions.
     """
-    user = Person.query.get(user_id)
-    if request.method == "GET":
-        return render_template('snippet_user.html', user=user)
+    if 'admin' not in session['role']:
+        abort(403)
+    if user_id:
+        user = Person.query.get(user_id)
+        if request.method == "GET":
+            return render_template('snippet_user.html', user=user)
+        elif request.method == "PUT":
+            # Update the user record
+            try:
+                user.email = request.form.get('email')
+                user.firstname = request.form.get('firstname')
+                user.lastname = request.form.get('lastname')
+                user.role = request.form.get('role')
+                db.session.commit()
+                return jsonify({'response': 'Success'})
+            except ValueError, v:
+                return jsonify({'response': 'Error', 'message': str(v)})
     elif request.method == "POST":
-        # Update the user record
-        for k, v in request.form.iteritems():
-            if k != 'id':
-                setattr(user, k, v)
-        db.session.commit()
-        return redirect(url_for('admin'))
-
+        # Add a new user record
+        try:
+            u = Person(request.form.get('email'), request.form.get('firstname'), request.form.get('lastname'))
+            u.role =  request.form.get('role')
+            db.session.add(u)
+            result = db.session.commit()
+            app.logger.debug(result)
+            return redirect(url_for('admin'), code=303)
+        except ValueError, v:
+            return jsonify({'response': 'Error', 'message': str(v)})

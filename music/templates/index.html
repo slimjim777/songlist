@@ -22,11 +22,10 @@
                     {% else %}
                     <a href="{{ f.url }}">
                         {% if 'audio' in f.mime_type or 'video' in f.mime_type %}
-                        <span class="glyphicon glyphicon-play">
+                        <span class="glyphicon glyphicon-play"></span>
                         {% else %}
-                        <span class="glyphicon glyphicon-eye-open">
+                        <span class="glyphicon glyphicon-eye-open"></span>
                         {% endif %}
-                        </span>
                     </a>
                     {% endif %}
                 </button>
@@ -42,9 +41,9 @@
 <ul class="pagination">
 {% for index in range(1, pages + 1) %}
     {% if page==index %}
-        <li class="active"><a href="/?page={{ index }}">{{ index }} <span class="sr-only">(current)</span></a></li>
+        <li class="active"><a href="/songs?page={{ index }}">{{ index }} <span class="sr-only">(current)</span></a></li>
     {% else %}
-    <li><a href="/?page={{ index }}">{{ index }}</a></li>
+    <li><a href="/songs?page={{ index }}">{{ index }}</a></li>
     {% endif %}
 {% endfor %}
 </ul>

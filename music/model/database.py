@@ -1,23 +1,5 @@
 from music import db
-
-
-#role_users = db.Table(
-#    'role_users',
-#    db.Column('role_id', db.Integer, db.ForeignKey('role.id')),
-#    db.Column('user_id', db.Integer, db.ForeignKey('user.id'))
-#)
-#
-#
-#class Role(db.Model):
-#    id = db.Column(db.Integer, primary_key=True)
-#    name = db.Column(db.String(255), unique=True)
-#    role_users = db.relationship('User', secondary=role_users, backref=db.backref('roles_ref', lazy='dynamic'))
-#
-#    def __init__(self, name):
-#        self.name = name
-#
-#    def __repr__(self):
-#        return '<Role %r>' % self.name
+from sqlalchemy.orm import validates
 
 
 class Person(db.Model):
@@ -32,6 +14,13 @@ class Person(db.Model):
         self.email = email
         self.firstname = firstname
         self.lastname = lastname
+
+    @validates('firstname', 'lastname', 'email')
+    def check_not_empty(self, key, value):
+        if not value or len(value.strip()) == 0:
+            raise ValueError('The field `%s` must not be empty' % key)
+        else:
+            return value.strip()
 
     @staticmethod
     def user_by_email(email):

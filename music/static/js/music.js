@@ -101,6 +101,7 @@ function renderSong() {
     main.append(html);
 }
 
+/* USERS */
 function userEdit(userId) {
     var request = $.ajax({
       type: 'GET',
@@ -123,7 +124,7 @@ function userCancel(ev, userId) {
 
 function userSave(userId) {
     // Get the details of the updated fields from the form
-    var data = {
+    var postdata = {
         id: userId,
         firstname: $("#usrfirst").val(),
         lastname: $("#usrlast").val(),
@@ -132,13 +133,57 @@ function userSave(userId) {
     };
 
     var request = $.ajax({
-      type: 'POST',
+      type: 'PUT',
       url: '/admin/users/' + userId,
-      data: data
+      data: postdata
     }).done( function(data) { 
-        if (data) {
-            document.location.href = '/admin';
-            var row = $('#usr' + userId).hide();
+        if (data.response == 'Success') {
+            window.location.href = '/admin';
+        } else {
+            // Display the error
+            console.log(data.message);
+            $('#main').prepend(getMessage(data.message, 'alert'));
+            $('#message').fadeIn(1000).delay(3000).fadeOut(1000).queue(function() { $(this).remove(); });
         }
     });
+}
+
+function userAddToggle(ev) {
+    ev.preventDefault();
+    // Show the add user form
+    $('#usrnew').toggleClass('hidden');
+}
+
+function userAdd(event) {
+    // Get the details of the new person
+    var data = {
+        firstname: $("#usrnewfirst").val(),
+        lastname: $("#usrnewlast").val(),
+        email: $("#usrnewemail").val(),
+        role: $("#usrnewrole option:selected").val(),
+    };
+
+    var request = $.ajax({
+      type: 'POST',
+      url: '/admin/users',
+      data: data
+    }).done( function(data) {
+        if (data.response == 'Success') {
+            window.location.href = '/admin';
+        } else {
+            // Display the error
+            console.log(data.message);
+            $('#main').prepend(getMessage(data.message, 'alert'));
+            $('#message').fadeIn(1000).delay(3000).fadeOut(1000).queue(function() { $(this).remove(); });
+        }
+    });
+
+}
+
+function getMessage(message, type) {
+    if (type=='success') {
+        return '<div id="message" class="alert alert-success">' + message + '</div>'
+    } else {
+        return '<div id="message" class="alert alert-danger">' + message + '</div>'
+    }
 }
