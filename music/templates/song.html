@@ -1,18 +1,7 @@
 {% extends "base.html" %}
 {% block body %}
 
-<script>
-    var song = {{ song|tojson|safe }};
 
-    $( document ).ready(function() {
-        renderSong();
-        
-        $("#key-select > button.btn").on("click", function(){
-            keySelectClick(this);
-        });
-        
-    });
-</script>
 {% endblock %}
 
 
@@ -54,13 +43,27 @@
             <div class="metalabel">Theme</div>
                 <div class="metadata">
                 <div class="btn-group" data-toggle="buttons-radio">
-                    <button id="light" name="state" type="button" class="btn btn-primary" onclick="changeTheme('light')">Light</button>    
-                    <button id="dark" name="state" type="button" class="btn btn-default" onclick="changeTheme('dark')">Dark</button>       
-                </div>                
+                    <button id="light" name="state" type="button" class="btn {{ 'btn-primary' if session.theme != 'dark' else 'btn-default' }}" onclick="changeTheme('light')">Light</button>
+                    <button id="dark" name="state" type="button" class="btn {{ 'btn-primary' if session.theme == 'dark' else 'btn-default' }}" onclick="changeTheme('dark')">Dark</button>
+                </div>
             </div>
         </div>        
     </div>
  
   </div>
 </div>
+
+<script>
+    var song = {{ song|tojson|safe }};
+
+    $( document ).ready(function() {
+        renderSong();
+
+        $("#key-select > button.btn").on("click", function(){
+            keySelectClick(this);
+        });
+
+        changeTheme('{{ session.theme or 'light' }}');
+    });
+</script>
 {% endblock %}

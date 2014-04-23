@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 from music import app
 from music.authorize import login_required
-from flask import render_template
 from flask import request
 from flask import jsonify
+from flask import session
 from music.model.onsong import Transpose
 from music.model.cache import Cache
 from music.views import cache_files
@@ -42,3 +42,15 @@ def monitor():
         cache_files()
 
     return jsonify({'response': 'Success'})
+
+
+@app.route('/user/theme', methods=['POST'])
+@login_required
+def change_theme():
+    """
+    Store the user's theme as a session variable.
+    """
+    app.logger.debug(request.json.get('theme', 'Hello'))
+    if 'theme' in request.json:
+        session['theme'] = request.json['theme']
+    return ''

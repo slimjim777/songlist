@@ -110,8 +110,7 @@ def admin():
     if 'admin' not in session['role']:
         abort(403)
 
-    users = Person.query.all()
-    
+    users = Person.query.order_by('lastname', 'firstname').all()
     return render_template('admin.html', users=users)
 
 @app.route('/admin/users', methods=['POST'])

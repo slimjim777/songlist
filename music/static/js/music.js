@@ -13,6 +13,15 @@ function changeTheme(theme) {
         $('#dark').toggleClass('btn-default', true);
         $('#dark').toggleClass('btn-primary', false);
     }
+
+    // Save the setting for the user
+    $.ajax({
+        type: "POST",
+        url: "/user/theme",
+        data: JSON.stringify({theme: theme}),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json"
+    });
 }
 
 function keySelectClick(el) {

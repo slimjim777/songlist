@@ -8,13 +8,11 @@ class Person(db.Model):
     firstname = db.Column(db.String(100))
     lastname = db.Column(db.String(100))
     role = db.Column(db.Enum('admin', 'standard', name='role_types'), default='standard')
-    #user_roles = db.relationship('Role', secondary=role_users, backref=db.backref('users_ref', lazy='dynamic'))
 
     def __init__(self, email, firstname, lastname):
         self.email = email
         self.firstname = firstname
         self.lastname = lastname
-
 
     @validates('firstname', 'lastname', 'email')
     def check_not_empty(self, key, value):
@@ -30,6 +28,6 @@ class Person(db.Model):
         """
         user = Person.query.filter_by(email=email).first()
         return user
-        
+
     def __repr__(self):
         return '<User %r>' % self.email
