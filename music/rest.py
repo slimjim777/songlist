@@ -50,7 +50,6 @@ def change_theme():
     """
     Store the user's theme as a session variable.
     """
-    app.logger.debug(request.json.get('theme', 'Hello'))
     if 'theme' in request.json:
         session['theme'] = request.json['theme']
     return ''

@@ -10,6 +10,7 @@ from flask import redirect
 from flask import url_for
 from music.model.drive import Drive
 from music.model.onsong import Onsong
+from music.model.chordpro import ChordPro
 from music.model.cache import Cache
 import json
 from music.authorize import login_required
@@ -92,9 +93,16 @@ def song():
     store = Drive()
     contents = store.file_contents(file_path)
 
-    # Parse the Onsong file
-    songon = Onsong(contents)
-    song_chart = songon.parse()
+    # Parse the file based on the extension
+    extension = file_path.split('.')[-1]
+
+    if extension.lower() == 'onsong':
+        # Parse the Onsong file
+        songon = Onsong(contents)
+        song_chart = songon.parse()
+    else:
+        songpro = ChordPro(contents)
+        song_chart = songpro.parse()
 
     return render_template('song.html', song=song_chart)
 

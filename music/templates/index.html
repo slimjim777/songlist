@@ -17,7 +17,7 @@
             <p>
                 <a href="{{ f.url }}?dl=1" title="Download">{{ f.name }} ({{ f.size }})</a>
                 <button class="btn btn-default" title="View">
-                    {% if f.extension == 'onsong' %}
+                    {% if f.extension in ['onsong','pro','chordpro','chdpro','chopro'] %}
                     <a href="/song?file_path={{ f.path }}"><span class="glyphicon glyphicon-music"></span></a>
                     {% else %}
                     <a href="{{ f.url }}">
