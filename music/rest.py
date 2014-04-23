@@ -5,6 +5,8 @@ from flask import render_template
 from flask import request
 from flask import jsonify
 from music.model.onsong import Transpose
+from music.model.cache import Cache
+from music.views import cache_files
 import json
 
 
@@ -24,3 +26,19 @@ def transpose():
     transpose = Transpose()
     song_chart = transpose.transpose(song, key)
     return jsonify(song_chart)
+
+
+@app.route('/monitor', methods=['GET'])
+def monitor():
+    """
+    Expose a URL for the site monitoring that will also refresh the song cache
+    from Dropbox every hour.
+    """
+    # Check if the local cache of the file/folder list is valid
+    cache = Cache()
+    cache_valid = cache.hcache_valid('fileshash')
+
+    if not cache_valid:
+        cache_files()
+
+    return jsonify({'response': 'Success'})

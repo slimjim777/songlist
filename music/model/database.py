@@ -15,6 +15,7 @@ class Person(db.Model):
         self.firstname = firstname
         self.lastname = lastname
 
+
     @validates('firstname', 'lastname', 'email')
     def check_not_empty(self, key, value):
         if not value or len(value.strip()) == 0:
