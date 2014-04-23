@@ -29,5 +29,8 @@ class Person(db.Model):
         user = Person.query.filter_by(email=email).first()
         return user
 
+    def full_name(self):
+        return '%s %s' % (self.firstname, self.lastname)
+
     def __repr__(self):
         return '<User %r>' % self.email

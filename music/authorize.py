@@ -85,5 +85,5 @@ def check_user(email):
         # Save the user details in the session
         session['user_id'] = user.id
         session['role'] = user.role
-        session['name'] = '%s %s' % (user.firstname, user.lastname)
+        session['name'] = user.full_name()
         return True
