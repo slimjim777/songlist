@@ -1,5 +1,6 @@
 from music import db
 from sqlalchemy.orm import validates
+import datetime
 
 
 class Person(db.Model):
@@ -8,6 +9,7 @@ class Person(db.Model):
     firstname = db.Column(db.String(100))
     lastname = db.Column(db.String(100))
     role = db.Column(db.Enum('admin', 'standard', name='role_types'), default='standard')
+    last_login = db.Column(db.DateTime())
 
     def __init__(self, email, firstname, lastname):
         self.email = email
@@ -31,6 +33,13 @@ class Person(db.Model):
 
     def full_name(self):
         return '%s %s' % (self.firstname, self.lastname)
+
+    @staticmethod
+    def update_last_login(user_id):
+        user = Person.query.get(user_id)
+        user.last_login = datetime.datetime.utcnow()
+        db.session.add(user)
+        db.session.commit()
 
     def __repr__(self):
         return '<User %r>' % self.email

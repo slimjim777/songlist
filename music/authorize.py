@@ -33,6 +33,11 @@ def login_required(f):
         if session.get('google_token') is None:
             return redirect(url_for('login', next=request.url))
         session.pop('messages', None)
+
+        # Update the user's last activity time
+        if 'user_id' in session:
+            Person.update_last_login(session['user_id'])
+
         return f(*args, **kwargs)
     return decorated_function
 
