@@ -60,6 +60,10 @@ class Song(object):
         if line[0] != '[':
             chords.insert(0, '')
 
+        # There is a blank lyric when the line starts with a chord - remove it
+        if line[0] == '[':
+            lyrics.pop(0)
+
         return {'chords': chords, 'lyrics': lyrics}
 
 
@@ -220,16 +224,16 @@ class ChordPro(Song):
 
 
 if __name__ == '__main__':
-    f = file('/Users/jjesudason/Downloads/Alive.onsong')
+    f = file('/Users/jjesudason/Dropbox/Songs/Fill This Place/Fill This Place.onsong')
     s = f.read()
     f.close()
     o = Onsong(s)
     s = o.parsed
     app.logger.debug(s)
 
-    f = file('/Users/jjesudason/Downloads/Alive (ChordPro).pro')
-    s = f.read()
-    f.close()
-    o = ChordPro(s)
-    s = o.parsed
-    app.logger.debug(s)
+    #f = file('/Users/jjesudason/Downloads/Alive (ChordPro).pro')
+    #s = f.read()
+    #f.close()
+    #o = ChordPro(s)
+    #s = o.parsed
+    #app.logger.debug(s)

@@ -14,9 +14,14 @@
         <div>
             <div class="metalabel">By</div><div class="metadata">{{ song.Artist.decode('utf8') }}</div>
         </div>
+        {% if song.Tempo %}
         <div>
             <div class="metalabel">Tempo</div><div class="metadata">{{ song.Tempo }}</div>
         </div>
+        {% endif %}
+        {% if song.Flow %}
+        <div><div class="metalabel">Flow</div><div class="metadata">{{ ', '.join(song.Flow) }}</div></div>
+        {% endif %}
         <div>
             <div class="metalabel">Key</div>
             <div class="metadata">
