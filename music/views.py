@@ -9,8 +9,7 @@ from flask import jsonify
 from flask import redirect
 from flask import url_for
 from music.model.drive import Drive
-from music.model.onsong import Onsong
-from music.model.chordpro import ChordPro
+from music.model.song import Onsong, ChordPro
 from music.model.cache import Cache
 import json
 from music.authorize import login_required
@@ -46,9 +45,10 @@ def index():
         files[f] = json.loads(cache.hget_cache('fileshash', f))
 
     # Get the total number of pages
-    total_pages = int((len(cache.r.hkeys('fileshash')) + PAGE_SIZE - 1)/PAGE_SIZE)
+    total_pages = int((len(cache.r.hkeys('fileshash')) + PAGE_SIZE - 1) / PAGE_SIZE)
 
-    return render_template('index.html', songs=enumerate(sorted(files.keys())), files=files, page=page, pages=total_pages)
+    return render_template('index.html', songs=enumerate(sorted(files.keys())), files=files, page=page,
+                           pages=total_pages)
 
 
 def cache_files():
@@ -58,7 +58,7 @@ def cache_files():
     is kept in the cache as a sorted list - this is used for pagination.
 
     Redis keys:
-                filehash: hash of all the folders and files.
+               fileshash: hash of all the folders and files.
         fileshash_expiry: expiry date/time of the cached data.
                songnames: sorted list of the songs for pagination.
     """
@@ -70,9 +70,9 @@ def cache_files():
     cache = Cache()
     cache.delete('fileshash')
     cache.hset_cache_expiry('fileshash')
-    for file, value in files.iteritems():
+    for filename, value in files.iteritems():
         # Hash key is the song name and the value is the JSON file list
-        cache.hset_cache('fileshash', file, json.dumps(value))
+        cache.hset_cache('fileshash', filename, json.dumps(value))
 
     # Cache the song names in a list (sorted). This is used for pagination
     cache.delete('songnames')
@@ -98,11 +98,11 @@ def song():
 
     if extension.lower() == 'onsong':
         # Parse the Onsong file
-        songon = Onsong(contents)
-        song_chart = songon.parse()
+        on_song = Onsong(contents)
+        song_chart = on_song.parsed
     else:
-        songpro = ChordPro(contents)
-        song_chart = songpro.parse()
+        song_pro = ChordPro(contents)
+        song_chart = song_pro.parsed
 
     return render_template('song.html', song=song_chart)
 
@@ -120,6 +120,7 @@ def admin():
 
     users = Person.query.order_by('lastname', 'firstname').all()
     return render_template('admin.html', users=users)
+
 
 @app.route('/admin/users', methods=['POST'])
 @app.route('/admin/users/<int:user_id>', methods=['GET', 'PUT'])
@@ -149,7 +150,7 @@ def admin_user_edit(user_id=None):
         # Add a new user record
         try:
             u = Person(request.form.get('email'), request.form.get('firstname'), request.form.get('lastname'))
-            u.role =  request.form.get('role')
+            u.role = request.form.get('role')
             db.session.add(u)
             result = db.session.commit()
             app.logger.debug(result)

@@ -4,10 +4,9 @@ from music.authorize import login_required
 from flask import request
 from flask import jsonify
 from flask import session
-from music.model.onsong import Transpose
 from music.model.cache import Cache
+from music.model.transpose import Transpose
 from music.views import cache_files
-import json
 
 
 @app.route('/song/transpose', methods=['POST'])
@@ -23,9 +22,8 @@ def transpose():
     key = request.json['key']
 
     # Transpose the song
-    transpose = Transpose()
-    song_chart = transpose.transpose(song, key)
-    return jsonify(song_chart)
+    t = Transpose(song, key)
+    return jsonify(t.song)
 
 
 @app.route('/monitor', methods=['GET'])
