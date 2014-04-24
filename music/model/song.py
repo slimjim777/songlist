@@ -114,7 +114,6 @@ class Onsong(Song):
         # Define the sections for the display
         self.song['display_order'] = self.song_sections
 
-        app.logger.debug(self.song)
         return self.song
 
     def name_pair(self, line):
@@ -187,7 +186,6 @@ class ChordPro(Song):
         # Define the sections for the display
         self.song['display_order'] = self.song_sections
 
-        app.logger.debug(self.song)
         return self.song
 
     def name_pair(self, line):

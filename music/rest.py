@@ -16,8 +16,6 @@ def transpose():
     if not 'song' in request.json or not 'key' in request.json:
         return jsonify({'response': 'Failed', 'error': "The 'song' and 'key' must be supplied."})
         
-    app.logger.debug(request.json['song'])
-        
     song = request.json['song']
     key = request.json['key']
 

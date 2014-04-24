@@ -1,7 +1,12 @@
 {% extends "base.html" %}
 {% block body %}
 
-<h2 class="sub-header">Songs</h2>
+{% if q %}
+    {% if files.keys()|length == 0 %}
+    <p>No songs found.</p>
+    {% else %}
+
+<h3 class="sub-header">Found Songs...</h3>
 <table class="table table-striped">
   <thead>
     <tr>
@@ -37,24 +42,16 @@
     {%  endfor %}
   </tbody>
 </table>
-
-<ul class="pagination">
-{% for index in range(1, pages + 1) %}
-    {% if page==index %}
-        <li class="active"><a href="/songs?page={{ index }}">{{ index }} <span class="sr-only">(current)</span></a></li>
-    {% else %}
-    <li><a href="/songs?page={{ index }}">{{ index }}</a></li>
     {% endif %}
-{% endfor %}
-</ul>
+{% endif %}
 
 {% endblock %}
 
 {% block jumbotron %}
     <div class="jumbotron">
       <div class="container">
-        <h1>Lifechurch Worship Team</h1>
-        <p>Resource page for the Worship Team.</p>
+        <h2>Find Song</h2>
+
         <form class="navbar-form navbar-left" role="search" action="/songs/search" method="get">
           <div class="form-group">
             <input name="q" type="text" class="form-control" placeholder="search for songs" value="{{ q }}" />

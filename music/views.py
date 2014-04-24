@@ -51,6 +51,26 @@ def index():
                            pages=total_pages)
 
 
+@app.route('/songs/search')
+@login_required
+def song_search():
+    files = {}
+
+    # Check if we have a search query
+    q = request.args.get('q')
+    if q:
+        # Search for folders containing the query
+        cache = Cache()
+        song_list = cache.r.hkeys('fileshash')
+        song_names = [s for s in song_list if q.lower() in s.lower()]
+
+        # Get the song list from the cache, retrieving the songs for the search
+        for f in song_names:
+            files[f] = json.loads(cache.hget_cache('fileshash', f))
+
+    return render_template('search.html', songs=enumerate(sorted(files.keys())), files=files, q=q)
+
+
 def cache_files():
     """
     The folder/file list is cached in a hash (with the key as a song name/folder, value as
@@ -85,7 +105,6 @@ def cache_files():
 def song():
     # Get the file path of the song
     file_path = request.args.get('file_path')
-    app.logger.debug(file_path)
     if not file_path:
         abort(404)
 
@@ -154,6 +173,6 @@ def admin_user_edit(user_id=None):
             db.session.add(u)
             result = db.session.commit()
             app.logger.debug(result)
-            return redirect(url_for('admin'), code=303)
+            return jsonify({'response': 'Success'})
         except ValueError, v:
             return jsonify({'response': 'Error', 'message': str(v)})
