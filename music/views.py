@@ -6,14 +6,12 @@ from flask import request
 from flask import abort
 from flask import session
 from flask import jsonify
-from flask import redirect
-from flask import url_for
 from music.model.drive import Drive
 from music.model.song import Onsong, ChordPro
-from music.model.cache import Cache
-import json
 from music.authorize import login_required
 from music.model.database import Person
+from music.model.database import Folder
+import time
 
 
 PAGE_SIZE = int(app.config['PAGE_SIZE'])
@@ -27,77 +25,33 @@ def home():
 @app.route('/songs')
 @login_required
 def index():
+    start = time.time()
     # Get the page number for pagination
     page = int(request.args.get('page', 1))
     if page < 1:
         page = 1
 
-    # Check if the local cache of the file/folder list is valid
-    cache = Cache()
-    cache_valid = cache.hcache_valid('fileshash')
+    # Get the folders for the page
+    folders = Folder.query.order_by(Folder.name).paginate(page, PAGE_SIZE, False)
 
-    if not cache_valid:
-        cache_files()
-
-    # Get the song list from the cache, retrieving the songs for the current page
-    files = {}
-    for f in cache.r.lrange('songnames', (page - 1) * PAGE_SIZE, (page - 1) * PAGE_SIZE + (PAGE_SIZE - 1)):
-        files[f] = json.loads(cache.hget_cache('fileshash', f))
-
-    # Get the total number of pages
-    total_pages = int((len(cache.r.hkeys('fileshash')) + PAGE_SIZE - 1) / PAGE_SIZE)
-
-    return render_template('index.html', songs=enumerate(sorted(files.keys())), files=files, page=page,
-                           pages=total_pages)
+    resp = render_template('index.html', folders=folders, page=page, pages=folders.pages)
+    end = time.time()
+    app.logger.info('Page load: %s' % (end - start))
+    return resp
 
 
 @app.route('/songs/search')
 @login_required
 def song_search():
-    files = {}
-
     # Check if we have a search query
     q = request.args.get('q')
     if q:
         # Search for folders containing the query
-        cache = Cache()
-        song_list = cache.r.hkeys('fileshash')
-        song_names = [s for s in song_list if q.lower() in s.lower()]
+        song_list = Folder.query.filter(Folder.name.ilike('%%%s%%' % q)).order_by(Folder.name)
+    else:
+        song_list = None
 
-        # Get the song list from the cache, retrieving the songs for the search
-        for f in song_names:
-            files[f] = json.loads(cache.hget_cache('fileshash', f))
-
-    return render_template('search.html', songs=enumerate(sorted(files.keys())), files=files, q=q)
-
-
-def cache_files():
-    """
-    The folder/file list is cached in a hash (with the key as a song name/folder, value as
-    JSON file list). The expiry date/time is also set for the cache. The list of song names
-    is kept in the cache as a sorted list - this is used for pagination.
-
-    Redis keys:
-               fileshash: hash of all the folders and files.
-        fileshash_expiry: expiry date/time of the cached data.
-               songnames: sorted list of the songs for pagination.
-    """
-    # Cache was invalid or expired, so get the current file list
-    store = Drive()
-    files = store.files()
-
-    # Update the cache, store the file names in a hash
-    cache = Cache()
-    cache.delete('fileshash')
-    cache.hset_cache_expiry('fileshash')
-    for filename, value in files.iteritems():
-        # Hash key is the song name and the value is the JSON file list
-        cache.hset_cache('fileshash', filename, json.dumps(value))
-
-    # Cache the song names in a list (sorted). This is used for pagination
-    cache.delete('songnames')
-    for f in sorted(files.keys()):
-        cache.r.rpush('songnames', f)
+    return render_template('search.html', files=song_list, q=q)
 
 
 @app.route('/song')

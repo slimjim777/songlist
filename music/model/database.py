@@ -43,3 +43,36 @@ class Person(db.Model):
 
     def __repr__(self):
         return '<User %r>' % self.email
+
+
+class Folder(db.Model):
+    """
+    Cache the folder details in the database.
+    The URL and description allow users to enter extra metadata against a song e.g. Youtube link.
+    """
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(255), unique=True, index=True)
+    active = db.Column(db.Boolean, default=True)
+    url = db.Column(db.String(255))
+    notes = db.Text()
+    files = db.relationship('File', backref='folder', lazy='joined', cascade="save-update, merge, delete")
+
+    def __repr__(self):
+        return '<Folder %r>' % self.name
+
+
+class File(db.Model):
+    """
+    Cache the file details in the database.
+    """
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(255))
+    path = db.Column(db.String(255))
+    extension = db.Column(db.String(20))
+    size = db.Column(db.String(10))
+    mime_type = db.Column(db.String(255))
+    url = db.Column(db.String(255))
+    folder_id = db.Column(db.Integer, db.ForeignKey('folder.id'))
+
+    def __repr__(self):
+        return '<File %r>' % self.name

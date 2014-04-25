@@ -15,15 +15,14 @@ class Drive(object):
  
     def files(self):
         """
-        Get the song names by looking for subfolders.
-        TODO: Pagination
+        Get the song names by looking for sub-folders.
         """
         songs = {}
         for meta in self.client.metadata('/Songs/')['contents']:
             if not meta['is_dir']:
                 continue
             
-            # Folder name is the song name 
+            # Folder name is the song name
             song = meta['path'][7:]
             
             # Store the files for the song
