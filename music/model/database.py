@@ -1,6 +1,7 @@
 from music import db
 from sqlalchemy.orm import validates
 import datetime
+import re
 
 
 class Person(db.Model):
@@ -57,6 +58,16 @@ class Folder(db.Model):
     notes = db.Text()
     files = db.relationship('File', backref='folder', lazy='joined', cascade="save-update, merge, delete")
 
+    def highlight(self, q):
+        """
+        Mark up match text in the name.
+        """
+        if not q:
+            return self.name
+        p = re.compile("(" + q + ")", re.IGNORECASE)
+        return p.sub('<mark>'+ q + '</mark>', self.name)
+
+
     def __repr__(self):
         return '<Folder %r>' % self.name
 
@@ -73,6 +84,17 @@ class File(db.Model):
     mime_type = db.Column(db.String(255))
     url = db.Column(db.String(255))
     folder_id = db.Column(db.Integer, db.ForeignKey('folder.id'))
+
+
+    def highlight(self, q):
+        """
+        Mark up match text in the name.
+        """
+        if not q:
+            return self.name
+        p = re.compile("(" + q + ")", re.IGNORECASE)
+        return p.sub('<mark>'+ q + '</mark>', self.name)
+
 
     def __repr__(self):
         return '<File %r>' % self.name

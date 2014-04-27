@@ -11,6 +11,7 @@ from music.model.song import Onsong, ChordPro
 from music.authorize import login_required
 from music.model.database import Person
 from music.model.database import Folder
+from music.model.database import File
 import time
 
 
@@ -47,7 +48,10 @@ def song_search():
     q = request.args.get('q')
     if q:
         # Search for folders containing the query
-        song_list = Folder.query.filter(Folder.name.ilike('%%%s%%' % q)).order_by(Folder.name)
+        song_list_folders = Folder.query.filter(Folder.name.ilike('%%%s%%' % q))
+        song_list_files = File.query.filter(File.name.ilike('%%%s%%' % q))
+        song_list_file_folders = Folder.query.filter(Folder.id.in_([fil.folder_id for fil in song_list_files]))
+        song_list = song_list_file_folders.union(song_list_folders)
     else:
         song_list = None
 
