@@ -150,7 +150,6 @@ function userSave(userId) {
             window.location.href = '/admin';
         } else {
             // Display the error
-            console.log(data.message);
             $('#main').prepend(getMessage(data.message, 'alert'));
             $('#message').fadeIn(1000).delay(3000).fadeOut(1000).queue(function() { $(this).remove(); });
         }
@@ -181,13 +180,13 @@ function userAdd(event) {
             window.location.href = '/admin';
         } else {
             // Display the error
-            console.log(data.message);
             $('#main').prepend(getMessage(data.message, 'alert'));
             $('#message').fadeIn(1000).delay(3000).fadeOut(1000).queue(function() { $(this).remove(); });
         }
     });
 
 }
+/* --USERS */
 
 function getMessage(message, type) {
     if (type=='success') {
@@ -196,3 +195,54 @@ function getMessage(message, type) {
         return '<div id="message" class="alert alert-danger">' + message + '</div>'
     }
 }
+
+/* SONGS */
+
+function songEdit(songId) {
+    var container = $('#youtube' + songId);
+
+    // Get the song details
+    var request = $.ajax({
+      type: 'GET',
+      url: '/song/' + songId,
+    }).done( function(song) {
+        if (song) {
+            $(container).append(song);
+            $('#songedit' + songId).hide();
+        }
+    });
+
+    return false;
+}
+
+function songSave(songId) {
+    var data = {
+        url: $('#url' + songId).val()
+    };
+
+    var request = $.ajax({
+      type: 'POST',
+      url: '/song/' + songId,
+      data: JSON.stringify(data),
+      contentType: "application/json; charset=utf-8",
+      dataType: "json"
+    }).done( function(data) {
+        if (data.response == 'Success') {
+            window.location.href = '/songs';
+        } else {
+            // Display the error
+            $('#main').prepend(getMessage(data.message, 'alert'));
+            $('#message').fadeIn(1000).delay(3000).fadeOut(1000).queue(function() { $(this).remove(); });
+        }
+    });
+
+    return false;
+}
+
+function songCancel(songId) {
+    $('#songsave' + songId).remove();
+    $('#songedit' + songId).show();
+    return false;
+}
+
+/* --SONGS */

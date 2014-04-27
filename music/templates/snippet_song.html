@@ -1,0 +1,7 @@
+{% block body %}
+<span id="songsave{{ song.id }}" style="text-align: right">
+    <input id="url{{ song.id }}" type="text" value="{{ song.url if song.url or '' }}" class="form-control highlight" placeholder="Youtube URL" />
+    <button class="btn btn-primary" onclick="songSave({{ song.id }})"><span class="glyphicon glyphicon-save"></span></button>
+    <a href="#" onclick="songCancel({{ song.id }})">Cancel</a>
+</span>
+{% endblock %}

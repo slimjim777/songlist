@@ -4,6 +4,7 @@ from music.authorize import login_required
 from flask import request
 from flask import jsonify
 from flask import session
+from flask import render_template
 from music.model.cache import Cache
 from music.model.transpose import Transpose
 from music.model.drive import Drive
@@ -25,6 +26,18 @@ def transpose():
     # Transpose the song
     t = Transpose(song, key)
     return jsonify(t.song)
+
+
+@app.route('/song/<int:song_id>', methods=['GET', 'POST'])
+@login_required
+def song_by_id(song_id):
+    song = Folder.query.get(song_id)
+    if request.method != 'POST':
+        return render_template('snippet_song.html', song=song)
+
+    song.url = request.json.get('url')
+    db.session.commit()
+    return jsonify({'response': 'Success'})
 
 
 @app.route('/monitor', methods=['GET'])
@@ -85,7 +98,6 @@ def cache_files_in_database():
         song_folder = folder.query.filter_by(name=filename).first()
         if not song_folder:
             # No: create it
-            app.logger.debug('Create it')
             song_folder = Folder()
             song_folder.name = filename
             db.session.add(song_folder)

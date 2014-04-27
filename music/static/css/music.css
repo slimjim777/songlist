@@ -48,3 +48,9 @@
 .actions {
     width: 10%;
 }
+
+.highlight {
+    background-color: #F2F5A9;
+    width: 50%;
+    display: inline;
+}

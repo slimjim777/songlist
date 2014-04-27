@@ -17,6 +17,12 @@
     {% for song in files %}
     <tr class="collapse-group">
         <td><button class="btn btn-default" data-toggle="collapse" data-target="#viewdetails{{ song.id }}">{{ song.name }} ({{ song.files|length }}) &raquo;</button>
+            <a id="songedit{{ song.id }}" href="#" onclick="songEdit({{ song.id }})" style="float:right;"><span class="glyphicon glyphicon-edit"></span></a>
+            <span id="youtube{{ song.id }}"></span>
+            {% if song.url %}
+            <a href="{{ song.url }}" title="Youtube"><img src="/static/images/YouTube-social-icon_red_24px.png" /></a>
+            {% endif %}
+
             <div id="viewdetails{{ song.id }}" class="collapse"><br />
             {% for f in song.files %}
             <p>
