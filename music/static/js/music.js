@@ -198,7 +198,8 @@ function getMessage(message, type) {
 
 /* SONGS */
 
-function songEdit(songId) {
+function songEdit(ev, songId) {
+    ev.preventDefault();
     var container = $('#youtube' + songId);
 
     // Get the song details
@@ -212,7 +213,6 @@ function songEdit(songId) {
         }
     });
 
-    return false;
 }
 
 function songSave(songId) {
@@ -239,10 +239,10 @@ function songSave(songId) {
     return false;
 }
 
-function songCancel(songId) {
+function songCancel(ev, songId) {
+    ev.preventDefault();
     $('#songsave' + songId).remove();
     $('#songedit' + songId).show();
-    return false;
 }
 
 /* --SONGS */
