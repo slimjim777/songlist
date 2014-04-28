@@ -12,7 +12,6 @@ from music.authorize import login_required
 from music.model.database import Person
 from music.model.database import Folder
 from music.model.database import File
-import time
 
 
 PAGE_SIZE = int(app.config['PAGE_SIZE'])
@@ -26,7 +25,6 @@ def home():
 @app.route('/songs')
 @login_required
 def index():
-    start = time.time()
     # Get the page number for pagination
     page = int(request.args.get('page', 1))
     if page < 1:
@@ -35,10 +33,7 @@ def index():
     # Get the folders for the page
     folders = Folder.query.order_by(Folder.name).paginate(page, PAGE_SIZE, False)
 
-    resp = render_template('index.html', folders=folders, page=page, pages=folders.pages)
-    end = time.time()
-    app.logger.info('Page load: %s' % (end - start))
-    return resp
+    return render_template('index.html', folders=folders, page=page, pages=folders.pages)
 
 
 @app.route('/songs/search')
@@ -51,7 +46,7 @@ def song_search():
         song_list_folders = Folder.query.filter(Folder.name.ilike('%%%s%%' % q))
         song_list_files = File.query.filter(File.name.ilike('%%%s%%' % q))
         song_list_file_folders = Folder.query.filter(Folder.id.in_([fil.folder_id for fil in song_list_files]))
-        song_list = song_list_file_folders.union(song_list_folders)
+        song_list = song_list_file_folders.union(song_list_folders).order_by(Folder.name)
     else:
         song_list = None
 
