@@ -27,7 +27,7 @@
 }
 
 .metalabel {
-    width: 80px;
+    width: 100px;
     color: #666;
     font-weight: bold;
 }
@@ -53,4 +53,10 @@
     background-color: #F2F5A9;
     width: 50%;
     display: inline;
+}
+
+@media all and (max-width: 699px) {
+    .metalabel {
+        width: 10%;
+    }
 }

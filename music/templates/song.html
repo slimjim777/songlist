@@ -22,6 +22,11 @@
         {% if song.Flow %}
         <div><div class="metalabel">Flow</div><div class="metadata">{{ ', '.join(song.Flow) }}</div></div>
         {% endif %}
+        {% if song.Key %}
+        <div>
+            <div class="metalabel">Original Key</div><div class="metadata">{{ song.Key }}</div>
+        </div>
+        {% endif %}
         <div>
             <div class="metalabel">Key</div>
             <div class="metadata">
