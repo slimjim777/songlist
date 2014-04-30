@@ -1,33 +1,49 @@
 # -*- coding: utf-8 -*-
+from music import app
 
 
 class Transpose(object):
+    """
+    Based on algorithm written by +Mike Trahearn.
+    """
     INVALID_NOTE = -1
-    NOTE_NAMES = ["Ab", "A", "A#", "Bb", "B", "Cb", "C", "C#", "Db", "D", "D#", "Eb", "E", "E#", "Fb", "F", "F#", "Gb",
-                  "G", "G#"]
+    KEY_COUNT = 21
+    SEMITONE_COUNT = 12
     KEY_TABLE = [["A", "A#", "B", "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#"],
+                 # theoretical
+                 ["A#", "A", "B#", "C#", "C##", "D#", "D##", "E#", "F#", "F##", "G#", "G##"],
                  ["Bb", "B", "C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A"],
                  ["B", "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#"],
+                 # theoretical
+                 ["B#", "B##", "C##", "C###", "D##", "E#", "E##", "F##", "G#", "G##", "G###", "A##"],
+                 # theoretical
+                 ["Cb", "Dbb", "Db", "Ebb", "Eb", "Fb", "Gbb", "Gb", "Ab", "Ab", "Bbb", "Bb"],
                  # Key of C uses popular flats/sharps
                  ["C", "C#", "D", "Eb", "E", "F", "F#", "G", "G#", "A", "Bb", "B"],
+                 ["C#", "C##", "D#", "D##", "E#", "F#", "F##", "G#", "G##", "A#", "A##", "B#"],
                  ["Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B", "C"],
                  ["D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B", "C", "C#"],
+                 # theoretical
+                 ["D#", "D##", "E#", "E##", "F##", "G#", "G##", "A#", "A##", "B#", "B##", "C##"],
                  ["Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B", "C", "Db", "D"],
                  ["E", "F", "F#", "G", "G#", "A", "A#", "B", "C", "C#", "D", "D#"],
+                 # theoretical
+                 ["E#", "E##", "F##", "F###", "G##", "A#", "A##", "B#", "B##", "C##", "C###", "D##"],
+                 # theoretical
+                 ["Fb", "Gbb", "Gb", "Abb", "Ab", "Bbb", "Cbb", "Cb", "Dbb", "Db", "Ebb", "Eb"],
                  ["F", "Gb", "G", "Ab", "A", "Bb", "B", "C", "Db", "D", "Eb", "E"],
                  ["F#", "G", "G#", "A", "A#", "B", "C", "C#", "D", "D#", "E", "E#"],
+                 ["Gb", "Abb", "Ab", "Bbb", "Bb", "Cb", "Dbb", "Db", "Ebb", "Eb", "Fb", "F"],
                  ["G", "G#", "A", "A#", "B", "C", "C#", "D", "D#", "E", "F", "F#"],
+                 # theoretical
+                 ["G#", "G##", "A#", "A##", "B#", "C#", "C##", "D#", "D##", "E#", "E##", "F##"],
                  ["Ab", "A", "Bb", "B", "C", "Db", "D", "Eb", "E", "F", "Gb", "G"]]
-
-    # The notes values converts note index (0~19) of NOTE_NAMES which has pitch equivalent names into a semitone number
-    SEMITONE_NOS = [11, 0, 1, 1, 2, 2, 3, 4, 4, 5, 6, 6, 7, 8, 7, 8, 9, 9, 10, 11]
-    #  Ab  A  A# Bb B  Cb C  C# Db D  D# Eb E  E# Fb F  F# Gb  G  G#
 
     def __init__(self, song, new_key):
         self.song = song
         self.new_key = new_key
-        self.new_key_value = self.semitone_number(new_key)
-        self.key_value = self.semitone_number(self.song['Key'])
+        self.new_key_value = self.key_number(new_key)
+        self.key_value = self.key_number(self.song['Key'])
         self.transpose()
 
     def transpose(self):
@@ -42,34 +58,21 @@ class Transpose(object):
         semi_no = self.INVALID_NOTE
         note = self.simply_posh_characters(note)
 
-        # Get the note letter (without sharps/flats) and get it's semitone number to start with
-        note_letter = note[0]
-
-        for n in range(len(self.NOTE_NAMES)):
-            if self.NOTE_NAMES[n] == note_letter:
-                semi_no = self.SEMITONE_NOS[n]
+        # The note could contain multiple sharps OR flats.
+        # We find the note in the list of semitones in the current key.
+        for semi in range(self.SEMITONE_COUNT):
+            if self.KEY_TABLE[self.key_value][semi] == note:
+                semi_no = semi
                 break
 
-        if semi_no != self.INVALID_NOTE:
-            # Then add or subtract that semitone number by the number of flats and sharps in the Note
-            sharp_count = len(note.split('#')) - 1
-            flat_count = len(note.split('b')) - 1
-
-            semi_no += sharp_count
-            semi_no -= flat_count
-            return self.normalise_semitone_number(semi_no)
-        else:
-            return self.INVALID_NOTE
+        return semi_no
 
     def transpose_song(self):
         """
         Go through the song line-by-line and transpose the chords.
         """
-        # Get the unique sections of the song
-        sections = self.song_sections()
-
         # Go through each section and get the song lines
-        for sect in sections:
+        for sect in self.song['display_order']:
             for line_index, line in enumerate(self.song[sect]):
                 for chord_index, chord in enumerate(line.get('chords', [])):
                     ch = self.transpose_compound_chord(chord)
@@ -114,12 +117,14 @@ class Transpose(object):
         semi_no = self.semitone_number(note)
 
         if semi_no != self.INVALID_NOTE:
-            # Find the offset of this note from the current key of the song
-            semi_diff = semi_no - self.key_value
-            semi_no = self.normalise_semitone_number(semi_diff)
+            # Use the noteSemitoneNumber to look up the new note from the transpose table.
+            new_note = self.KEY_TABLE[self.new_key_value][semi_no]
 
-            # Find the equivalent note in the new key
-            return self.KEY_TABLE[self.new_key_value][semi_no]
+            # Return double sharps as "x" if there are an even number of them
+            sharp_count = len(new_note.split('#')) - 1
+            if sharp_count % 2:
+                new_note = new_note.replace('##', 'x')
+            return new_note
         else:
             # Don't transpose invalid notes
             return note
@@ -130,7 +135,7 @@ class Transpose(object):
         Retrieve the type of chord e.g. maj7, aug4 etc.
         This method assumes that the chord has at most, one sharp, one double-sharp or flat.
         """
-        end_note_part = max(chord.rfind('b'), chord.rfind('#'), chord.rfind('x'))
+        end_note_part = max(chord.rfind('b'), chord.rfind('#'))
         if end_note_part > -1:
             # E.g. Gbmaj7
             ch_type = chord[end_note_part + 1:]
@@ -141,27 +146,33 @@ class Transpose(object):
 
         return ch_type
 
-    def song_sections(self):
-        """
-        Get the unique sections (verse1, chorus...) of the song from the 'flow'.
-        """
-        sections = []
-        for f in self.song['Flow']:
-            if f not in sections:
-                sections.append(f)
-        return sections
-
-    @staticmethod
-    def normalise_semitone_number(semi_no):
-        if semi_no > 11:
-            semi_no -= 12
-        elif semi_no < 0:
-            semi_no += 12
-        return semi_no
-
     @staticmethod
     def simply_posh_characters(chord):
         ch = chord.replace("x", "##")
         #ch = ch.replace("♯", "#")
         #ch = ch.replace("♭", "b")
         return ch
+
+    def key_number(self, key):
+        """
+        Find the key from the transpose table using the first entry from each row as the key name and return the row
+        number. We don't simplify the key string - if we don't have it in the transpose table, we don't support it.
+        """
+        for k in range(self.KEY_COUNT):
+            if self.KEY_TABLE[k][0] == key:
+                return k
+
+        return self.INVALID_NOTE
+
+
+if __name__ == '__main__':
+    from music.model.song import Onsong
+
+    f = file('/Users/jjesudason/Downloads/Alive.onsong')
+    s = f.read()
+    f.close()
+    o = Onsong(s)
+    s = o.parsed
+    app.logger.debug(s)
+    t = Transpose(s, 'C#')
+    app.logger.debug(s)
