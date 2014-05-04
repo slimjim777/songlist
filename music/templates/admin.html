@@ -24,9 +24,9 @@
         <tr id="usr{{ u.id }}">
             <td class="actions">
                 <button class="btn btn-default" title="Edit" onclick="userEdit({{ u.id }})"><span class="glyphicon glyphicon-edit"></span></button>
-                <button class="btn btn-default" title="Delete"><span class="glyphicon glyphicon-remove"></span></button>
+                <button class="btn btn-default" title="Delete" onclick="userDelete({{ u.id }})"><span class="glyphicon glyphicon-remove"></span></button>
             </td>
-            <td>{{ u.firstname }}</td><td>{{ u.lastname }}</td><td>{{ u.email }}</td>
+            <td id="usrfirstname{{ u.id }}">{{ u.firstname }}</td><td id="usrlastname{{ u.id }}">{{ u.lastname }}</td><td>{{ u.email }}</td>
             <td>{{ u.role }}</td>
             <td>{{ u.last_login }}</td>
         </tr>

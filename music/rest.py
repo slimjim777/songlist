@@ -126,3 +126,50 @@ def cache_files_in_database():
     # Set the cache expiry
     cache = Cache()
     cache.hset_cache_expiry('fileshash')
+
+
+@app.route('/admin/users', methods=['POST'])
+@app.route('/admin/users/<int:user_id>', methods=['GET', 'PUT', 'DELETE'])
+@login_required
+def admin_user_edit(user_id=None):
+    """
+    Edit the user permissions.
+    """
+    if 'admin' not in session['role']:
+        abort(403)
+
+    if user_id:
+        user = Person.query.get(user_id)
+        if request.method == "GET":
+            return render_template('snippet_user.html', user=user)
+        elif request.method == "PUT":
+            # Update the user record
+            try:
+                user.email = request.form.get('email')
+                user.firstname = request.form.get('firstname')
+                user.lastname = request.form.get('lastname')
+                user.role = request.form.get('role')
+                db.session.commit()
+                return jsonify({'response': 'Success'})
+            except ValueError, v:
+                return jsonify({'response': 'Error', 'message': str(v)})
+        elif request.method == "DELETE":
+            # Delete the user
+            try:
+                user = Person.query.get(user_id)
+                db.session.delete(user)
+                db.session.commit()
+                return jsonify({'response': 'Success'})
+            except Exception, e:
+                return jsonify({'response': 'Error', 'message': str(e)})
+    elif request.method == "POST":
+        # Add a new user record
+        try:
+            u = Person(request.form.get('email'), request.form.get('firstname'), request.form.get('lastname'))
+            u.role = request.form.get('role')
+            db.session.add(u)
+            result = db.session.commit()
+            app.logger.debug(result)
+            return jsonify({'response': 'Success'})
+        except ValueError, v:
+            return jsonify({'response': 'Error', 'message': str(v)})

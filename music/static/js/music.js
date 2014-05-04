@@ -184,8 +184,54 @@ function userAdd(event) {
             $('#message').fadeIn(1000).delay(3000).fadeOut(1000).queue(function() { $(this).remove(); });
         }
     });
+}
+
+function userDelete(userId) {
+
+    var name = $('#usrfirstname'+userId).text() + ' ' + $('#usrlastname'+userId).text();
+    var postdata = {
+        id: userId
+    };
+
+    bootbox.dialog({
+        message: "Are you sure you want to delete the user record for '" + name + "'?",
+        title: 'Delete User',
+        buttons: {
+            success: {
+                label: 'Yes',
+                className: 'btn-info',
+                callback: function() {
+                    console.log('Success');
+                    var request = $.ajax({
+                      type: 'DELETE',
+                      url: '/admin/users/' + userId,
+                      data: postdata
+                    }).done( function(data) {
+                        if (data.response == 'Success') {
+                            window.location.href = '/admin';
+                        } else {
+                            // Display the error
+                            $('#main').prepend(getMessage(data.message, 'alert'));
+                            $('#message').fadeIn(1000).delay(3000).fadeOut(1000).queue(function() { $(this).remove(); });
+                        }
+                    }).fail( function(a, b, c) {
+                         // Error
+                         $('#main').prepend(getMessage(a.responseText, 'alert'));
+                         $('#message').fadeIn(1000).delay(3000).fadeOut(1000).queue(function() { $(this).remove(); });
+                    });
+
+                }
+            },
+            cancel: {
+                label: 'No',
+                className: 'btn-default',
+                callback: function() {}
+            }
+        }
+    });
 
 }
+
 /* --USERS */
 
 function getMessage(message, type) {
