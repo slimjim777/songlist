@@ -16,7 +16,7 @@
         </div>
         {% if song.Tempo %}
         <div>
-            <div class="metalabel">Tempo</div><div class="metadata">{{ song.Tempo }}</div>
+            <div class="metalabel">Tempo</div><div class="metadata">{{ song.Tempo }} &nbsp;<button id="metroStart" class="btn btn-success" onclick="metroStart({{ song.Tempo }}, '')">Start</button>&nbsp;<button id="metroStop" class="btn btn-danger" onclick="metroStop('')">Stop</button></div>
         </div>
         {% endif %}
         {% if song.Flow %}
@@ -66,6 +66,10 @@
     </div>
  
   </div>
+</div>
+<div hidden="hidden">
+        <audio id="beepOne" src="/static/js/beepone.wav" preload="auto" controls="controls">Get a better standards compliant browser!</audio>
+        <audio id="beep" src="/static/js/beep.wav" preload="auto" controls="controls">Get a better standards compliant browser!</audio>
 </div>
 
 <script>

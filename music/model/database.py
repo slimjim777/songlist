@@ -57,6 +57,7 @@ class Folder(db.Model):
     url = db.Column(db.String(255))
     notes = db.Text()
     files = db.relationship('File', backref='folder', lazy='joined', cascade="save-update, merge, delete")
+    tempo = db.Column(db.Integer)
 
     def highlight(self, q):
         """

@@ -17,6 +17,9 @@
             {% if song.url %}
             <a href="{{ song.url }}" title="Youtube"><img src="/static/images/YouTube-social-icon_red_24px.png" /></a>
             {% endif %}
+            {% if song.tempo and song.tempo > 0  %}
+            <span title="Tempo">{{ song.tempo }} BPM <button id="metroStart{{ song.id }}" class="btn btn-success" onclick="metroStart({{ song.tempo or 0 }}, {{ song.id }})">Start</button>&nbsp;<button id="metroStop{{ song.id }}" class="btn btn-danger" onclick="metroStop({{ song.id }})">Stop</button></span>
+            {% endif %}
 
             <div id="viewdetails{{ song.id }}" class="collapse"><br />
             {% for f in song.files %}
@@ -48,6 +51,10 @@
     {%  endfor %}
   </tbody>
 </table>
+<div hidden="hidden">
+        <audio id="beepOne" src="/static/js/beepone.wav" preload="auto" controls="controls">Get a better standards compliant browser!</audio>
+        <audio id="beep" src="/static/js/beep.wav" preload="auto" controls="controls">Get a better standards compliant browser!</audio>
+</div>
 
 <ul class="pagination">
 {% for index in range(1, pages + 1) %}

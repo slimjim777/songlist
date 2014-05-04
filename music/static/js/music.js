@@ -1,3 +1,9 @@
+var bpm = 100;
+var bpb = 4;
+var metroOn = false;
+var ONEMIN = 60000;
+var beatCount = 1;
+var timeoutId;
 
 function changeTheme(theme) {
     if (theme == 'dark') {
@@ -263,7 +269,8 @@ function songEdit(ev, songId) {
 
 function songSave(songId) {
     var data = {
-        url: $('#url' + songId).val()
+        url: $('#url' + songId).val(),
+        tempo: $('#tempo' + songId).val()
     };
 
     var request = $.ajax({
@@ -290,5 +297,37 @@ function songCancel(ev, songId) {
     $('#songsave' + songId).remove();
     $('#songedit' + songId).show();
 }
+
+function metroTick() {
+    if (beatCount == 1) {
+        document.getElementById('beepOne').play();
+    } else {
+        //$('#beep').play();        
+        document.getElementById('beep').play();
+    }
+    
+    beatCount += 1;
+    if (beatCount > bpb) {
+        beatCount = 1;
+    }
+}
+
+function metroStart(beats, songId) {
+    $('#metroStart'+songId).prop('disabled', true);
+    bpm = beats;
+    beat();
+}
+
+function metroStop(songId) {
+    $('#metroStart'+songId).prop('disabled', false);
+    clearTimeout(timeoutId);
+    beatCount = 1;
+}
+
+function beat() {
+    timeoutId = setTimeout("beat()", (ONEMIN / bpm));
+    metroTick();
+}
+
 
 /* --SONGS */
