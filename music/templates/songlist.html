@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block body %}
+<h3>Song Lists <span title="Add Song List"><a href="#" class="btn btn-info" onclick="songlistAddToggle(event)"><span class="glyphicon glyphicon-plus"></span></a></span></h3>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th></th><th>Event Date</th><th>Song List Name</th><th>Owner</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr id="slnew" class="hidden">
+            <td><button id="slnewsave" class="btn btn-info" title="Save" onclick="songlistAdd(event)">Save</button> <a href="#"  onclick="songlistAddToggle(event)">Cancel</a></td>
+            <td><input id="slnewdate" name="event_date" placeholder="event date" type="text" class="form-control" value="{{ today }}" /></td>
+            <td><input id="slnewname" name="name" placeholder="name of song list" type="text" class="form-control" /></td>
+            <td>
+                <input id="slnewperson" name="owner" placeholder="owner" type="text" class="form-control" value="{{ session.name }}" disabled="disabled" />
+                <input id="slnewownerid" name="owner_id" type="hidden" value="{{ session.user_id }}" />
+            </td>
+        </tr>
+        {% for s in songlists %}
+        <tr id="sl{{ s.id }}">
+            <td class="actions">
+                <button class="btn btn-default" title="Edit" onclick="songlistEdit({{ s.id }})"><span class="glyphicon glyphicon-edit"></span></button>
+                <button class="btn btn-default" title="Delete" onclick="songlistDelete({{ s.id }})"><span class="glyphicon glyphicon-remove"></span></button>
+            </td>
+            <td id="sldate{{ s.id }}"><a href="/songlist/{{ s.id }}">{{ s.event_date.strftime('%d/%m/%Y') }}</a></td><td id="slname{{ s.id }}"><a href="/songlist/{{ s.id }}">{{ s.name }}</a></td><td>{{ s.person.full_name() }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<script>
+    $( document ).ready(function() {
+        var selectDate = $('#slnewdate').datepicker({
+            format: dateFormat
+        });
+
+        // Set the current page
+        $('ul.navbar-nav li').removeClass('active');
+        $('#nav-songlist').addClass('active');
+    });
+
+</script>
+
+
+{% endblock %}
+
+
+{% block jumbotron %}
+    <div class="jumbotron">
+      <div class="container">
+        <h2 class="sub-header">Song Lists</h2>
+          <p>Create and manage set lists for an event.</p>
+      </div>
+    </div>
+{% endblock %}

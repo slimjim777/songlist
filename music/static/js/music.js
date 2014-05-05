@@ -4,6 +4,7 @@ var metroOn = false;
 var ONEMIN = 60000;
 var beatCount = 1;
 var timeoutId;
+var dateFormat = 'dd/mm/yyyy';
 
 function changeTheme(theme) {
     if (theme == 'dark') {
@@ -207,7 +208,6 @@ function userDelete(userId) {
                 label: 'Yes',
                 className: 'btn-info',
                 callback: function() {
-                    console.log('Success');
                     var request = $.ajax({
                       type: 'DELETE',
                       url: '/admin/users/' + userId,
@@ -298,14 +298,17 @@ function songCancel(ev, songId) {
     $('#songedit' + songId).show();
 }
 
+/* --SONGS */
+
+/* METRONOME */
 function metroTick() {
     if (beatCount == 1) {
         document.getElementById('beepOne').play();
     } else {
-        //$('#beep').play();        
+        //$('#beep').trigger('play');
         document.getElementById('beep').play();
     }
-    
+
     beatCount += 1;
     if (beatCount > bpb) {
         beatCount = 1;
@@ -329,5 +332,213 @@ function beat() {
     metroTick();
 }
 
+/* -- METRONOME */
 
-/* --SONGS */
+/* SONG LISTS */
+
+function songlistAddToggle(ev) {
+    ev.preventDefault();
+    // Show the add song list form
+    $('#slnew').toggleClass('hidden');
+}
+
+function songlistAdd(event) {
+    // Get the details of the new person
+    var data = {
+        event_date: $("#slnewdate").val(),
+        name: $("#slnewname").val(),
+        owner_id: $("#slnewownerid").val(),
+    };
+
+    var request = $.ajax({
+      type: 'POST',
+      url: '/songlist/list',
+      data: data
+    }).done( function(data) {
+        if (data.response == 'Success') {
+            window.location.href = '/songlist';
+        } else {
+            // Display the error
+            $('#main').prepend(getMessage(data.message, 'alert'));
+            $('#message').fadeIn(1000).delay(3000).fadeOut(1000).queue(function() { $(this).remove(); });
+        }
+    });
+}
+
+function songlistEdit(listId) {
+    var request = $.ajax({
+      type: 'GET',
+      url: '/songlist/list/' + listId,
+    }).done( function(data) {
+        if (data) {
+            var row = $('#sl' + listId).hide();
+            $(row).after(data);
+
+            // Set up the date picker on the event date
+            $('#sldate').datepicker({format: dateFormat});
+        }
+    });
+}
+
+function songlistCancel(ev, listId) {
+    ev.preventDefault();
+
+    // Remove the editable row and show the read-only row
+    $('#sledit' + listId).remove();
+    $('#sl' + listId).fadeIn(1000);
+}
+
+function songlistSave(listId) {
+    // Get the details of the updated fields from the form
+    var postdata = {
+        id: listId,
+        name: $("#slname").val(),
+        event_date: $("#sldate").val(),
+    };
+
+    var request = $.ajax({
+      type: 'PUT',
+      url: '/songlist/list/' + listId,
+      data: postdata
+    }).done( function(data) {
+        if (data.response == 'Success') {
+            window.location.href = '/songlist';
+        } else {
+            // Display the error
+            $('#main').prepend(getMessage(data.message, 'alert'));
+            $('#message').fadeIn(1000).delay(3000).fadeOut(1000).queue(function() { $(this).remove(); });
+        }
+    });
+}
+
+function songlistDelete(listId) {
+
+    var name = $('#slname'+listId).text();
+    var eventDate = $('#sldate'+listId).text();
+    var postdata = {
+        id: listId
+    };
+
+    bootbox.dialog({
+        message: "Are you sure you want to delete the song list '" + name + " (" + eventDate + ")'?",
+        title: 'Delete Song List',
+        buttons: {
+            success: {
+                label: 'Yes',
+                className: 'btn-info',
+                callback: function() {
+                    var request = $.ajax({
+                      type: 'DELETE',
+                      url: '/songlist/list/' + listId,
+                      data: postdata
+                    }).done( function(data) {
+                        if (data.response == 'Success') {
+                            window.location.href = '/songlist';
+                        } else {
+                            // Display the error
+                            $('#main').prepend(getMessage(data.message, 'alert'));
+                            $('#message').fadeIn(1000).delay(3000).fadeOut(1000).queue(function() { $(this).remove(); });
+                        }
+                    }).fail( function(a, b, c) {
+                         // Error
+                         $('#main').prepend(getMessage(a.responseText, 'alert'));
+                         $('#message').fadeIn(1000).delay(3000).fadeOut(1000).queue(function() { $(this).remove(); });
+                    });
+                }
+            },
+            cancel: {
+                label: 'No',
+                className: 'btn-default',
+                callback: function() {}
+            }
+        }
+    });
+}
+
+
+/* -- SONG LISTS */
+
+/* SONG LIST SONG */
+
+function songlistSongAdd(ev) {
+    ev.preventDefault();
+
+    // Show the song search dialog
+    var html = '<h3>Find a song and add it to the song list</h3>'
+            + '<input id="q" name="q" placeholder="song name" onkeyup="songlistSongSearch(this)" type="search" class="form-control" />'
+            + '<div id="songs"></div>';
+    bootbox.alert(html, function () {
+        var listId = $('#songlist').val();
+        window.location.href = '/songlist/' + listId;
+    });
+}
+
+function songlistSongSearch($el) {
+    var q = $($el).val();
+    q = $.trim(q);
+    if (q.length == 0) {
+        return;
+    }
+    var postdata = {q:q};
+
+    // Search for songs with the text
+    var request = $.ajax({
+      type: 'POST',
+      url: '/songs/find',
+      data: postdata
+    }).done( function(data) {
+        var container = $('#songs');
+        $(container).empty()
+        $(container).append(data);
+    });
+}
+
+function songlistSongSelect(songId) {
+    var listId = $('#songlist').val();
+    var postdata = {
+        songlist_id: listId,
+        song_id: songId
+    };
+
+    // Search for songs with the text
+    var request = $.ajax({
+      type: 'POST',
+      url: '/songlist/' + listId + '/add',
+      data: postdata
+    }).done( function(data) {
+        if (data.response == 'Success') {
+            $('#songselect' + songId).fadeOut(1000);
+        } else {
+            // Display the error
+            $('#main').prepend(getMessage(data.message, 'alert'));
+            $('#message').fadeIn(1000).delay(3000).fadeOut(1000).queue(function() { $(this).remove(); });
+        }
+    });
+}
+
+function songlistSongRemove(listId, songId) {
+    var postdata = {
+        songlist_id: listId,
+        song_id: songId
+    };
+
+    // Search for songs with the text
+    var request = $.ajax({
+      type: 'DELETE',
+      url: '/songlist/' + listId + '/remove',
+      data: postdata
+    }).done( function(data) {
+        if (data.response == 'Success') {
+            window.location.href = '/songlist/' + listId;
+        } else {
+            // Display the error
+            $('#main').prepend(getMessage(data.message, 'alert'));
+            $('#message').fadeIn(1000).delay(3000).fadeOut(1000).queue(function() { $(this).remove(); });
+        }
+    }).fail( function(a, b, c) {
+         // Error
+         $('#main').prepend(getMessage(a.responseText, 'alert'));
+         $('#message').fadeIn(1000).delay(3000).fadeOut(1000).queue(function() { $(this).remove(); });
+    });
+}
+/* --SONG LIST SONG */

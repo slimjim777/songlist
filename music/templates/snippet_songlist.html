@@ -1,0 +1,8 @@
+{% block body %}
+<tr id="sledit{{ songlist.id }}">
+    <td><button id="slsave{{ songlist.id }}" onclick="songlistSave({{ songlist.id }})" class="btn btn-info" title="Save">Save</button> <a href="#" onclick="songlistCancel(event, {{ songlist.id }})">Cancel</a></td>
+    <td><input id="sldate" name="event_date" value="{{ songlist.event_date }}" type="text" class="form-control" /></td>
+    <td><input id="slname" name="name" value="{{ songlist.name }}" type="text" class="form-control" /></td>
+    <td><input id="slperson" name="owner" value="{{ songlist.person.full_name() }}" type="text" class="form-control" disabled /></td>
+</tr>
+{% endblock %}

@@ -20,6 +20,9 @@ app.config['GCLIENT_SECRET'] = os.environ['GCLIENT_SECRET']
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ["DATABASE_URL"]
 app.secret_key = os.environ['APP_SECRET']
 
+# Date format
+app.config['DATE_FORMAT'] = os.environ.get('DATE_FORMAT', '%d/%m/%Y')
+
 
 db = SQLAlchemy(app)
 

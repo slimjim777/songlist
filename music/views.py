@@ -1,17 +1,17 @@
 # -*- coding: utf-8 -*-
 from music import app
-from music import db
 from flask import render_template
 from flask import request
 from flask import abort
 from flask import session
-from flask import jsonify
 from music.model.drive import Drive
 from music.model.song import Onsong, ChordPro
 from music.authorize import login_required
 from music.model.database import Person
 from music.model.database import Folder
 from music.model.database import File
+from music.model.database import SongList
+import datetime
 
 
 PAGE_SIZE = int(app.config['PAGE_SIZE'])
@@ -92,3 +92,17 @@ def admin():
 
     users = Person.query.order_by('lastname', 'firstname').all()
     return render_template('admin.html', users=users)
+
+
+@app.route('/songlist')
+@login_required
+def songlist():
+    songlists = SongList.query.order_by('event_date desc').all()
+    return render_template('songlist.html', songlists=songlists, today=datetime.date.today().strftime('%d/%m/%Y'))
+
+
+@app.route('/songlist/<int:songlist_id>')
+@login_required
+def songlist_view(songlist_id):
+    sl = SongList.query.get(songlist_id)
+    return render_template('songlist_view.html', songlist=sl)

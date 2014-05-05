@@ -1,7 +1,15 @@
-from music import db
+from music import db, app
 from sqlalchemy.orm import validates
 import datetime
 import re
+
+
+songlist_song = db.Table(
+    'songlist_song',
+    db.Column('songlist_id', db.Integer, db.ForeignKey('song_list.id')),
+    db.Column('folder_id', db.Integer, db.ForeignKey('folder.id')),
+    db.Column('display_order', db.Integer, default=0)
+)
 
 
 class Person(db.Model):
@@ -11,6 +19,7 @@ class Person(db.Model):
     lastname = db.Column(db.String(100))
     role = db.Column(db.Enum('admin', 'standard', name='role_types'), default='standard')
     last_login = db.Column(db.DateTime())
+    songlists = db.relationship('SongList', backref='person', lazy='dynamic')
 
     def __init__(self, email, firstname, lastname):
         self.email = email
@@ -66,8 +75,7 @@ class Folder(db.Model):
         if not q:
             return self.name
         p = re.compile("(" + q + ")", re.IGNORECASE)
-        return p.sub('<mark>'+ q + '</mark>', self.name)
-
+        return p.sub('<mark>' + q + '</mark>', self.name)
 
     def __repr__(self):
         return '<Folder %r>' % self.name
@@ -86,7 +94,6 @@ class File(db.Model):
     url = db.Column(db.String(255))
     folder_id = db.Column(db.Integer, db.ForeignKey('folder.id'))
 
-
     def highlight(self, q):
         """
         Mark up match text in the name.
@@ -94,8 +101,33 @@ class File(db.Model):
         if not q:
             return self.name
         p = re.compile("(" + q + ")", re.IGNORECASE)
-        return p.sub('<mark>'+ q + '</mark>', self.name)
-
+        return p.sub('<mark>' + q + '</mark>', self.name)
 
     def __repr__(self):
         return '<File %r>' % self.name
+
+
+class SongList(db.Model):
+    """
+    Song List to be able to create play lists of songs. This has a many-to-many relationship with the Folder.
+    """
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(255))
+    event_date = db.Column(db.Date)
+    person_id = db.Column(db.Integer, db.ForeignKey('person.id'))
+    songs = db.relationship('Folder', secondary=songlist_song, backref=db.backref('folder', lazy='dynamic'))
+
+    def __init__(self, name, event_date, owner_id):
+        self.name = name
+        self.event_date = event_date
+        self.person_id = owner_id
+
+    @validates('name', 'person_id')
+    def check_not_empty(self, key, value):
+        if not value or len(value.strip()) == 0:
+            raise ValueError('The field `%s` must not be empty' % key)
+        else:
+            return value.strip()
+
+    def __repr__(self):
+        return '<SongList %r>' % self.name

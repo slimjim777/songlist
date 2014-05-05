@@ -10,7 +10,10 @@ from music.model.transpose import Transpose
 from music.model.drive import Drive
 from music.model.database import Folder
 from music.model.database import File
+from music.model.database import SongList
 from music import db
+import time
+import datetime
 
 
 @app.route('/song/transpose', methods=['POST'])
@@ -157,7 +160,6 @@ def admin_user_edit(user_id=None):
         elif request.method == "DELETE":
             # Delete the user
             try:
-                user = Person.query.get(user_id)
                 db.session.delete(user)
                 db.session.commit()
                 return jsonify({'response': 'Success'})
@@ -169,8 +171,104 @@ def admin_user_edit(user_id=None):
             u = Person(request.form.get('email'), request.form.get('firstname'), request.form.get('lastname'))
             u.role = request.form.get('role')
             db.session.add(u)
-            result = db.session.commit()
-            app.logger.debug(result)
+            db.session.commit()
             return jsonify({'response': 'Success'})
         except ValueError, v:
             return jsonify({'response': 'Error', 'message': str(v)})
+
+
+@app.route('/songlist/list', methods=['POST'])
+@app.route('/songlist/list/<int:songlist_id>', methods=['GET', 'PUT', 'DELETE'])
+@login_required
+def songlist_admin(songlist_id=None):
+    """
+    Maintain the song lists: add, update, delete.
+    """
+    if songlist_id:
+        sl = SongList.query.get(songlist_id)
+        if request.method == "GET":
+            return render_template('snippet_songlist.html', songlist=sl)
+        elif request.method == "PUT":
+            # Update the song list record
+            try:
+                sl.name = request.form.get('name')
+                ev_date = time.strptime(request.form.get('event_date'), '%d/%m/%Y')
+                sl.event_date = datetime.date(*ev_date[:3])
+                db.session.commit()
+                return jsonify({'response': 'Success'})
+            except Exception, v:
+                return jsonify({'response': 'Error', 'message': str(v)})
+        elif request.method == "DELETE":
+            # Delete the user
+            try:
+                db.session.delete(sl)
+                db.session.commit()
+                return jsonify({'response': 'Success'})
+            except Exception, e:
+                return jsonify({'response': 'Error', 'message': str(e)})
+    elif request.method == 'POST':
+        try:
+            # Check the date
+            ev_date = time.strptime(request.form.get('event_date'), '%d/%m/%Y')
+            sl = SongList(request.form.get('name'), datetime.date(*ev_date[:3]), request.form.get('owner_id'))
+            db.session.add(sl)
+            result = db.session.commit()
+            app.logger.debug(result)
+            return jsonify({'response': 'Success'})
+        except Exception, v:
+            return jsonify({'response': 'Error', 'message': str(v)})
+
+
+@app.route('/songs/find', methods=['POST'])
+@login_required
+def songs_find():
+    # Check if we have a search query
+    q = request.form.get('q')
+    if q:
+        # Search for folders containing the query
+        song_list = Folder.query.filter(Folder.name.ilike('%%%s%%' % q)).order_by(Folder.name)
+    else:
+        song_list = None
+    return render_template('snippet_song_find.html', song_list=song_list)
+
+
+@app.route('/songlist/<int:songlist_id>/add', methods=['POST'])
+@login_required
+def songlist_add(songlist_id):
+    """
+    Add a song to an existing song list.
+    """
+    sl = SongList.query.get(songlist_id)
+    song_id = int(request.form.get('song_id'))
+    if not song_id:
+        return jsonify({'response': 'Error', 'message': "The 'song_id' must be supplied."})
+
+    # Check if we have the song in the song list already
+    for s in sl.songs:
+        if s.id == song_id:
+            # Nothing to do
+            return jsonify({'response': 'Success'})
+
+    # Add the song to the song list
+    song = Folder.query.get(song_id)
+    sl.songs.append(song)
+    db.session.commit()
+    return jsonify({'response': 'Success'})
+
+
+@app.route('/songlist/<int:songlist_id>/remove', methods=['DELETE'])
+@login_required
+def songlist_remove(songlist_id):
+    """
+    Remove a song to an existing song list.
+    """
+    sl = SongList.query.get(songlist_id)
+    song_id = int(request.form.get('song_id'))
+    if not song_id:
+        return jsonify({'response': 'Error', 'message': "The 'song_id' must be supplied."})
+
+    # Remove the song from the song list
+    song = Folder.query.get(song_id)
+    sl.songs.remove(song)
+    db.session.commit()
+    return jsonify({'response': 'Success'})

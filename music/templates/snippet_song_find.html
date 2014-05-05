@@ -1,0 +1,12 @@
+{% block body %}
+<table class="table table-striped">
+    <tbody>
+        {% for s in song_list %}
+        <tr id="songselect{{ s.id }}">
+            <td>{{ s.name }}</td>
+            <td><button onclick="songlistSongSelect({{ s.id }})" class="btn btn-info">Add</button></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
