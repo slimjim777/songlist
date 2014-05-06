@@ -4,12 +4,11 @@ import datetime
 import re
 
 
-songlist_song = db.Table(
-    'songlist_song',
-    db.Column('songlist_id', db.Integer, db.ForeignKey('song_list.id')),
-    db.Column('folder_id', db.Integer, db.ForeignKey('folder.id')),
-    db.Column('display_order', db.Integer, default=0)
-)
+class SongListLink(db.Model):
+    songlist_id = db.Column(db.Integer, db.ForeignKey('song_list.id'), primary_key=True)
+    song_id = db.Column(db.Integer, db.ForeignKey('folder.id'), primary_key=True)
+    position = db.Column(db.Integer, default=0)
+    folder = db.relationship('Folder', backref='songlist_link')
 
 
 class Person(db.Model):
@@ -115,7 +114,7 @@ class SongList(db.Model):
     name = db.Column(db.String(255))
     event_date = db.Column(db.Date)
     person_id = db.Column(db.Integer, db.ForeignKey('person.id'))
-    songs = db.relationship('Folder', secondary=songlist_song, backref=db.backref('folder', lazy='dynamic'))
+    folders = db.relationship('SongListLink', backref='songlist')
 
     def __init__(self, name, event_date, owner_id):
         self.name = name

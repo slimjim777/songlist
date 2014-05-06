@@ -1,21 +1,27 @@
 {% extends "base.html" %}
 {% block body %}
-<h3>Songs <span title="Add Song"><a href="#" class="btn btn-info" onclick="songlistSongAdd(event)"><span class="glyphicon glyphicon-plus"></span></a></span></h3>
+<h3>Songs <span title="Add Song">
+            <a href="#" class="btn btn-info" onclick="songlistSongAdd(event)"><span class="glyphicon glyphicon-plus"></span></a>
+          </span>
+          <span title="Reorder Songs">
+            <a href="#" class="btn btn-info" onclick="songlistReorder(event, {{ songlist.id }})"><span class="glyphicon glyphicon-sort-by-attributes"></span></a>
+          </span>
+</h3>
 <input type="hidden" id="songlist" name="songlist" value="{{ songlist.id }}" />
 <table class="table table-striped">
     <thead>
         <th></th><th>Name</th><th>Tempo</th><th>Youtube</th>
     </thead>
     <tbody>
-    {% for s in songlist.songs %}
-    <tr id="song{{ s.id }}">
+    {% for s in songlinks %}
+    <tr id="song{{ s.folder.id }}">
         <td class="actions">
-            <button class="btn btn-default" title="Remove" onclick="songlistSongRemove({{ songlist.id }}, {{ s.id }})"><span class="glyphicon glyphicon-remove"></span></button>
+            <button class="btn btn-default" title="Remove" onclick="songlistSongRemove({{ s.songlist.id }}, {{ s.folder.id }})"><span class="glyphicon glyphicon-remove"></span></button>
         </td>
-        <td>{{ s.name }}</td>
-        <td>{{ s.tempo or ''}}</td>
+        <td>{{ s.folder.name }}</td>
+        <td>{{ s.folder.tempo or ''}}</td>
         <td>
-            {% if s.url %}
+            {% if s.folder.url %}
             <a href="{{ s.url }}" title="Youtube"><img src="/static/images/YouTube-social-icon_red_24px.png" /></a>
             {% endif %}
         </td>

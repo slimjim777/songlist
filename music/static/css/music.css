@@ -60,3 +60,14 @@
         width: 10%;
     }
 }
+
+.sortable li {
+    list-style: none;
+    border: 1px solid #ccc;
+    background: #f6f6f6;
+    color: #1C94C4;
+    margin: 5px;
+    padding: 5px;
+    height: 30px;
+    vertical-align: center;
+}

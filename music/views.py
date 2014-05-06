@@ -11,6 +11,7 @@ from music.model.database import Person
 from music.model.database import Folder
 from music.model.database import File
 from music.model.database import SongList
+from music.model.database import SongListLink
 import datetime
 
 
@@ -104,5 +105,7 @@ def songlist():
 @app.route('/songlist/<int:songlist_id>')
 @login_required
 def songlist_view(songlist_id):
+    # Get the songlist link records so we can sort songs in the display order
+    links = SongListLink.query.filter_by(songlist_id=songlist_id).order_by(SongListLink.position).all()
     sl = SongList.query.get(songlist_id)
-    return render_template('songlist_view.html', songlist=sl)
+    return render_template('songlist_view.html', songlinks=links, songlist=sl)

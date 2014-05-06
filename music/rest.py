@@ -11,6 +11,7 @@ from music.model.drive import Drive
 from music.model.database import Folder
 from music.model.database import File
 from music.model.database import SongList
+from music.model.database import SongListLink
 from music import db
 import time
 import datetime
@@ -244,14 +245,16 @@ def songlist_add(songlist_id):
         return jsonify({'response': 'Error', 'message': "The 'song_id' must be supplied."})
 
     # Check if we have the song in the song list already
-    for s in sl.songs:
-        if s.id == song_id:
+    for s in sl.folders:
+        if s.folder.id == song_id:
             # Nothing to do
             return jsonify({'response': 'Success'})
 
     # Add the song to the song list
     song = Folder.query.get(song_id)
-    sl.songs.append(song)
+    link = SongListLink()
+    link.folder = song
+    sl.folders.append(link)
     db.session.commit()
     return jsonify({'response': 'Success'})
 
@@ -268,7 +271,32 @@ def songlist_remove(songlist_id):
         return jsonify({'response': 'Error', 'message': "The 'song_id' must be supplied."})
 
     # Remove the song from the song list
-    song = Folder.query.get(song_id)
-    sl.songs.remove(song)
+    links = SongListLink.query.filter_by(songlist_id=songlist_id, song_id=song_id).all()
+    for l in links:
+        db.session.delete(l)
     db.session.commit()
     return jsonify({'response': 'Success'})
+
+
+@app.route('/songlist/<int:songlist_id>/list', methods=['GET', 'PUT'])
+@login_required
+def songlist_list(songlist_id):
+    """
+    Get the list of songs for the song list or update the order of the songs.
+    """
+    #sl = SongList.query.get(songlist_id)
+    links = SongListLink.query.filter_by(songlist_id=songlist_id).order_by(SongListLink.position).all()
+    if request.method == 'GET':
+        return render_template('snippet_songlist_songs.html', song_list=links)
+    elif request.method == 'PUT':
+        new_order = request.json.get('new_order')
+        if not new_order:
+            return jsonify({'response': 'Error', 'message': "The 'new_order' must be supplied."})
+
+        # Update the order of the songs in the link table
+        for l in links:
+            # Get the index of the song in the newly ordered list
+            position = new_order.index(str(l.song_id))
+            l.position = position
+        db.session.commit()
+        return jsonify({'response': 'Success'})

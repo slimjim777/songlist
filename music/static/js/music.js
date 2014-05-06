@@ -412,7 +412,6 @@ function songlistSave(listId) {
 }
 
 function songlistDelete(listId) {
-
     var name = $('#slname'+listId).text();
     var eventDate = $('#sldate'+listId).text();
     var postdata = {
@@ -455,6 +454,43 @@ function songlistDelete(listId) {
     });
 }
 
+function songlistReorder(ev, listId) {
+    ev.preventDefault();
+
+    var request = $.ajax({
+      type: 'GET',
+      url: '/songlist/' + listId + '/list',
+    }).done( function(html) {
+        bootbox.confirm(html, function(result) {
+            if (result) {
+                var new_order = [];
+                $('#songlist_sortable li').each( function() {
+                    new_order.push(this.id.replace('item',''));
+                });
+                console.log(listId, new_order)
+                songlistReorderComplete(listId, new_order)
+            }
+        });
+        $('.sortable').sortable();
+    });
+}
+
+function songlistReorderComplete(listId, new_order) {
+    var postdata = {
+        new_order: new_order
+    };
+
+    var request = $.ajax({
+        type: 'PUT',
+        url: '/songlist/' + listId + '/list',
+        data: JSON.stringify(postdata),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json"
+    }).done( function(data) {
+        console.log(data);
+        window.location.href = '/songlist/' + listId;
+    });
+}
 
 /* -- SONG LISTS */
 
@@ -541,4 +577,5 @@ function songlistSongRemove(listId, songId) {
          $('#message').fadeIn(1000).delay(3000).fadeOut(1000).queue(function() { $(this).remove(); });
     });
 }
+
 /* --SONG LIST SONG */
