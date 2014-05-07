@@ -5,6 +5,7 @@ from flask import request
 from flask import jsonify
 from flask import session
 from flask import render_template
+from flask import abort
 from music.model.cache import Cache
 from music.model.transpose import Transpose
 from music.model.drive import Drive
@@ -12,6 +13,7 @@ from music.model.database import Folder
 from music.model.database import File
 from music.model.database import SongList
 from music.model.database import SongListLink
+from music.model.database import Person
 from music import db
 import time
 import datetime
@@ -265,7 +267,6 @@ def songlist_remove(songlist_id):
     """
     Remove a song to an existing song list.
     """
-    sl = SongList.query.get(songlist_id)
     song_id = int(request.form.get('song_id'))
     if not song_id:
         return jsonify({'response': 'Error', 'message': "The 'song_id' must be supplied."})

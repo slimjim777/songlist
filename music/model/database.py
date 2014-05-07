@@ -1,4 +1,4 @@
-from music import db, app
+from music import db
 from sqlalchemy.orm import validates
 import datetime
 import re
