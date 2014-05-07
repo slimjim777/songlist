@@ -1,7 +1,8 @@
-var bpm = 100;
+var bpm = 100.0;
 var bpb = 4;
 var metroOn = false;
-var ONEMIN = 60000;
+var ONEMIN = 60000.0;
+var metroStartTime;
 var beatCount = 1;
 var timeoutId;
 var dateFormat = 'dd/mm/yyyy';
@@ -318,7 +319,8 @@ function metroTick() {
 function metroStart(beats, songId) {
     $('#metroStart'+songId).prop('disabled', true);
     bpm = beats;
-    beat();
+    metroStartTime = new Date().getTime();
+    beat(true);
 }
 
 function metroStop(songId) {
@@ -327,8 +329,19 @@ function metroStop(songId) {
     beatCount = 1;
 }
 
-function beat() {
-    timeoutId = setTimeout("beat()", (ONEMIN / bpm));
+function beat(first) {
+    var interval = ONEMIN / bpm;
+    var diff;
+    if (!first) {
+        // Calculate how far we are off the schedule
+        diff = (new Date().getTime()) - metroStartTime - interval;
+    } else {
+        diff = 0.0;
+    }
+
+    // Set the call with an adjusted timeout
+    timeoutId = setTimeout("beat()", (interval - diff));
+    metroStartTime = new Date().getTime();
     metroTick();
 }
 
