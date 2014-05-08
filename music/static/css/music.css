@@ -71,3 +71,20 @@
     height: 30px;
     vertical-align: center;
 }
+
+.left {
+    float: left;
+}
+
+.right {
+    float: right;
+}
+
+tr.selected td {
+    background-color: #39b3d7 !important;
+}
+
+#metro_tempo {
+    text-align: center;
+    font-size: 2em;
+}

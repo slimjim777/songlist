@@ -76,6 +76,14 @@ class Folder(db.Model):
         p = re.compile("(" + q + ")", re.IGNORECASE)
         return p.sub('<mark>' + q + '</mark>', self.name)
 
+    def dict(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'url': self.url,
+            'tempo': self.tempo
+        }
+
     def __repr__(self):
         return '<Folder %r>' % self.name
 

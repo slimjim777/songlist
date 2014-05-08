@@ -108,4 +108,5 @@ def songlist_view(songlist_id):
     # Get the songlist link records so we can sort songs in the display order
     links = SongListLink.query.filter_by(songlist_id=songlist_id).order_by(SongListLink.position).all()
     sl = SongList.query.get(songlist_id)
-    return render_template('songlist_view.html', songlinks=links, songlist=sl)
+    songs = [s.folder.dict() for s in links]
+    return render_template('songlist_view.html', songlinks=links, songlist=sl, songs=songs)

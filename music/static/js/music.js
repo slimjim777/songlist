@@ -1,6 +1,5 @@
 var bpm = 100.0;
 var bpb = 4;
-var metroOn = false;
 var ONEMIN = 60000.0;
 var metroStartTime;
 var beatCount = 1;
@@ -480,7 +479,6 @@ function songlistReorder(ev, listId) {
                 $('#songlist_sortable li').each( function() {
                     new_order.push(this.id.replace('item',''));
                 });
-                console.log(listId, new_order)
                 songlistReorderComplete(listId, new_order)
             }
         });
@@ -500,7 +498,6 @@ function songlistReorderComplete(listId, new_order) {
         contentType: "application/json; charset=utf-8",
         dataType: "json"
     }).done( function(data) {
-        console.log(data);
         window.location.href = '/songlist/' + listId;
     });
 }
@@ -589,6 +586,83 @@ function songlistSongRemove(listId, songId) {
          $('#main').prepend(getMessage(a.responseText, 'alert'));
          $('#message').fadeIn(1000).delay(3000).fadeOut(1000).queue(function() { $(this).remove(); });
     });
+}
+
+function songlistMetronome(index) {
+    $('#metro_index').val(index);
+    $('#metro_title').text(songs[index].name);
+    if (songs[index].tempo) {
+        $('#metro_tempo').val(songs[index].tempo);
+    } else {
+        $('#metro_tempo').val('');
+    }
+
+    $('.song_list').toggleClass('selected', false);
+    $('#song' + songs[index].id).toggleClass('selected', true)
+}
+
+function metroNextSong() {
+    var index = parseInt($('#metro_index').val()) + 1;
+    if (index >= songs.length) {
+        index = 0;
+    }
+    songlistMetronome(index);
+}
+
+function metroPreviousSong() {
+    var index = parseInt($('#metro_index').val()) - 1;
+    if (index < 0) {
+        index = songs.length - 1;
+    }
+    songlistMetronome(index);
+}
+
+function toggleMetronome() {
+    var tempo = getTempo();
+
+    // Stop or start the metronome
+    var button = $('#metro_start_stop');
+
+    if ($(button).hasClass('btn-success')) {
+        // Start the metronome
+        beatCount = 1;
+        bpm = tempo;
+        metroStartTime = new Date().getTime();
+        $(button).toggleClass('btn-success', false);
+        $(button).toggleClass('btn-danger', true);
+        beat(true);
+    } else {
+        // Stop the metronome
+        clearTimeout(timeoutId);
+        beatCount = 1;
+        $(button).toggleClass('btn-success', true);
+        $(button).toggleClass('btn-danger', false);
+    }
+}
+
+function metroPlus() {
+    var tempo = getTempo() + 1;
+    if (tempo > 200) {
+        tempo = 200;
+    }
+    $('#metro_tempo').val(tempo);
+}
+
+function metroMinus() {
+    var tempo = getTempo() - 1 ;
+    if (tempo < 1) {
+        tempo = 1;
+    }
+    $('#metro_tempo').val(tempo);
+}
+
+function getTempo() {
+    var tempo = $('#metro_tempo').val();
+    if (tempo) {
+        return parseInt(tempo);
+    } else {
+        return 1;
+    }
 }
 
 /* --SONG LIST SONG */

@@ -14,7 +14,7 @@
     </thead>
     <tbody>
     {% for s in songlinks %}
-    <tr id="song{{ s.folder.id }}">
+    <tr id="song{{ s.folder.id }}" class="song_list">
         <td class="actions">
             <button class="btn btn-default" title="Remove" onclick="songlistSongRemove({{ s.songlist.id }}, {{ s.folder.id }})"><span class="glyphicon glyphicon-remove"></span></button>
         </td>
@@ -30,12 +30,46 @@
     </tbody>
 </table>
 
+<div hidden="hidden">
+        <audio id="beepOne" src="/static/js/beepone.wav" preload="auto" controls="controls">Get a better standards compliant browser!</audio>
+        <audio id="beep" src="/static/js/beep.wav" preload="auto" controls="controls">Get a better standards compliant browser!</audio>
+</div>
+
+<div id="metronome" class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title" id="metro_title">Metronome</h3>
+  </div>
+  <div class="panel-body">
+    <div>
+        <center><button onclick="metroMinus()"><span class="glyphicon glyphicon-minus"></span></button>
+                    <input id="metro_index" type="hidden" />
+                    <input id="metro_tempo" type="number" placeholder="tempo" />
+                <button onclick="metroPlus()"><span class="glyphicon glyphicon-plus"></span></button>
+        </center>
+    </div>
+    <br />
+    <div>
+        <center><button id="metro_start_stop" class="btn btn-success btn-lg" onclick="toggleMetronome()">&nbsp;Start&nbsp;</button></center>
+    </div>
+    <div>
+        <span class="left"><button class="btn btn-default" onclick="metroPreviousSong()">Previous Song</button></span>
+        <span class="right"><button class="btn btn-default" onclick="metroNextSong()">Next Song</button></span>
+    </div>
+
+  </div>
+
+</div>
+
 
 <script>
+    var songs = {{ songs|tojson }};
+
     $( document ).ready(function() {
         // Set the current page
         $('ul.navbar-nav li').removeClass('active');
         $('#nav-songlist').addClass('active');
+
+        songlistMetronome(0);
     });
 
 </script>
