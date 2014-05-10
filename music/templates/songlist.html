@@ -23,7 +23,9 @@
                 <button class="btn btn-default" title="Edit" onclick="songlistEdit({{ s.id }})"><span class="glyphicon glyphicon-edit"></span></button>
                 <button class="btn btn-default" title="Delete" onclick="songlistDelete({{ s.id }})"><span class="glyphicon glyphicon-remove"></span></button>
             </td>
-            <td id="sldate{{ s.id }}"><a href="/songlist/{{ s.id }}">{{ s.event_date.strftime('%d/%m/%Y') }}</a></td><td id="slname{{ s.id }}"><a href="/songlist/{{ s.id }}">{{ s.name }}</a></td><td>{{ s.person.full_name() }}</td>
+            <td id="sldate{{ s.id }}"><a href="/songlist/{{ s.id }}">{{ s.event_date.strftime('%d/%m/%Y') }}</a></td>
+            <td id="slname{{ s.id }}"><a href="/songlist/{{ s.id }}">{{ s.name }}</a></td>
+            <td>{{ s.person.full_name() }}</td>
         </tr>
         {% endfor %}
     </tbody>

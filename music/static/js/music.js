@@ -270,7 +270,8 @@ function songEdit(ev, songId) {
 function songSave(songId) {
     var data = {
         url: $('#url' + songId).val(),
-        tempo: $('#tempo' + songId).val()
+        tempo: $('#tempo' + songId).val(),
+        time_signature: $('#time' + songId).val()
     };
 
     var request = $.ajax({
@@ -318,6 +319,7 @@ function metroTick() {
 function metroStart(beats, songId) {
     $('#metroStart'+songId).prop('disabled', true);
     bpm = beats;
+    bpb = beatsPerBar();
     metroStartTime = new Date().getTime();
     beat(true);
 }
@@ -590,12 +592,19 @@ function songlistSongRemove(listId, songId) {
 
 function songlistMetronome(index) {
     $('#metro_index').val(index);
-    $('#metro_title').text(songs[index].name);
+    var title = songs[index].name;
     if (songs[index].tempo) {
         $('#metro_tempo').val(songs[index].tempo);
     } else {
         $('#metro_tempo').val('');
     }
+    if (songs[index].time_signature) {
+        title += ' (' + songs[index].time_signature +')';
+        $('#metro_time').text(songs[index].time_signature);
+    } else {
+        $('#metro_time').text('4/4');
+    }
+    $('#metro_title').text(title);
 
     $('.song_list').toggleClass('selected', false);
     $('#song' + songs[index].id).toggleClass('selected', true)
@@ -627,6 +636,7 @@ function toggleMetronome() {
         // Start the metronome
         beatCount = 1;
         bpm = tempo;
+        bpb = beatsPerBar();
         metroStartTime = new Date().getTime();
         $(button).toggleClass('btn-success', false);
         $(button).toggleClass('btn-danger', true);
@@ -635,9 +645,20 @@ function toggleMetronome() {
         // Stop the metronome
         clearTimeout(timeoutId);
         beatCount = 1;
+        bpb = 4;
         $(button).toggleClass('btn-success', true);
         $(button).toggleClass('btn-danger', false);
     }
+}
+
+function beatsPerBar() {
+    var time_signature = $('#metro_time').text();
+    if (time_signature == '3/4') {
+        return 3;
+    } else if (time_signature == '6/8') {
+        return 6;
+    }
+    return 4;
 }
 
 function metroPlus() {
@@ -646,14 +667,16 @@ function metroPlus() {
         tempo = 200;
     }
     $('#metro_tempo').val(tempo);
+    bpb = beatsPerBar();
 }
 
 function metroMinus() {
     var tempo = getTempo() - 1 ;
     if (tempo < 1) {
-        tempo = 1;
+        tempo = 50;
     }
     $('#metro_tempo').val(tempo);
+    bpb = beatsPerBar();
 }
 
 function getTempo() {
@@ -661,8 +684,30 @@ function getTempo() {
     if (tempo) {
         return parseInt(tempo);
     } else {
-        return 1;
+        return 50;
     }
+}
+
+function onKeyPress(ev) {
+    //
+    var key = ev.which;
+    if (key == 39) {
+        metroNextSong();
+        ev.preventDefault();
+    } else if (key == 37) {
+        metroPreviousSong();
+        ev.preventDefault();
+    } else if (key == 32) {
+        toggleMetronome();
+        ev.preventDefault();
+    } else if (key == 38) {
+        metroPlus();
+        ev.preventDefault();
+    } else if (key == 40) {
+        metroMinus();
+        ev.preventDefault();
+    }
+
 }
 
 /* --SONG LIST SONG */

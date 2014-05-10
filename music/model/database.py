@@ -66,6 +66,7 @@ class Folder(db.Model):
     notes = db.Text()
     files = db.relationship('File', backref='folder', lazy='joined', cascade="save-update, merge, delete")
     tempo = db.Column(db.Integer)
+    time_signature = db.Column(db.Enum('4/4', '3/4', '6/8', name='time_signatures'), default='4/4')
 
     def highlight(self, q):
         """
@@ -81,7 +82,8 @@ class Folder(db.Model):
             'id': self.id,
             'name': self.name,
             'url': self.url,
-            'tempo': self.tempo
+            'tempo': self.tempo,
+            'time_signature': self.time_signature,
         }
 
     def __repr__(self):

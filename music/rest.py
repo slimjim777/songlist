@@ -43,6 +43,7 @@ def song_by_id(song_id):
 
     song.url = request.json.get('url')
     song.tempo = request.json.get('tempo')
+    song.time_signature = request.json.get('time_signature')
     db.session.commit()
     return jsonify({'response': 'Success'})
 

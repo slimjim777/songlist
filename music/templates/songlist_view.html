@@ -10,7 +10,7 @@
 <input type="hidden" id="songlist" name="songlist" value="{{ songlist.id }}" />
 <table class="table table-striped">
     <thead>
-        <th></th><th>Name</th><th>Tempo</th><th>Youtube</th>
+        <th></th><th>Name</th><th>Tempo</th><th>Time Signature</th><th>Youtube</th>
     </thead>
     <tbody>
     {% for s in songlinks %}
@@ -20,6 +20,7 @@
         </td>
         <td>{{ s.folder.name }}</td>
         <td>{{ s.folder.tempo or ''}}</td>
+        <td>{{ s.folder.time_signature or ''}}</td>
         <td>
             {% if s.folder.url %}
             <a href="{{ s.url }}" title="Youtube"><img src="/static/images/YouTube-social-icon_red_24px.png" /></a>
@@ -37,14 +38,14 @@
 
 <div id="metronome" class="panel panel-default">
   <div class="panel-heading">
-    <h3 class="panel-title" id="metro_title">Metronome</h3>
+    <h3 class="panel-title" id="metro_title">Metronome</h3><span id="metro_time"></span>
   </div>
   <div class="panel-body">
     <div>
-        <center><button onclick="metroMinus()"><span class="glyphicon glyphicon-minus"></span></button>
+        <center><button onclick="metroMinus()" class="btn btn-info"><span class="badge"><span class="glyphicon glyphicon-arrow-down"></span></span>&nbsp;<span class="glyphicon glyphicon-minus"></span></button>
                     <input id="metro_index" type="hidden" />
                     <input id="metro_tempo" type="number" placeholder="tempo" />
-                <button onclick="metroPlus()"><span class="glyphicon glyphicon-plus"></span></button>
+                <button onclick="metroPlus()" class="btn btn-info"><span class="glyphicon glyphicon-plus"></span>&nbsp;<span class="badge"><span class="glyphicon glyphicon-arrow-up"></span></span></button>
         </center>
     </div>
     <br />
@@ -52,8 +53,8 @@
         <center><button id="metro_start_stop" class="btn btn-success btn-lg" onclick="toggleMetronome()">&nbsp;Start&nbsp;</button></center>
     </div>
     <div>
-        <span class="left"><button class="btn btn-default" onclick="metroPreviousSong()">Previous Song</button></span>
-        <span class="right"><button class="btn btn-default" onclick="metroNextSong()">Next Song</button></span>
+        <span class="left"><button class="btn btn-info" onclick="metroPreviousSong()"><span class="badge"><span class="glyphicon glyphicon-arrow-left"></span></span>&nbsp; Song</button></span>
+        <span class="right"><button class="btn btn-info" onclick="metroNextSong()">Next Song&nbsp;<span class="badge"><span class="glyphicon glyphicon-arrow-right"></span></span></button></span>
     </div>
 
   </div>
@@ -70,6 +71,9 @@
         $('#nav-songlist').addClass('active');
 
         songlistMetronome(0);
+        $(window).keydown(function(e) {
+            onKeyPress(e);
+        });
     });
 
 </script>
@@ -78,8 +82,9 @@
 {% block jumbotron %}
     <div class="jumbotron">
       <div class="container">
-        <h2 class="sub-header">{{ songlist.name }} for {{ songlist.event_date.strftime(config.DATE_FORMAT) }}</h2>
-          <span>Owner: {{ songlist.person.full_name() }}</span><br /><br />
+            <h2 class="sub-header">{{ songlist.name }} for {{ songlist.event_date.strftime(config.DATE_FORMAT) }}</h2>
+            <span>Owner: {{ songlist.person.full_name() }}</span><br /><br />
+
       </div>
     </div>
 {% endblock %}

@@ -16,13 +16,18 @@
   <tbody>
     {% for song in files %}
     <tr class="collapse-group">
-        <td><button class="btn btn-default" data-toggle="collapse" data-target="#viewdetails{{ song.id }}">{{ song.highlight(q)|safe }} ({{ song.files|length }}) &raquo;</button>
+        <td><button class="btn btn-default" data-toggle="collapse" data-target="#viewdetails{{ song.id }}">{{ song.highlight(q)|safe }} <span class="badge">{{ song.files|length }}</span> &raquo;</button>
             <a id="songedit{{ song.id }}" href="#" onclick="songEdit(event, {{ song.id }})" style="float:right;"><span class="glyphicon glyphicon-edit"></span></a>
             <span id="youtube{{ song.id }}"></span>
             {% if song.url %}
             <a href="{{ song.url }}" title="Youtube"><img src="/static/images/YouTube-social-icon_red_24px.png" /></a>
             {% endif %}
-
+            {% if song.tempo and song.tempo > 0  %}
+            <span title="Tempo">{{ song.tempo }} bpm <!--button id="metroStart{{ song.id }}" class="btn btn-success" onclick="metroStart({{ song.tempo or 0 }}, {{ song.id }})">Start</button>&nbsp;<button id="metroStop{{ song.id }}" class="btn btn-danger" onclick="metroStop({{ song.id }})">Stop</button--></span>
+            {% endif %}
+            {% if song.time_signature  %}
+            <span title="Time Signature">&nbsp;{{ song.time_signature }}</span>
+            {% endif %}
             <div id="viewdetails{{ song.id }}" class="collapse"><br />
             {% for f in song.files %}
             <p>
