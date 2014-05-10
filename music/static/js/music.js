@@ -599,7 +599,6 @@ function songlistMetronome(index) {
         $('#metro_tempo').val('');
     }
     if (songs[index].time_signature) {
-        title += ' (' + songs[index].time_signature +')';
         $('#metro_time').text(songs[index].time_signature);
     } else {
         $('#metro_time').text('4/4');
