@@ -639,6 +639,7 @@ function toggleMetronome() {
         metroStartTime = new Date().getTime();
         $(button).toggleClass('btn-success', false);
         $(button).toggleClass('btn-danger', true);
+        $(button).text('Stop');
         beat(true);
     } else {
         // Stop the metronome
@@ -647,6 +648,7 @@ function toggleMetronome() {
         bpb = 4;
         $(button).toggleClass('btn-success', true);
         $(button).toggleClass('btn-danger', false);
+        $(button).text('Start');
     }
 }
 

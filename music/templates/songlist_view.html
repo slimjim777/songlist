@@ -74,6 +74,11 @@
         $(window).keydown(function(e) {
             onKeyPress(e);
         });
+
+        $('.song_list').click(function() {
+            var rowIndex  = $(this).closest('tr')[0].rowIndex
+            songlistMetronome(rowIndex-1);
+        });
     });
 
 </script>
