@@ -14,6 +14,7 @@ from music.model.database import File
 from music.model.database import SongList
 from music.model.database import SongListLink
 from music.model.database import Person
+from music.model.database import Tag
 from music import db
 import time
 import datetime
@@ -25,7 +26,7 @@ def transpose():
     # Get the parameters from the JSON request
     if not 'song' in request.json or not 'key' in request.json:
         return jsonify({'response': 'Failed', 'error': "The 'song' and 'key' must be supplied."})
-        
+
     song = request.json['song']
     key = request.json['key']
 
@@ -300,5 +301,43 @@ def songlist_list(songlist_id):
             # Get the index of the song in the newly ordered list
             position = new_order.index(str(l.song_id))
             l.position = position
+        db.session.commit()
+        return jsonify({'response': 'Success'})
+
+
+@app.route('/song/<int:folder_id>/tags', methods=['GET', 'POST'])
+@login_required
+def song_tags(folder_id):
+    if request.method == 'GET':
+        folder = Folder.query.get(folder_id)
+        selected_ids = [t.id for t in folder.tags]
+        if len(selected_ids) > 0:
+            unselected = Tag.query.filter(~ Tag.id.in_(selected_ids))
+        else:
+            unselected = Tag.query.all()
+        app.logger.debug(unselected)
+        return render_template('snippet_song_tags.html', folder_id=folder_id, selected=folder.tags,
+                               unselected=unselected)
+    elif request.method == 'POST':
+        folder = Folder.query.get(folder_id)
+        selected = request.json.get('selected', [])
+        app.logger.debug(selected)
+
+        # Remove the existing tags for the song
+        for t in folder.tags:
+            folder.tags.remove(t)
+
+        # Add the updated list of song tags
+        for sel in selected:
+            try:
+                tag_id = int(sel)
+                tag = Tag.query.get(tag_id)
+                folder.tags.append(tag)
+            except ValueError:
+                # Must be a new tag that needs creating
+                tag = Tag()
+                tag.name = sel
+                db.session.add(tag)
+                folder.tags.append(tag)
         db.session.commit()
         return jsonify({'response': 'Success'})

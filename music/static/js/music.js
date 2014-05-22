@@ -6,6 +6,15 @@ var beatCount = 1;
 var timeoutId;
 var dateFormat = 'dd/mm/yyyy';
 
+function showMessage(msg, message) {
+    if (!message) {
+        message = $('#d-message');
+    }
+    message.text(msg);
+    message.attr('class', 'alert alert-danger');
+    message.fadeIn(1000).delay(3000).fadeOut(1000);
+}
+
 function changeTheme(theme) {
     if (theme == 'dark') {
         $('body').toggleClass('body-dark', true);
@@ -712,3 +721,121 @@ function onKeyPress(ev) {
 }
 
 /* --SONG LIST SONG */
+
+/* SONG TAGS */
+
+function songTags(ev, songId, songName) {
+    ev.preventDefault();
+
+    var request = $.ajax({
+      type: 'GET',
+      url: '/song/' + songId + '/tags',
+      data: {}
+    }).done( function(data) {
+        $('#song-tags-form').html(data);
+        $('#song-tags h4').text('Select tags for ' + songName);
+        $('#song-tags').modal('show');
+    }).fail( function(a, b, c) {
+        showMessage(a.status + ': ' + a.statusText);
+    });
+}
+
+function songTagSelect(ev) {
+    ev.preventDefault();
+    $('#unselected option:selected').each( function(index) {
+        $(this).remove().appendTo('#selected');
+    });
+}
+
+function songTagDeselect(ev) {
+    ev.preventDefault();
+    $('#selected option:selected').each( function(index) {
+        $(this).remove().appendTo('#unselected');
+    });
+}
+
+function songTagsSave(ev) {
+    ev.preventDefault();
+
+    var songId = $('#select-folder_id').val();
+
+    // Get the tags from the selected list
+    var selected = [];
+    $('#selected option').each(function() {
+        if ($(this).val()) {
+            selected.push($(this).val());
+        } else {
+            selected.push($(this).text());
+        }
+    });
+
+    var postdata = {
+        folder_id: songId,
+        selected: selected
+    };
+
+    var request = $.ajax({
+      type: 'POST',
+      url: '/song/' + songId + '/tags',
+      data: JSON.stringify(postdata),
+      contentType:"application/json",
+      dataType: "json",
+    }).done( function(data) {
+        if (data.response == 'Success') {
+            $('#song-tags').modal('hide');
+            window.location.href = '/songs';
+        } else {
+            // Display the error
+            $('#r-message').html(getMessage(data.message, 'alert'));
+            $('#r-message').fadeIn(1000).delay(3000).fadeOut(1000);
+        }
+    }).fail( function(a, b, c) {
+        $('#r-message').html(getMessage(a.status + ': ' + a.statusText, 'alert'));
+        $('#r-message').fadeIn(1000).delay(3000).fadeOut(1000);
+    });
+}
+
+function songTagNew(ev) {
+    ev.preventDefault();
+
+    var tagName = $.trim($('#new_tag').val());
+    tagName = tagName.replace(/[^a-zA-Z\.]+/g,'');
+    if (tagName.length == 0) {
+        return;
+    }
+
+    // Check that the tag does not exist
+    var unsel = $('#unselected option').filter( function() {
+        return $(this).text().toLowerCase() === tagName.toLowerCase();
+    });
+    if (unsel[0]) {
+        showMessage('The tag already exists', $('#r-message'));
+        return;
+    }
+    var sel = $('#selected option').filter( function() {
+        return $(this).text().toLowerCase() === tagName.toLowerCase();
+    });
+    if (sel[0]) {
+        showMessage('The tag already exists', $('#r-message'));
+        return;
+    }
+
+    // Add the tag to the selected list
+    $('#selected').append('<option>' + tagName + '</option>');
+}
+
+function songTagSelect(ev, tagName, tagsSelected) {
+    ev.preventDefault();
+
+    var selected = tagsSelected.split('|');
+    var index = selected.indexOf(tagName);
+    if (index>-1) {
+        // Remove it from the list
+        selected.splice(index, 1);
+    } else {
+        selected.push(tagName);
+    }
+    window.location.href = '/songs?tags_selected=' + selected.toString().replace(/\,/g, '|');
+}
+
+/* --SONG TAGS */

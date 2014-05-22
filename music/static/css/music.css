@@ -89,3 +89,10 @@ tr.selected td {
     font-size: 2em;
 }
 
+a.tag span.label {
+    text-decoration: none;
+}
+
+a.tag:hover span.label {
+    background-color: #39b3d7;
+}

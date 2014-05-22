@@ -11,7 +11,7 @@
   <tbody>
     {% for song in folders.items %}
     <tr class="collapse-group">
-        <td><button class="btn btn-default" data-toggle="collapse" data-target="#viewdetails{{ song.id }}">{{ song.name }} <span class="badge">{{ song.files|length }}</span> &raquo;</button>
+        <td><button class="btn btn-default" data-toggle="collapse" data-target="#viewdetails{{ song.id }}" id="name{{ song.id }}">{{ song.name }} <span class="badge">{{ song.files|length }}</span> &raquo;</button>
             <a id="songedit{{ song.id }}" href="#" onclick="songEdit(event, {{ song.id }})" style="float:right;"><span class="glyphicon glyphicon-edit"></span></a>
             <span id="youtube{{ song.id }}"></span>
             {% if song.url %}
@@ -23,6 +23,7 @@
             {% if song.time_signature  %}
             <span title="Time Signature">&nbsp;{{ song.time_signature }}</span>
             {% endif %}
+            <button class="btn btn-default" onclick="songTags(event, {{ song.id }}, '{{ song.name }}')" title="{{ song.tags|length }} tags"><span class="glyphicon glyphicon-tags badge">{{ song.tags|length }}</span></button>
             <div id="viewdetails{{ song.id }}" class="collapse"><br />
             {% for f in song.files %}
             <p>
@@ -58,6 +59,28 @@
         <audio id="beep" src="/static/js/beep.wav" preload="auto" controls="controls">Get a better standards compliant browser!</audio>
 </div>
 
+<!-- Select Tags for Song -->
+<div id="song-tags" title="Select Tags for Song" class="modal fade">
+  <div class="modal-dialog">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h4 class="modal-title"></h4>
+          </div>
+          <div class="modal-body">
+              <form>
+                  <fieldset id="song-tags-form">
+                  </fieldset>
+              </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary" onclick="songTagsSave(event)">Save</button>
+          </div>
+      </div>
+  </div>
+</div>
+
+
 <ul class="pagination">
 {% for index in range(1, pages + 1) %}
     {% if page==index %}
@@ -72,15 +95,25 @@
 
 {% block jumbotron %}
     <div class="jumbotron">
-      <div class="container">
-        <br />
-        <form class="navbar-form navbar-left" role="search" action="/songs/search" method="get">
-          <div class="form-group">
-            <input name="q" type="text" class="form-control" placeholder="search for songs" value="{{ q }}" />
-          </div>
-          <button type="submit" class="btn btn-info">Find</button>
-        </form>
-      </div>
-
+        <div class="container">
+            <br />
+            <form class="navbar-form navbar-left" role="search" action="/songs/search" method="get">
+              <div class="form-group">
+                <input name="q" type="text" class="form-control" placeholder="search for songs" value="{{ q }}" />
+              </div>
+              <button type="submit" class="btn btn-info">Find</button>
+            </form>
+        </div>
+        <div class="container">
+            {% for t in tags %}
+            <a href="" onclick="songTagSelect(event, '{{ t.name }}', '{{ '|'.join(tags_selected) }}')" class="tag">
+                {% if t.name in tags_selected %}
+                <span class="label label-info">{{ t.name }}</span>
+                {% else %}
+                <span class="label label-default">{{ t.name }}</span>
+                {% endif %}
+            </a>
+            {% endfor %}
+        </div>
     </div>
 {% endblock %}

@@ -4,6 +4,12 @@ import datetime
 import re
 
 
+tags = db.Table('tags',
+    db.Column('tag_id', db.Integer, db.ForeignKey('tag.id')),
+    db.Column('folder_id', db.Integer, db.ForeignKey('folder.id'))
+)
+
+
 class SongListLink(db.Model):
     songlist_id = db.Column(db.Integer, db.ForeignKey('song_list.id'), primary_key=True)
     song_id = db.Column(db.Integer, db.ForeignKey('folder.id'), primary_key=True)
@@ -67,6 +73,7 @@ class Folder(db.Model):
     files = db.relationship('File', backref='folder', lazy='joined', cascade="save-update, merge, delete")
     tempo = db.Column(db.Integer)
     time_signature = db.Column(db.Enum('4/4', '3/4', '6/8', name='time_signatures'), default='4/4')
+    tags = db.relationship('Tag', secondary=tags, backref=db.backref('folders', lazy='dynamic'))
 
     def highlight(self, q):
         """
@@ -140,3 +147,8 @@ class SongList(db.Model):
 
     def __repr__(self):
         return '<SongList %r>' % self.name
+
+
+class Tag(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(255))

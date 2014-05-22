@@ -1,0 +1,35 @@
+{% block body %}
+<div id="r-message"></div>
+
+<table class="table">
+    <tr>
+        <th>Not Assigned</th><th>&nbsp;</th><th>Assigned to Song</th>
+    </tr>
+    <tr>
+        <td>
+            <input type="text" id="select-folder_id" name="folder_id" hidden value="{{ folder_id }}">
+            <select multiple id="unselected" class="form-control tag-select">
+            {% for u in unselected %}
+            <option id="tag{{ u.id }}" value="{{ u.id }}">{{ u.name }}</option>
+            {% endfor %}
+            </select>
+        </td>
+        <td>
+            <center>
+                <button class="btn btn-success" onclick="songTagSelect(event)">&raquo;</button>
+                <br />
+                <button class="btn btn-danger" onclick="songTagDeselect(event)">&laquo;</button>
+            </center>
+        </td>
+        <td>
+            <select multiple id="selected" class="form-control tag-select">
+            {% for u in selected %}
+            <option id="tag{{ u.id }}" value="{{ u.id }}">{{ u.name }}</option>
+            {% endfor %}
+            </select>
+            <input type="text" id="new_tag" name="new_tag" value="" placeholder="create a new tag" />&nbsp;<button class="btn btn-info" onclick="songTagNew(event)"><span class="glyphicon glyphicon-plus"></span></button>
+        </td>
+    </tr>
+</table>
+
+{% endblock %}

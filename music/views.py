@@ -5,13 +5,15 @@ from flask import request
 from flask import abort
 from flask import session
 from music.model.drive import Drive
-from music.model.song import Onsong, ChordPro
+from music.model.song import Onsong
+from music.model.song import ChordPro
 from music.authorize import login_required
 from music.model.database import Person
 from music.model.database import Folder
 from music.model.database import File
 from music.model.database import SongList
 from music.model.database import SongListLink
+from music.model.database import Tag
 import datetime
 
 
@@ -31,10 +33,18 @@ def index():
     if page < 1:
         page = 1
 
-    # Get the folders for the page
-    folders = Folder.query.order_by(Folder.name).paginate(page, PAGE_SIZE, False)
+    tags_selected = request.args.get('tags_selected', '').split('|')
+    if '' in tags_selected:
+        tags_selected.remove('')
 
-    return render_template('index.html', folders=folders, page=page, pages=folders.pages)
+    # Get the folders for the page
+    if len(tags_selected) == 0:
+        folders = Folder.query.order_by(Folder.name).paginate(page, PAGE_SIZE, False)
+    else:
+        folders = Folder.query.filter(Folder.tags.any(Tag.name.in_(tags_selected))).order_by(Folder.name).paginate(page, PAGE_SIZE, False)
+    tags = Tag.query.all()
+
+    return render_template('index.html', folders=folders, page=page, pages=folders.pages, tags=tags, tags_selected=tags_selected)
 
 
 @app.route('/songs/search')
