@@ -79,6 +79,10 @@
             var rowIndex  = $(this).closest('tr')[0].rowIndex
             songlistMetronome(rowIndex-1);
         });
+
+        // Preload the sounds
+        $('#beep').trigger('play');
+        $('#beepone').trigger('play');
     });
 
 </script>
