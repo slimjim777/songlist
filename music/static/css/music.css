@@ -1,3 +1,7 @@
+.ember-application {
+    margin: 20px;
+}
+
 .chord {
     font-weight: bold;
     color: red;
@@ -70,6 +74,10 @@
     padding: 5px;
     height: 35px;
     vertical-align: center;
+}
+
+.center {
+    text-align: center;
 }
 
 .left {

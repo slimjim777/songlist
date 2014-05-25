@@ -120,3 +120,7 @@ def songlist_view(songlist_id):
     sl = SongList.query.get(songlist_id)
     songs = [s.folder.dict() for s in links]
     return render_template('songlist_view.html', songlinks=links, songlist=sl, songs=songs)
+
+@app.route('/metronome')
+def metronome():
+    return render_template('metronome.html')

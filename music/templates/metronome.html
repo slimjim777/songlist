@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Lifechurch Metronome</title>
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/static/css/music.css" />
+</head>
+<body>
+
+<div hidden>
+    <audio id="beepOne" src="/static/js/beepone.wav" preload="auto" controls="controls"></audio>
+    <audio id="beep" src="/static/js/beep.wav" preload="auto" controls="controls"></audio>
+</div>
+
+<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Lifechurch Worship</a>
+        </div>
+        <div class="collapse navbar-collapse">
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="/songs">Home</a></li>
+                <li id="nav-songlist"><a href="/songlist">Song Lists</a></li>
+                <li id="nav-metronome"><a href="/metronome">Metronome</a></li>
+                <li><a href="{{ config.NAV_rota }}?search={{ session.name|urlencode }}">Rota</a></li>
+                <li><a href="{{ config.NAV_rehearsal }}">Rehearsals</a></li>
+                <li><a href="{{ config.NAV_spotify }}">Spotify</a></li>
+                {% if 'admin' in session.role %}
+                <li id="nav-admin"><a href="/admin">Admin</a></li>
+                {% endif %}
+                <li><a href="https://accounts.google.com">{{ session.name }}</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<br />
+
+{% raw %}
+<script type="text/x-handlebars">
+    {{outlet}}
+</script>
+
+<script type="text/x-handlebars" id="index" data-template-name="songlists">
+    <h2>Song List</h2>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Event Date</th><th>List Name</th><th>Owner</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{#each item in model}}
+        <tr>
+            <td>{{#link-to 'songlist' item}}{{item.event_date}}{{/link-to}}</td>
+            <td>{{#link-to 'songlist' item}}{{item.name}}{{/link-to}}</td>
+            <td>{{#link-to 'songlist' item}}{{item.owner}}{{/link-to}}</td>
+        </tr>
+        {{/each}}
+        </tbody>
+    </table>
+</script>
+
+<script type="text/x-handlebars" id="songlist-songs" data-template-name="songlist">
+    <h2>{{model.name}} on {{model.event_date}}</h2>
+    <em>{{model.owner}}</em>
+    <br />
+    {{#if model.songs}}
+    <div class="panel panel-default">
+        <!--div class="panel-heading"><h3 class="panel-title">Songs</h3></div-->
+        <div class="panel-body">
+            <table class="table table-striped">
+                <tr>
+                    <th>Name</th><th>Tempo</th><th>Time Signature</th>
+                </tr>
+                {{#each song in model.songs}}
+                <tr>
+                    <td>{{#link-to 'song' song}}{{song.name}}{{/link-to}}</td>
+                    <td>{{#link-to 'song' song}}{{song.tempo}}{{/link-to}}</td>
+                    <td>{{#link-to 'song' song}}{{song.time_signature}}{{/link-to}}</td>
+                </tr>
+                {{/each}}
+            </table>
+        </div>
+    </div>
+
+    <div>
+        {{outlet}}
+    </div>
+    {{else}}
+
+    <div class="alert alert-warning">No songs in the list.</div>
+    {{/if}}
+</script>
+
+<script type="text/x-handlebars" id="song" data-template-name="song">
+    <div class="panel panel-default">
+        <div class="panel-heading"><h3 class="panel-title">{{model.name}}</h3></div>
+        <div class="panel-body">
+            <div>
+                {{#if isMetroStarted}}
+                <div class="alert alert-info">Time Delay: {{metronome.delta}}ms ({{metronome.delay}}ms)</div>
+                {{/if}}
+            </div>
+            <div class="center">
+                <button {{action 'metroMinus'}} class="btn btn-info"><span class="badge"><span class="glyphicon glyphicon-arrow-down"></span></span>&nbsp;<span class="glyphicon glyphicon-minus"></span></button>
+                {{input id="metro_tempo" type="number" value=model.tempo min=50 max=200 placeholder="tempo"}}
+                <button {{action 'metroPlus'}} class="btn btn-info"><span class="glyphicon glyphicon-plus"></span>&nbsp;<span class="badge"><span class="glyphicon glyphicon-arrow-up"></span></span></button>
+            </div>
+            <br />
+            <div class="center">
+                {{#if isMetroStarted}}
+                <button id="metro_start_stop" class="btn btn-danger btn-lg " {{action 'stopMetronome'}}>&nbsp;Stop&nbsp;</button></center>
+                {{else}}
+                <button id="metro_start_stop" class="btn btn-success btn-lg" {{action 'startMetronome'}}>&nbsp;Start&nbsp;</button></center>
+                {{/if}}
+            </div>
+            <div>
+                <span class="left">{{#link-to 'song' model.previousSong class="btn btn-info"}}<span class="glyphicon glyphicon-arrow-left"></span> Previous{{/link-to}}</span>
+                <span class="right">{{#link-to 'song' model.nextSong class="btn btn-info"}}Next <span class="glyphicon glyphicon-arrow-right"></span>{{/link-to}}</span>
+            </div>
+        </div>
+    </div>
+</script>
+{% endraw %}
+
+<script src="/static/js/libs/jquery-1.10.2.js"></script>
+<script src="/static/js/libs/bootstrap.min.js"></script>
+<script src="/static/js/libs/handlebars-1.1.2.js"></script>
+<script src="/static/js/libs/ember-1.5.1.js"></script>
+<script src="/static/js/libs/ember-data.min.js"></script>
+<script src="/static/js/app.js"></script>
+<script src="/static/js/models/songlists.js"></script>
+
+<!-- to activate the test runner, add the "?test" query string parameter -->
+<script src="/static/tests/runner.js"></script>
+</body>
+</html>
