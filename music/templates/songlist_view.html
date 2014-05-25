@@ -41,12 +41,11 @@
     <h3 class="panel-title" id="metro_title">Metronome</h3><span id="metro_time"></span>
   </div>
   <div class="panel-body">
-    <div>
-        <center><button onclick="metroMinus()" class="btn btn-info"><span class="badge"><span class="glyphicon glyphicon-arrow-down"></span></span>&nbsp;<span class="glyphicon glyphicon-minus"></span></button>
+    <div class="center">
+        <button onclick="metroMinus()" class="btn btn-info"><span class="badge"><span class="glyphicon glyphicon-arrow-down"></span></span>&nbsp;<span class="glyphicon glyphicon-minus"></span></button>
                     <input id="metro_index" type="hidden" />
                     <input id="metro_tempo" type="number" placeholder="tempo" />
                 <button onclick="metroPlus()" class="btn btn-info"><span class="glyphicon glyphicon-plus"></span>&nbsp;<span class="badge"><span class="glyphicon glyphicon-arrow-up"></span></span></button>
-        </center>
     </div>
     <br />
     <div>
@@ -80,9 +79,7 @@
             songlistMetronome(rowIndex-1);
         });
 
-        // Preload the sounds
-        //$('#beep').trigger('play');
-        //$('#beepone').trigger('play');
+        // Initialise the audio engine
         audioContext = new AudioContext();
     });
 
