@@ -65,12 +65,10 @@ App.SongController = Ember.Controller.extend({
         startMetronome: function() {
             console.log('Start Metronome');
             this.set('isMetroStarted', true);
-            console.log(this.get('model').get('delay'));
             this.set('metronome', MetronomeService.create({
                 delay: this.get('model').get('delay'),
                 bpb: this.get('model').get('bpb')
             }));
-            console.log(this.get('metronome').get('lastTick'));
         },
 
         stopMetronome: function() {
@@ -92,14 +90,6 @@ function metroTick(beatCount) {
         document.getElementById('beep').play();
     }
 }
-
-function getPhoneGapPath() {
-
-    var path = window.location.pathname;
-    path = path.substr( path, path.length - 10 );
-    return 'file://' + path;
-
-};
 
 var MetronomeService = Ember.Object.extend({
     _milli: 0,

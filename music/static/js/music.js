@@ -1,9 +1,4 @@
-var bpm = 100.0;
 var bpb = 4;
-var ONEMIN = 60000.0;
-var metroStartTime;
-var beatCount = 1;
-var timeoutId;
 var dateFormat = 'dd/mm/yyyy';
 
 function showMessage(msg, message) {
@@ -310,53 +305,6 @@ function songCancel(ev, songId) {
 
 /* --SONGS */
 
-/* METRONOME */
-function metroTick() {
-    if (beatCount == 1) {
-        document.getElementById('beepOne').play();
-    } else {
-        //$('#beep').trigger('play');
-        document.getElementById('beep').play();
-    }
-
-    beatCount += 1;
-    if (beatCount > bpb) {
-        beatCount = 1;
-    }
-}
-
-function metroStart(beats, songId) {
-    $('#metroStart'+songId).prop('disabled', true);
-    bpm = beats;
-    bpb = beatsPerBar();
-    metroStartTime = new Date().getTime();
-    beat(true);
-}
-
-function metroStop(songId) {
-    $('#metroStart'+songId).prop('disabled', false);
-    clearTimeout(timeoutId);
-    beatCount = 1;
-}
-
-function beat(first) {
-    var interval = ONEMIN / bpm;
-    var diff;
-    if (!first) {
-        // Calculate how far we are off the schedule
-        diff = (new Date().getTime()) - metroStartTime - interval;
-    } else {
-        diff = 0.0;
-    }
-
-    // Set the call with an adjusted timeout
-    timeoutId = setTimeout("beat()", (interval - diff));
-    metroStartTime = new Date().getTime();
-    metroTick();
-}
-
-/* -- METRONOME */
-
 /* SONG LISTS */
 
 function songlistAddToggle(ev) {
@@ -634,33 +582,6 @@ function metroPreviousSong() {
     songlistMetronome(index);
 }
 
-function toggleMetronome() {
-    var tempo = getTempo();
-
-    // Stop or start the metronome
-    var button = $('#metro_start_stop');
-
-    if ($(button).hasClass('btn-success')) {
-        // Start the metronome
-        beatCount = 1;
-        bpm = tempo;
-        bpb = beatsPerBar();
-        metroStartTime = new Date().getTime();
-        $(button).toggleClass('btn-success', false);
-        $(button).toggleClass('btn-danger', true);
-        $(button).text('Stop');
-        beat(true);
-    } else {
-        // Stop the metronome
-        clearTimeout(timeoutId);
-        beatCount = 1;
-        bpb = 4;
-        $(button).toggleClass('btn-success', true);
-        $(button).toggleClass('btn-danger', false);
-        $(button).text('Start');
-    }
-}
-
 function beatsPerBar() {
     var time_signature = $('#metro_time').text();
     if (time_signature == '3/4') {
@@ -839,3 +760,5 @@ function songTagSelect(ev, tagName, tagsSelected) {
 }
 
 /* --SONG TAGS */
+
+
