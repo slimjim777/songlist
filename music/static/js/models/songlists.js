@@ -107,7 +107,7 @@ App.Song.FIXTURES = [
         songlist: 2,
         name: 'We are the champions',
         tempo: '90',
-        time_signature: '4/4'
+        time_signature: '6/8'
     },
     {
         id: 3,

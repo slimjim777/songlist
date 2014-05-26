@@ -1,4 +1,4 @@
-var bpb = 4;
+//var bpb = 4;
 var dateFormat = 'dd/mm/yyyy';
 
 function showMessage(msg, message) {
@@ -598,7 +598,9 @@ function metroPlus() {
         tempo = 200;
     }
     $('#metro_tempo').val(tempo);
-    bpb = beatsPerBar();
+    setTempo(tempo);
+    var bpb = beatsPerBar();
+    setBPB(bpb);
 }
 
 function metroMinus() {
@@ -607,7 +609,9 @@ function metroMinus() {
         tempo = 50;
     }
     $('#metro_tempo').val(tempo);
-    bpb = beatsPerBar();
+    setTempo(tempo);
+    var bpb = beatsPerBar();
+    setBPB(bpb);
 }
 
 function getTempo() {

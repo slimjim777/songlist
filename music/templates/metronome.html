@@ -11,10 +11,10 @@
 </head>
 <body>
 
-<div hidden>
+<!--div hidden>
     <audio id="beepOne" src="/static/js/beepone.wav" preload="auto" controls="controls"></audio>
     <audio id="beep" src="/static/js/beep.wav" preload="auto" controls="controls"></audio>
-</div>
+</div-->
 
 <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
     <div class="container">
@@ -31,7 +31,7 @@
             <ul class="nav navbar-nav">
                 <li class="active"><a href="/songs">Home</a></li>
                 <li id="nav-songlist"><a href="/songlist">Song Lists</a></li>
-                <li id="nav-metronome"><a href="/metronome">Metronome</a></li>
+                <li id="nav-metronome"><a href="/metronome">Metronome (Test)</a></li>
                 <li><a href="{{ config.NAV_rota }}?search={{ session.name|urlencode }}">Rota</a></li>
                 <li><a href="{{ config.NAV_rehearsal }}">Rehearsals</a></li>
                 <li><a href="{{ config.NAV_spotify }}">Spotify</a></li>
@@ -109,12 +109,12 @@
         <div class="panel-body">
             <div>
                 {{#if isMetroStarted}}
-                <div class="alert alert-info">Time Delay: {{metronome.delta}}ms ({{metronome.delay}}ms)</div>
+                <div class="alert alert-info">Metronome is running at {{model.tempo}} bpm</div>
                 {{/if}}
             </div>
             <div class="center">
                 <button {{action 'metroMinus'}} class="btn btn-info"><span class="badge"><span class="glyphicon glyphicon-arrow-down"></span></span>&nbsp;<span class="glyphicon glyphicon-minus"></span></button>
-                {{input id="metro_tempo" type="number" value=model.tempo min=50 max=200 placeholder="tempo"}}
+                {{input id="metro_tempo" name="metro_tempo" type="number" value=model.tempo min=50 max=200 placeholder="tempo"}}
                 <button {{action 'metroPlus'}} class="btn btn-info"><span class="glyphicon glyphicon-plus"></span>&nbsp;<span class="badge"><span class="glyphicon glyphicon-arrow-up"></span></span></button>
             </div>
             <br />
@@ -134,13 +134,22 @@
 </script>
 {% endraw %}
 
+
 <script src="/static/js/libs/jquery-1.10.2.js"></script>
 <script src="/static/js/libs/bootstrap.min.js"></script>
 <script src="/static/js/libs/handlebars-1.1.2.js"></script>
 <script src="/static/js/libs/ember-1.5.1.js"></script>
 <script src="/static/js/libs/ember-data.min.js"></script>
+<script src="/static/js/metronome.js"></script>
 <script src="/static/js/app.js"></script>
 <script src="/static/js/models/songlists.js"></script>
+
+<script>
+    $( document ).ready(function() {
+        // Initialise the audio engine
+        initializeAudio();
+    });
+</script>
 
 <!-- to activate the test runner, add the "?test" query string parameter -->
 <script src="/static/tests/runner.js"></script>

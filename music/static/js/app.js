@@ -65,23 +65,41 @@ App.SongController = Ember.Controller.extend({
         startMetronome: function() {
             console.log('Start Metronome');
             this.set('isMetroStarted', true);
-            this.set('metronome', MetronomeService.create({
-                delay: this.get('model').get('delay'),
-                bpb: this.get('model').get('bpb')
-            }));
+            //this.set('metronome', MetronomeService.create({
+            //    delay: this.get('model').get('delay'),
+            //    bpb: this.get('model').get('bpb')
+            //}));
+
+            //tempo = this.get('model').get('tempo')
+            //bpb = this.get('model').get('bpb');
+
+            scheduler();
         },
 
         stopMetronome: function() {
             console.log('Stop Metronome');
             this.set('isMetroStarted', false);
-            this.get('metronome').destroy();
+            //this.get('metronome').destroy();
+            window.clearTimeout(timerID);
         }
-    }
+    },
 
+    // Observers
+    metroTempoChange: function() {
+        var tempo = this.get('model').get('tempo');
+        setTempo(tempo);
+    }.observes('model.tempo'),
+
+    metroBPBChange: function() {
+        var bpb = this.get('model').get('bpb');
+        setBPB(bpb);
+    }.observes('model.bpb')
 });
 
 
-// Metronome
+/*
+
+// Metronome Service
 
 function metroTick(beatCount) {
     if (beatCount == 1) {
@@ -139,4 +157,5 @@ Ember.Application.initializer({
     }
 });
 
+*/
 
