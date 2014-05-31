@@ -1,19 +1,17 @@
-var ONEMIN = 60000.0;
+//var ONEMIN = 60000.0;
 
-
-App.Store = DS.Store.extend({
-    revision: 1
-});
+/*
 
 App.Songlist = DS.Model.extend({
     event_date: DS.attr('date'),
     name: DS.attr('string'),
     owner: DS.attr('string'),
-    songs: DS.hasMany('song')
+    //songs: DS.hasMany('song')
 });
 
 App.Song = DS.Model.extend({
     songlist: DS.belongsTo('songlist'),
+    //songlist: DS.attr('int'),
     name: DS.attr('string'),
     tempo: DS.attr('string'),
     time_signature: DS.attr('string'),
@@ -67,9 +65,8 @@ App.Song = DS.Model.extend({
     }.property('tempo')
 });
 
-App.Store.reopen({
-    adapter: 'DS.FixtureAdapter'
-});
+
+// Test fixtures
 
 App.Songlist.FIXTURES = [
     {
@@ -125,3 +122,4 @@ App.Song.FIXTURES = [
     }
 ];
 
+*/

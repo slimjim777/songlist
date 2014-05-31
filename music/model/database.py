@@ -2,12 +2,13 @@ from music import db
 from sqlalchemy.orm import validates
 import datetime
 import re
+import time
 
 
 tags = db.Table('tags',
-    db.Column('tag_id', db.Integer, db.ForeignKey('tag.id')),
-    db.Column('folder_id', db.Integer, db.ForeignKey('folder.id'))
-)
+                db.Column('tag_id', db.Integer, db.ForeignKey('tag.id')),
+                db.Column('folder_id', db.Integer, db.ForeignKey('folder.id'))
+                )
 
 
 class SongListLink(db.Model):
@@ -132,18 +133,46 @@ class SongList(db.Model):
     event_date = db.Column(db.Date)
     person_id = db.Column(db.Integer, db.ForeignKey('person.id'))
     folders = db.relationship('SongListLink', backref='songlist')
+    songs = db.relationship('Song', backref='songlist', lazy='dynamic')
 
     def __init__(self, name, event_date, owner_id):
         self.name = name
         self.event_date = event_date
         self.person_id = owner_id
 
-    @validates('name', 'person_id')
+    @validates('name')
     def check_not_empty(self, key, value):
         if not value or len(value.strip()) == 0:
             raise ValueError('The field `%s` must not be empty' % key)
         else:
             return value.strip()
+
+    @validates('event_date')
+    def check_date(self, key, value):
+        if not value:
+            raise ValueError('The field `%s` must not be empty' % key)
+        if isinstance(value, basestring):
+            if len(value.strip()) == 0:
+                raise ValueError('The field `%s` must not be empty' % key)
+            else:
+                try:
+                    time.strptime(value, '%Y-%m-%d')
+                    return value
+                except:
+                    raise ValueError('The field `%s` is not a valid date' % key)
+        elif isinstance(value, datetime):
+            return value
+        else:
+            raise ValueError('The field `%s` must not be a date' % key)
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'event_date': self.event_date.strftime('%Y-%m-%d'),
+            'owner': self.person.full_name(),
+            'songs': [s.to_dict() for s in self.songs],
+        }
 
     def __repr__(self):
         return '<SongList %r>' % self.name
@@ -152,3 +181,27 @@ class SongList(db.Model):
 class Tag(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(255))
+
+
+class Song(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(255))
+    songlist_id = db.Column(db.Integer, db.ForeignKey('song_list.id'))
+    tempo = db.Column(db.Integer)
+    time_signature = db.Column(db.Enum('4/4', '3/4', '6/8', name='time_signatures'), default='4/4')
+    key = db.Column(db.String(10))
+    url = db.Column(db.String(255))
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'songlist': self.songlist_id,
+            'tempo': self.tempo,
+            'time_signature': self.time_signature,
+            'key': self.key,
+            'url': self.url,
+        }
+
+    def __repr__(self):
+        return '<Song %r>' % self.name

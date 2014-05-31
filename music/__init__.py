@@ -29,3 +29,4 @@ db = SQLAlchemy(app)
 import music.authorize
 import music.views
 import music.rest
+import music.songlist

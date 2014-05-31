@@ -7,14 +7,15 @@
 
     <title>Lifechurch Metronome</title>
     <link rel="stylesheet" href="/static/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="http://dbushell.github.io/Pikaday/css/pikaday.css" />
     <link rel="stylesheet" href="/static/css/music.css" />
 </head>
 <body>
 
-<!--div hidden>
+<div hidden>
     <audio id="beepOne" src="/static/js/beepone.wav" preload="auto" controls="controls"></audio>
     <audio id="beep" src="/static/js/beep.wav" preload="auto" controls="controls"></audio>
-</div-->
+</div>
 
 <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
     <div class="container">
@@ -48,20 +49,43 @@
 
 {% raw %}
 <script type="text/x-handlebars">
+<div id="main" class="container" role="main">
     {{outlet}}
+</div>
 </script>
 
 <script type="text/x-handlebars" id="index" data-template-name="songlists">
-    <h2>Song List</h2>
+    {{#if error }}
+    <div class="alert box alert-danger">
+      <h4>Application Error</h4>
+      <div>
+      {{ error }}
+      </div>
+    </div>
+    {{/if}}
+
+    <h2>Song Lists <span title="Add Song List"><button class="btn btn-info" {{action 'newSonglist'}}><span class="glyphicon glyphicon-plus"></span></button></span></h2>
     <table class="table table-striped">
         <thead>
         <tr>
-            <th>Event Date</th><th>List Name</th><th>Owner</th>
+            <th></th><th>Event Date</th><th>List Name</th><th>Owner</th>
         </tr>
         </thead>
         <tbody>
+        {{#if isEditing}}
+        <tr class="grid-row">
+            <td>
+                <button class="btn btn-info" {{action 'saveSonglist'}}>Save</button>&nbsp;
+                <a {{action 'cancelSonglistEdit'}}>Cancel</a>
+            </td>
+            <td>{{view App.CalendarDatePicker value=newSonglist.event_date class="form-control" placeholder="event date"}}</td>
+            <td>{{input value=newSonglist.name class="form-control" placeholder="name of song list"}}</td>
+            <td></td>
+        </tr>
+        {{/if}}
         {{#each item in model}}
-        <tr>
+        <tr class="grid-row">
+            <td></td>
             <td>{{#link-to 'songlist' item}}{{item.event_date}}{{/link-to}}</td>
             <td>{{#link-to 'songlist' item}}{{item.name}}{{/link-to}}</td>
             <td>{{#link-to 'songlist' item}}{{item.owner}}{{/link-to}}</td>
@@ -72,40 +96,53 @@
 </script>
 
 <script type="text/x-handlebars" id="songlist-songs" data-template-name="songlist">
-    <h2>{{model.name}} on {{model.event_date}}</h2>
-    <em>{{model.owner}}</em>
-    <br />
-    {{#if model.songs}}
-    <div class="panel panel-default">
-        <!--div class="panel-heading"><h3 class="panel-title">Songs</h3></div-->
-        <div class="panel-body">
-            <table class="table table-striped">
-                <tr>
-                    <th>Name</th><th>Tempo</th><th>Time Signature</th>
-                </tr>
-                {{#each song in model.songs}}
-                <tr>
-                    <td>{{#link-to 'song' song}}{{song.name}}{{/link-to}}</td>
-                    <td>{{#link-to 'song' song}}{{song.tempo}}{{/link-to}}</td>
-                    <td>{{#link-to 'song' song}}{{song.time_signature}}{{/link-to}}</td>
-                </tr>
-                {{/each}}
-            </table>
-        </div>
-    </div>
-
-    <div>
-        {{outlet}}
-    </div>
+    {{#link-to 'songlists' }}&laquo; Back to Song Lists{{/link-to}}
+    {{#if isEditing}}
+        <form {{action 'saveSonglist' on="submit"}}>
+            <label>Songlist Name</label>
+            {{input name=model.name value=model.name class="form-control" placeholder="songlist name"}}
+            <label>Event Date</label>
+            {{input name=model.event_date value=model.event_date class="form-control" placeholder="event_date"}}
+            <br/>
+            <button type="submit" class="btn btn-info">Save</button> <button {{action "cancelSonglistEdit"}} class="btn btn-warning">Cancel</button>
+        </form>
     {{else}}
+        <h2>{{model.name}} on {{model.event_date}} <button {{action 'editSonglist'}} class="btn btn-info">Edit</button></h2>
+        <em>{{model.owner}}</em>
+        <br />
 
-    <div class="alert alert-warning">No songs in the list.</div>
+        {{#if model.songs}}
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <table class="table table-striped">
+                    <tr>
+                        <th>Name</th><th>Tempo</th><th>Key</th><th>Time Signature</th>
+                    </tr>
+                    {{#each song in model.songs}}
+                    <tr class="grid-row">
+                        <td>{{#link-to 'song' song}}{{song.name}}{{/link-to}}</td>
+                        <td>{{#link-to 'song' song}}{{song.tempo}}{{/link-to}}</td>
+                        <td>{{#link-to 'song' song}}{{song.key}}{{/link-to}}</td>
+                        <td>{{#link-to 'song' song}}{{song.time_signature}}{{/link-to}}</td>
+                    </tr>
+                    {{/each}}
+                </table>
+            </div>
+        </div>
+
+        <div>
+            {{outlet}}
+        </div>
+        {{else}}
+
+        <div class="alert alert-warning">No songs in the list.</div>
+        {{/if}}
     {{/if}}
 </script>
 
 <script type="text/x-handlebars" id="song" data-template-name="song">
     <div class="panel panel-default">
-        <div class="panel-heading"><h3 class="panel-title">{{model.name}}</h3></div>
+        <div class="panel-heading"><h3 class="panel-title">{{model.name}}{{#if model.time_signature}} ({{model.time_signature}}){{/if}}</h3></div>
         <div class="panel-body">
             <div>
                 {{#if isMetroStarted}}
@@ -132,20 +169,26 @@
         </div>
     </div>
 </script>
-{% endraw %}
 
+<script type="text/x-handlebars" id="song" data-template-name="loading">
+    <img src="/static/images/ajax-loader.gif" alt="Loading..." class="center" />
+</script>
+
+{% endraw %}
 
 <script src="/static/js/libs/jquery-1.10.2.js"></script>
 <script src="/static/js/libs/bootstrap.min.js"></script>
 <script src="/static/js/libs/handlebars-1.1.2.js"></script>
-<script src="/static/js/libs/ember-1.5.1.js"></script>
-<script src="/static/js/libs/ember-data.min.js"></script>
+<script src="/static/js/libs/moment.min.js"></script>
+<script src="/static/js/libs/ember.js"></script>
+<script src="/static/js/libs/buffer-loader.js"></script>
+<script src="/static/js/libs/pikaday.js"></script>
 <script src="/static/js/metronome.js"></script>
 <script src="/static/js/app.js"></script>
-<script src="/static/js/models/songlists.js"></script>
 
 <script>
     $( document ).ready(function() {
+
         // Initialise the audio engine
         initializeAudio();
     });

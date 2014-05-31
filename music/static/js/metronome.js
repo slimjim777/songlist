@@ -7,9 +7,12 @@ var notesInQueue = [];          // the notes that have been put into the web aud
 var lookahead = 25.0;           // How frequently to call scheduling function (ms)
 var tempo = 120.0;              // tempo (in beats per minute)
 var bpb = 4;
+var bufferLoader = null;
+var bufferList = [];            // list of sounds
+var bufferSource = null;
 
-var NOTE_LENGTH = 0.010;     // length of "beep" (in seconds)
-var BEAT_ONE_FREQUENCY = 1440.0;
+var NOTE_LENGTH = 0.025;     // length of "beep" (in seconds)
+var BEAT_ONE_FREQUENCY = 1760.0;
 var BEAT_OTHER_FREQUENCY = 880.0;
 
 function scheduler() {
@@ -29,6 +32,7 @@ function scheduleNote( beatNumber, time ) {
     if (beatNumber%4)
         return; // we're not playing non-quarter notes
 
+    /*
     // Create an oscillator
     var osc = audioContext.createOscillator();
     osc.connect( audioContext.destination );
@@ -39,6 +43,14 @@ function scheduleNote( beatNumber, time ) {
 
     osc.start( time );
     osc.stop( time + NOTE_LENGTH );
+    */
+
+    // Play the audio file
+    if (beatNumber % (4 * bpb) === 0) {
+        bufferSource = playSound(bufferList[0], time);
+    } else {
+        bufferSource = playSound(bufferList[1], time);
+    }
 }
 
 function nextNote() {
@@ -66,9 +78,8 @@ function toggleMetronome() {
         $(button).text('Stop');
 
         // Reset the metronome
-        current16thNote = 0;
         bpb = beatsPerBar();
-        nextNoteTime = audioContext.currentTime;
+        resetMetronome();
 
         // Start the metronome
         scheduler();
@@ -84,13 +95,36 @@ function toggleMetronome() {
 function initializeAudio() {
     // Initialise the audio engine
     audioContext = new AudioContext();
+
+    bufferLoader = new BufferLoader(audioContext, ['/static/js/beepone.wav','/static/js/beep.wav'], function(bl) {
+        bufferList = bl;
+    });
+    bufferLoader.load();
+}
+
+function playSound(buffer, time) {
+    var source = audioContext.createBufferSource();
+    source.buffer = buffer;
+    source.connect(audioContext.destination);
+    source.start(time);
+    return source;
+}
+
+function resetMetronome() {
+    current16thNote = 0;
+    while (notesInQueue.length > 0) {
+        notesInQueue.pop();
+    }
+    nextNoteTime = audioContext.currentTime;
 }
 
 // Getters and Setters to provide access from other files
-function setTempo(bpm) {
+function setMetronomeTempo(bpm) {
+    console.log("setMetronomeTempo: " + bpm);
     tempo = bpm;
 }
 
 function setBPB(beatsPerBarValue) {
+    console.log("setBPB: " + beatsPerBarValue);
     bpb = beatsPerBarValue;
 }

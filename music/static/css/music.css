@@ -104,3 +104,11 @@ a.tag span.label {
 a.tag:hover span.label {
     background-color: #39b3d7;
 }
+
+tr.grid-row a {
+    display: block;
+}
+
+div.container[role=main] {
+    margin-top: 20px;
+}
