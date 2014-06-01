@@ -20,6 +20,7 @@ def api_songlists():
         json_songlists.append(sl.to_dict())
 
     result = {
+        'response': 'Success',
         'songlists': json_songlists,
     }
 
@@ -35,16 +36,30 @@ def api_songlist(songlist_id=None):
     Create or update a songlist.
     """
     if request.method == "GET":
-        songlist = SongList.query.get(songlist_id)
-
-        result = {
-            'songlist': songlist.to_dict(),
-        }
-        return jsonify(songlist.to_dict())
+        try:
+            songlist = SongList.query.get(songlist_id)
+            if not songlist:
+                raise Exception('Cannot find the songlist')
+            result = {
+                'response': 'Success',
+                'songlist': songlist.to_dict(),
+            }
+            return jsonify(result)
+        except Exception, v:
+            return jsonify({'response': 'Error', 'message': str(v)})
     elif request.method == "POST":
         if songlist_id:
-            # Update an existing songlist
-            pass
+            try:
+                # Update an existing songlist
+                songlist = SongList.query.get(songlist_id);
+                if not songlist:
+                    raise Exception('Cannot find the songlist')
+                songlist.name = request.json.get('name')
+                songlist.event_date = request.json.get('event_date')
+                db.session.commit()
+                return jsonify({'response': 'Success', 'record': songlist.to_dict()})
+            except Exception, v:
+                return jsonify({'response': 'Error', 'message': str(v)})
         else:
             # Create a new songlist
             try:
