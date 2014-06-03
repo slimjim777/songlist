@@ -98,3 +98,45 @@ App.Songlist.reopenClass({
         });
     }
 });
+
+
+App.Song = Ember.Object.extend({});
+
+App.Song.reopenClass({
+    url: '/api/song',
+
+    findSongs: function (q) {
+        return ajax(this.url + '/find', {
+            type: 'POST',
+            data: JSON.stringify({q:q}),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json"
+        });
+    },
+
+    find: function(modelId) {
+        return ajax(this.url + '/' + modelId, {
+            type: 'GET',
+            contentType: "application/json; charset=utf-8",
+            dataType: "json"
+        });
+    },
+
+    saveRecord: function(data) {
+        var url;
+        if (data.id) {
+            url = this.url + '/' + data.id;
+        } else {
+            url = this.url;
+        }
+
+        return ajax(url, {
+            type: 'POST',
+            data: JSON.stringify(data),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json"
+        });
+    }
+
+});
+

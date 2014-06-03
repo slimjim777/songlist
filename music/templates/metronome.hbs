@@ -54,7 +54,7 @@
 </div>
 </script>
 
-<script type="text/x-handlebars" id="index" data-template-name="songlists">
+<script type="text/x-handlebars" id="songlists" data-template-name="songlists">
     {{#if error }}
     <div class="alert box alert-danger">
       <h4>Application Error</h4>
@@ -118,10 +118,11 @@
             <button type="submit" class="btn btn-info">Save</button> <button {{action "cancelSonglistEdit"}} class="btn btn-warning">Cancel</button>
         </form>
     {{else}}
-        <h2>{{model.name}} on {{model.event_date}} <button {{action 'editSonglist'}} class="btn btn-info">Edit</button></h2>
+        <h2>{{model.name}} on {{model.event_date}} <button {{action 'editSonglist'}} class="btn btn-info"><span class="glyphicon glyphicon-edit"></span></button></h2>
         <em>{{model.owner}}</em>
         <br />
 
+        <h4>Songs {{#link-to 'addSong' model class="btn btn-info" title="Add a Song"}}<span class="glyphicon glyphicon-plus"></span>{{/link-to}}</h4>
         {{#if model.songs}}
         <div class="panel panel-default">
             <div class="panel-body">
@@ -140,20 +141,34 @@
                 </table>
             </div>
         </div>
-
         <div>
             {{outlet}}
         </div>
         {{else}}
-
         <div class="alert alert-warning">No songs in the list.</div>
+        <div>
+            {{outlet}}
+        </div>
         {{/if}}
     {{/if}}
 </script>
 
 <script type="text/x-handlebars" id="song" data-template-name="song">
-    <div class="panel panel-default">
-        <div class="panel-heading"><h3 class="panel-title">{{model.name}}{{#if model.time_signature}} ({{model.time_signature}}){{/if}}</h3></div>
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <div class="panel-title"-->
+                <div class="row">
+                    <div class="col-md-4"><label>Song Name</label></div>
+                    <div class="col-md-4"><label>Key</label></div>
+                    <div class="col-md-4"><label>Time Signature</label></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">{{input type="text" name="model.name" value=model.name placeholder="song name" class="form-control"}}</div>
+                    <div class="col-md-4">{{view Ember.Select content=keys value=model.key class="form-control"}}</div>
+                    <div class="col-md-4">{{view Ember.Select content=time_signatures value=model.time_signature class="form-control"}}</div>
+                </div>
+            </div>
+        </div>
         <div class="panel-body">
             <div>
                 {{#if isMetroStarted}}
@@ -177,15 +192,41 @@
                 <span class="left">{{#link-to 'song' model.previousSong class="btn btn-info"}}<span class="glyphicon glyphicon-arrow-left"></span> Previous{{/link-to}}</span>
                 <span class="right">{{#link-to 'song' model.nextSong class="btn btn-info"}}Next <span class="glyphicon glyphicon-arrow-right"></span>{{/link-to}}</span>
             </div>
+
+        </div>
+        <div class="panel-footer">
+            <div class="center">
+                <button class="btn btn-info">Save Changes</button>
+            </div>
         </div>
     </div>
 </script>
 
-<script type="text/x-handlebars" id="song" data-template-name="loading">
+<script type="text/x-handlebars" data-template-name="addSong">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">Add Song to Songlist</h3>
+      </div>
+      <div class="panel-body">
+          {{input type="search" name="search" value=search placeholder="find existing song" action="findSong" class="form-control"}}
+          <table class="table table-striped">
+            {{#each folder in folders}}
+            <tr>
+                <td>{{ folder.name }}</td>
+                <td><button {{action 'selectSong' folder}} class="btn btn-info">Add</button></td>
+            </tr>
+            {{/each}}
+          </table>
+          <button {{action 'closeFind'}} class="btn btn-info">Close</button>
+      </div>
+    </div>
+</script>
+
+<script type="text/x-handlebars" data-template-name="loading">
     <img src="/static/images/ajax-loader.gif" alt="Loading..." class="center" />
 </script>
 
-<script type="text/x-handlebars" id="song" data-template-name="errorss">
+<script type="text/x-handlebars" data-template-name="error">
     <div class="alert box alert-danger">
         <h3>Application Error</h3>
         <div>{{model}}</div>

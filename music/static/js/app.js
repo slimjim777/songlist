@@ -10,7 +10,9 @@ App.Router.map(function() {
     this.resource('songlists', { path: '/' });
     this.resource('songlist', { path: '/songlists/:songlist_id' }, function() {
         this.resource('song', { path: '/:id' });
+        this.resource('addSong', { path: '/add_song'});
     });
+
 });
 
 
@@ -45,8 +47,13 @@ App.SonglistRoute = Ember.Route.extend({
 App.SongRoute = Ember.Route.extend({
     model: function(params) {
         console.log('Song:' + params.id);
+        /*
         return $.getJSON('/api/song/' + params.id).then( function(data) {
             return data;
+        });
+        */
+        return App.Song.find(params.id).then( function(data) {
+            return App.Song.create(data.record);
         });
     }
 });

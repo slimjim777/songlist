@@ -112,3 +112,9 @@ tr.grid-row a {
 div.container[role=main] {
     margin-top: 20px;
 }
+
+.form-control-inline {
+    display: inline-block;
+    width: auto;
+    vertical-align: middle;
+}

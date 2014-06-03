@@ -3,6 +3,7 @@ from music import db
 from music.authorize import login_required
 from music.model.database import SongList
 from music.model.database import Song
+from music.model.database import Folder
 from flask import jsonify
 from flask import session
 from flask import request
@@ -71,8 +72,62 @@ def api_songlist(songlist_id=None):
                 return jsonify({'response': 'Error', 'message': str(v)})
 
 
-@app.route('/api/song/<int:song_id>')
+@app.route('/api/song/find', methods=['POST'])
 @login_required
-def api_song(song_id):
-    song = Song.query.get(song_id)
-    return jsonify(song.to_dict())
+def api_song_find():
+    # Check if we have a search query
+    q = request.json.get('q')
+    if q:
+        # Search for folders containing the query
+        song_query = Folder.query.filter(Folder.name.ilike('%%%s%%' % q)).order_by(Folder.name)
+        song_list = [f.dict() for f in song_query.all()]
+    else:
+        song_list = []
+
+    return jsonify({'response': 'Success', 'folders': song_list})
+
+
+@app.route('/api/song', methods=['POST'])
+@app.route('/api/song/<int:song_id>', methods=['GET', 'POST'])
+@login_required
+def api_song(song_id=None):
+    if request.method == "POST":
+        if song_id:
+            try:
+                # Update existing song
+                song = Song.query.get(song_id)
+                song.songlist_id = request.json.get('songlist_id')
+                song.name = request.json.get('name')
+                song.key = request.json.get('key')
+                song.tempo = request.json.get('tempo')
+                song.time_signature = request.json.get('time_signature')
+                db.session.commit()
+                return jsonify({'response': 'Success', 'record': song.to_dict()})
+            except Exception, v:
+                return jsonify({'response': 'Error', 'message': str(v)})
+        else:
+            try:
+                # Create a new song
+                song = Song()
+                song.songlist_id = request.json.get('songlist_id')
+                song.name = request.json.get('name')
+                song.key = request.json.get('key')
+                song.tempo = request.json.get('tempo')
+                song.time_signature = request.json.get('time_signature')
+                db.session.add(song)
+                db.session.commit()
+                return jsonify({'response': 'Success', 'record': song.to_dict()})
+            except Exception, v:
+                return jsonify({'response': 'Error', 'message': str(v)})
+
+    elif request.method == "GET":
+        if song_id:
+            try:
+                song = Song.query.get(song_id)
+                if not song:
+                    raise Exception('Cannot find the request song.')
+                return jsonify({'response': 'Success', 'record': song.to_dict()})
+            except:
+                return jsonify({'response': 'Error', 'message': str(v)})
+        else:
+            return jsonify({'response': 'Error', 'message': 'No song requested.'})
