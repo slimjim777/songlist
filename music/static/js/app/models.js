@@ -96,6 +96,24 @@ App.Songlist.reopenClass({
             contentType: "application/json; charset=utf-8",
             dataType: "json"
         });
+    },
+
+    songOrder: function(modelId, song_order) {
+        return ajax(this.url + '/' + + modelId + '/song_order', {
+            type: 'POST',
+            data: JSON.stringify({song_order: song_order}),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json"
+        });
+    },
+
+    removeSong: function(modelId, songId) {
+        return ajax(this.url + '/' + + modelId + '/remove_song', {
+            type: 'POST',
+            data: JSON.stringify({song_id: songId}),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json"
+        });
     }
 });
 
@@ -122,10 +140,19 @@ App.Song.reopenClass({
         });
     },
 
-    saveRecord: function(data) {
+    saveRecord: function(model) {
         var url;
-        if (data.id) {
-            url = this.url + '/' + data.id;
+        var data = {
+            name: model.get('name'),
+            key: model.get('key'),
+            songlist_id: model.get('songlist'),
+            tempo: model.get('tempo'),
+            time_signature: model.get('time_signature')
+        };
+
+        if (model.get('id')) {
+            data.id = model.get('id');
+            url = this.url + '/' + model.get('id');
         } else {
             url = this.url;
         }

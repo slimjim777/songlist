@@ -13,7 +13,6 @@ App.SonglistsController = Ember.ArrayController.extend({
 
         saveSonglist: function() {
             // Save new songlist
-            console.log('Save New Songlist');
             var controller = this;
             App.Songlist.saveRecord(this.get('newSonglist')).then(function(value) {
                 controller.set('isEditing', false);
@@ -27,7 +26,6 @@ App.SonglistsController = Ember.ArrayController.extend({
         },
 
         cancelSonglistEdit: function () {
-            console.log('Cancel Songlist');
             this.set('isEditing', false);
             this.set('error', false);
         }
@@ -47,8 +45,6 @@ App.SonglistController = Ember.ObjectController.extend({
 
         saveSonglist: function() {
             // Save changed songlist
-            console.log('Save Edit Songlist');
-
             var controller = this;
             App.Songlist.saveRecord(this.get('model')).then(function(value) {
                 // Success
@@ -61,10 +57,50 @@ App.SonglistController = Ember.ObjectController.extend({
         },
 
         cancelSonglistEdit: function () {
-            console.log('Cancel Songlist');
             this.set('isEditing', false);
             this.set('error', false);
             this.send('reloadModel');   // Calls action on the route
+        },
+
+        songOrder: function(song, direction) {
+            // Move the song up/down in the songlist
+            var controller = this;
+            var index = this.get('model').get('songs').indexOf(song);
+            var songs = controller.get('model').get('songs');
+
+            // Check if the song is already at the top/bottom
+            if ((direction === 'up') && (index === 0)) {
+                return;
+            }
+            if ((direction === 'down') && (index === songs.length - 1)) {
+                return;
+            }
+
+            // Reorganise the list
+            songs.splice(index, 1);
+            if (direction === 'up') {
+                songs.splice(index - 1, 0, song);
+            } else {
+                songs.splice(index + 1, 0, song);
+            }
+
+            // Store the IDs of the songs in order
+            var song_order = [];
+            songs.forEach(function(sng) {
+                song_order.push(sng.get('id'));
+            });
+
+            // Save the updated songs in order
+            controller.get('model').get('songs').setObjects(songs);
+            App.Songlist.songOrder(controller.get('model').get('id'), song_order);
+        },
+
+        removeSong: function(song) {
+            // Remove song from the songlist
+            var controller = this;
+            App.Songlist.removeSong(controller.get('model').get('id'), song.get('id')).then(function() {
+                controller.get('model').get('songs').removeObject(song);
+            });
         }
 
     }
@@ -72,6 +108,9 @@ App.SonglistController = Ember.ObjectController.extend({
 
 
 App.SongController = Ember.ObjectController.extend({
+    // Link to the Songlist controller
+    needs: "songlist",
+    songlist: Ember.computed.alias("controllers.songlist"),
 
     // Metronome state
     isMetroStarted: false,
@@ -103,7 +142,6 @@ App.SongController = Ember.ObjectController.extend({
         },
 
         startMetronome: function() {
-            console.log('Start Metronome');
             this.set('isMetroStarted', true);
 
             resetMetronome();
@@ -111,10 +149,32 @@ App.SongController = Ember.ObjectController.extend({
         },
 
         stopMetronome: function() {
-            console.log('Stop Metronome');
             this.set('isMetroStarted', false);
-
             window.clearTimeout(timerID);
+        },
+
+        saveSong: function(song) {
+            var controller = this;
+
+            App.Song.saveRecord(song).then(function(value) {
+                var savedSong = App.Song.create(value.record);
+
+                // Update the songlist with the changed song
+                var index = -1;
+                var i = -1;
+                controller.get('songlist').get('songs').forEach(function(song) {
+                    i += 1;
+                    if (song.get('id') == savedSong.get('id')) {
+                        index = i;
+                        return;
+                    }
+                });
+                if (index != -1) {
+                    var songs = controller.get('songlist').get('songs');
+                    songs[index] = savedSong;
+                    controller.get('songlist').get('songs').setObjects(songs);
+                }
+            });
         }
     },
 
@@ -145,9 +205,6 @@ App.AddSongController = Ember.ObjectController.extend({
 
     actions: {
         findSong: function () {
-            console.log('Song AddSongController');
-            console.log(this.get('model'));
-            console.log('Find ' + this.get('search'));
             var controller = this;
             App.Song.findSongs(this.get('search')).then(function(value) {
                 var folders = value.folders.map( function(f) {
@@ -155,22 +212,20 @@ App.AddSongController = Ember.ObjectController.extend({
                     f.songlist_id = controller.get('model').get('id');
                     return App.Song.create(f);
                 });
-                console.log(folders);
                 controller.set('folders', folders);
             });
         },
 
         selectSong: function(folder) {
-            console.log('select song');
-            console.log(folder);
-            var newSong = {
+            // Save the selected folder as a song
+            var newSong = App.Song.create({
                 id: folder.get('id'),
-                songlist_id: this.get('model').get('id'),
+                songlist: this.get('model').get('id'),
                 name: folder.get('name'),
                 tempo: folder.get('tempo'),
                 key: '',
                 time_signature: folder.get('time_signature')
-            }
+            });
             var controller = this;
 
             App.Song.saveRecord(newSong).then(function(value) {
@@ -184,14 +239,12 @@ App.AddSongController = Ember.ObjectController.extend({
         },
 
         closeFind: function() {
-            console.log('Close find');
             this.set('search', '');
             this.set('folders', []);
             this.transitionToRoute('songlist', this.get('model').get('id'));
         },
 
         cancelSong: function() {
-            console.log('cancel song');
             this.set('folders', []);
             this.set('search', '');
             this.transitionToRoute('songlist', this.get('model').get('id'));

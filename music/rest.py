@@ -126,7 +126,7 @@ def cache_files_in_database():
         db.session.commit()
 
     # Delete any folder records that no longer exist in Dropbox
-    no_longer = Folder.query.filter(~Folder.name.in_(files.keys()))
+    no_longer = Folder.query.filter(~Folder.name.in_(files.keys())).all()
     for nl in no_longer:
         db.session.delete(nl)
 
@@ -315,7 +315,6 @@ def song_tags(folder_id):
             unselected = Tag.query.filter(~ Tag.id.in_(selected_ids))
         else:
             unselected = Tag.query.all()
-        app.logger.debug(unselected)
         return render_template('snippet_song_tags.html', folder_id=folder_id, selected=folder.tags,
                                unselected=unselected)
     elif request.method == 'POST':

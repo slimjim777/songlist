@@ -131,3 +131,28 @@ def api_song(song_id=None):
                 return jsonify({'response': 'Error', 'message': str(v)})
         else:
             return jsonify({'response': 'Error', 'message': 'No song requested.'})
+
+
+@app.route('/api/songlists/<int:songlist_id>/song_order', methods=['POST'])
+@login_required
+def api_songlist_order(songlist_id):
+    update = False
+    for index, song_id in enumerate(request.json.get('song_order', [])):
+        update = True
+        song = Song.query.get(song_id)
+        song.position = index
+
+    if update:
+        db.session.commit()
+    return jsonify({'response': 'Success'})
+
+
+@app.route('/api/songlists/<int:songlist_id>/remove_song', methods=['POST'])
+@login_required
+def api_songlist_remove_song(songlist_id):
+    song_id = request.json.get('song_id')
+    if song_id:
+        song = Song.query.get(song_id)
+        db.session.delete(song)
+        db.session.commit()
+    return jsonify({'response': 'Success'})

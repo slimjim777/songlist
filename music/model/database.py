@@ -133,7 +133,7 @@ class SongList(db.Model):
     event_date = db.Column(db.Date)
     person_id = db.Column(db.Integer, db.ForeignKey('person.id'))
     folders = db.relationship('SongListLink', backref='songlist')
-    songs = db.relationship('Song', backref='songlist', lazy='dynamic')
+    songs = db.relationship('Song', backref='songlist', lazy='dynamic', order_by=lambda:Song.position)
 
     def __init__(self, name, event_date, owner_id):
         self.name = name
@@ -191,6 +191,7 @@ class Song(db.Model):
     time_signature = db.Column(db.Enum('4/4', '3/4', '6/8', name='time_signatures'), default='4/4')
     key = db.Column(db.String(10))
     url = db.Column(db.String(255))
+    position = db.Column(db.Integer, default=0)
 
     def to_dict(self):
         return {
@@ -201,6 +202,7 @@ class Song(db.Model):
             'time_signature': self.time_signature,
             'key': self.key,
             'url': self.url,
+            'position': self.position,
         }
 
     def __repr__(self):

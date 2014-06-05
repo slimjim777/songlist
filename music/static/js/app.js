@@ -32,7 +32,11 @@ App.SonglistsRoute = Ember.Route.extend({
 App.SonglistRoute = Ember.Route.extend({
     model: function(params) {
         return App.Songlist.find(params.songlist_id).then( function(data) {
-            return App.Songlist.create(data.songlist);
+            var songs = data.songlist.songs.map(function(song) {
+                return App.Song.create(song);
+            });
+            data.songlist.songs = songs;
+            return App.Songlist.create(data.songlist)
         });
     },
 
@@ -47,14 +51,16 @@ App.SonglistRoute = Ember.Route.extend({
 App.SongRoute = Ember.Route.extend({
     model: function(params) {
         console.log('Song:' + params.id);
-        /*
-        return $.getJSON('/api/song/' + params.id).then( function(data) {
-            return data;
-        });
-        */
+
         return App.Song.find(params.id).then( function(data) {
             return App.Song.create(data.record);
         });
     }
 });
 
+
+App.AddSongRoute = Ember.Route.extend({
+    renderTemplate: function() {
+        this.render({ outlet: 'addSong' });
+    }
+});

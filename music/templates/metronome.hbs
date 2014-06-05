@@ -85,7 +85,7 @@
         {{/if}}
         {{#each item in model}}
         <tr class="grid-row">
-            <td></td>
+            <td><button {{action 'removeSonglist' item}} class="btn btn-default"><span class="glyphicon glyphicon-remove"></span></button></td>
             <td>{{#link-to 'songlist' item}}{{item.event_date}}{{/link-to}}</td>
             <td>{{#link-to 'songlist' item}}{{item.name}}{{/link-to}}</td>
             <td>{{#link-to 'songlist' item}}{{item.owner}}{{/link-to}}</td>
@@ -123,19 +123,24 @@
         <br />
 
         <h4>Songs {{#link-to 'addSong' model class="btn btn-info" title="Add a Song"}}<span class="glyphicon glyphicon-plus"></span>{{/link-to}}</h4>
+        <div>
+            {{outlet addSong}}
+        </div>
         {{#if model.songs}}
         <div class="panel panel-default">
             <div class="panel-body">
                 <table class="table table-striped">
                     <tr>
-                        <th>Name</th><th>Tempo</th><th>Key</th><th>Time Signature</th>
+                        <th>Order</th><th>Name</th><th>Tempo</th><th>Key</th><th>Time Signature</th><th></th>
                     </tr>
                     {{#each song in model.songs}}
                     <tr class="grid-row">
+                        <td><button {{action 'songOrder' song 'up'}} class="btn btn-default"><span class="glyphicon glyphicon-arrow-up"></span></button><button {{action 'songOrder' song 'down'}} class="btn btn-default"><span class="glyphicon glyphicon-arrow-down"></span></button></td>
                         <td>{{#link-to 'song' song}}{{song.name}}{{/link-to}}</td>
                         <td>{{#link-to 'song' song}}{{song.tempo}}{{/link-to}}</td>
                         <td>{{#link-to 'song' song}}{{song.key}}{{/link-to}}</td>
                         <td>{{#link-to 'song' song}}{{song.time_signature}}{{/link-to}}</td>
+                        <td><button {{action 'removeSong' song}} class="btn btn-default"><span class="glyphicon glyphicon-remove"></span></button></td>
                     </tr>
                     {{/each}}
                 </table>
@@ -156,7 +161,7 @@
 <script type="text/x-handlebars" id="song" data-template-name="song">
     <div class="panel panel-primary">
         <div class="panel-heading">
-            <div class="panel-title"-->
+            <div class="panel-title">
                 <div class="row">
                     <div class="col-md-4"><label>Song Name</label></div>
                     <div class="col-md-4"><label>Key</label></div>
@@ -196,14 +201,14 @@
         </div>
         <div class="panel-footer">
             <div class="center">
-                <button class="btn btn-info">Save Changes</button>
+                <button class="btn btn-info" {{action 'saveSong' model}}>Save Changes</button>
             </div>
         </div>
     </div>
 </script>
 
 <script type="text/x-handlebars" data-template-name="addSong">
-    <div class="panel panel-default">
+    <div class="panel panel-info">
       <div class="panel-heading">
         <h3 class="panel-title">Add Song to Songlist</h3>
       </div>
@@ -234,6 +239,7 @@
     </div>
 </script>
 
+
 {% endraw %}
 
 <script src="/static/js/libs/jquery-1.10.2.js"></script>
@@ -250,6 +256,9 @@
 
 <script>
     $( document ).ready(function() {
+        // Set the current page
+        $('ul.navbar-nav li').removeClass('active');
+        $('#nav-songlist').addClass('active');
 
         // Initialise the audio engine
         initializeAudio();
