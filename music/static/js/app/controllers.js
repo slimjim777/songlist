@@ -3,6 +3,10 @@ App.SonglistsController = Ember.ArrayController.extend({
     error: null,
     isEditing: false,
     newSonglist: null,
+    isDeleting: false,
+    title: null,
+    message: null,
+    toDelete: null,
 
     actions: {
         newSonglist: function() {
@@ -28,7 +32,39 @@ App.SonglistsController = Ember.ArrayController.extend({
         cancelSonglistEdit: function () {
             this.set('isEditing', false);
             this.set('error', false);
+        },
+
+        removeSonglist: function(songlist) {
+            console.log('Remove songlist: ' + songlist.name);
+            this.set('title', 'Confirm Deletion');
+            this.set('message', 'Delete song list "' + songlist.name + '"?');
+            this.set('toDelete', songlist);
+            this.set('isDeleting', true);
+        },
+
+        cancelDelete: function() {
+            this.set('isDeleting', false);
+            this.set('title', null);
+            this.set('message', null);
+            this.set('toDelete', null);
+        },
+
+        confirmDelete: function() {
+            var controller = this;
+
+            App.Songlist.removeSonglist(this.get('toDelete').get('id')).then(function() {
+                // Remove the songlist from the array
+                var index = controller.get('model').indexOf(controller.get('toDelete'))
+                controller.get('model').removeAt(index, 1);
+
+                // Reset
+                controller.set('isDeleting', false);
+                controller.set('title', null);
+                controller.set('message', null);
+                controller.set('toDelete', null);
+            });
         }
+
     }
 });
 
@@ -230,7 +266,8 @@ App.AddSongController = Ember.ObjectController.extend({
 
             App.Song.saveRecord(newSong).then(function(value) {
                 // Add the song to the list of songs
-                controller.get('model').get('songs').addObject(value.record);
+                var sng = App.Song.create(value.record);
+                controller.get('model').get('songs').addObject(sng);
 
                 // Remove the folder from the folders list
                 controller.get('folders').removeObject(folder);

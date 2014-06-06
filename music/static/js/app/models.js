@@ -114,6 +114,15 @@ App.Songlist.reopenClass({
             contentType: "application/json; charset=utf-8",
             dataType: "json"
         });
+    },
+
+    removeSonglist: function(modelId) {
+        return ajax(this.url + '/' + + modelId, {
+            type: 'DELETE',
+            data: JSON.stringify({songlist_id: modelId}),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json"
+        });
     }
 });
 

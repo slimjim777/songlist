@@ -29,7 +29,7 @@ def api_songlists():
 
 
 @app.route('/api/songlists', methods=['POST'])
-@app.route('/api/songlists/<int:songlist_id>', methods=['GET', 'POST'])
+@app.route('/api/songlists/<int:songlist_id>', methods=['GET', 'POST', 'DELETE'])
 @login_required
 def api_songlist(songlist_id=None):
     """
@@ -70,6 +70,15 @@ def api_songlist(songlist_id=None):
                 return jsonify({'response': 'Success', 'record': songlist.to_dict()})
             except Exception, v:
                 return jsonify({'response': 'Error', 'message': str(v)})
+    elif request.method == "DELETE":
+        try:
+            # Delete the songlist
+            songlist = SongList.query.get(songlist_id);
+            db.session.delete(songlist)
+            db.session.commit()
+            return jsonify({'response': 'Success'})
+        except Exception, v:
+            return jsonify({'response': 'Error', 'message': str(v)})
 
 
 @app.route('/api/song/find', methods=['POST'])

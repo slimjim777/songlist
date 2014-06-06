@@ -133,7 +133,8 @@ class SongList(db.Model):
     event_date = db.Column(db.Date)
     person_id = db.Column(db.Integer, db.ForeignKey('person.id'))
     folders = db.relationship('SongListLink', backref='songlist')
-    songs = db.relationship('Song', backref='songlist', lazy='dynamic', order_by=lambda:Song.position)
+    songs = db.relationship('Song', backref='songlist', lazy='dynamic', order_by=lambda:Song.position,
+                            cascade="save-update, merge, delete")
 
     def __init__(self, name, event_date, owner_id):
         self.name = name
