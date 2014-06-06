@@ -18,12 +18,12 @@
             <a href="{{ song.url }}" title="Youtube"><img src="/static/images/YouTube-social-icon_red_24px.png" /></a>
             {% endif %}
             {% if song.tempo and song.tempo > 0  %}
-            <span title="Tempo">{{ song.tempo }} bpm <!--button id="metroStart{{ song.id }}" class="btn btn-success" onclick="metroStart({{ song.tempo or 0 }}, {{ song.id }})">Start</button>&nbsp;<button id="metroStop{{ song.id }}" class="btn btn-danger" onclick="metroStop({{ song.id }})">Stop</button--></span>
+            <span title="Tempo">{{ song.tempo }} bpm</span>
             {% endif %}
             {% if song.time_signature  %}
             <span title="Time Signature">&nbsp;{{ song.time_signature }}</span>
             {% endif %}
-            <button class="btn btn-default" onclick="songTags(event, {{ song.id }}, '{{ song.name }}')" title="{{ song.tags|length }} tags"><span class="glyphicon glyphicon-tags badge">{{ song.tags|length }}</span></button>
+            <button class="btn btn-default" onclick="songTags(event, {{ song.id }})" title="{{ song.tags|length }} tags"><span class="glyphicon glyphicon-tags badge">{{ song.tags|length }}</span></button>
             <div id="viewdetails{{ song.id }}" class="collapse"><br />
             {% for f in song.files %}
             <p>
@@ -106,7 +106,7 @@
         </div>
         <div class="container">
             {% for t in tags %}
-            <a href="" onclick="songTagSelect(event, '{{ t.name }}', '{{ '|'.join(tags_selected) }}')" class="tag">
+            <a href="" onclick="songTagFilter(event, '{{ t.name }}', '{{ '|'.join(tags_selected) }}')" class="tag">
                 {% if t.name in tags_selected %}
                 <span class="label label-info">{{ t.name }}</span>
                 {% else %}

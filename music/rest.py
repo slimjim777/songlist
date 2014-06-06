@@ -11,8 +11,6 @@ from music.model.transpose import Transpose
 from music.model.drive import Drive
 from music.model.database import Folder
 from music.model.database import File
-from music.model.database import SongList
-from music.model.database import SongListLink
 from music.model.database import Person
 from music.model.database import Tag
 from music import db
@@ -181,14 +179,11 @@ def admin_user_edit(user_id=None):
         except ValueError, v:
             return jsonify({'response': 'Error', 'message': str(v)})
 
-
+"""
 @app.route('/songlist/list', methods=['POST'])
 @app.route('/songlist/list/<int:songlist_id>', methods=['GET', 'PUT', 'DELETE'])
 @login_required
 def songlist_admin(songlist_id=None):
-    """
-    Maintain the song lists: add, update, delete.
-    """
     if songlist_id:
         sl = SongList.query.get(songlist_id)
         if request.method == "GET":
@@ -222,7 +217,7 @@ def songlist_admin(songlist_id=None):
             return jsonify({'response': 'Success'})
         except Exception, v:
             return jsonify({'response': 'Error', 'message': str(v)})
-
+"""
 
 @app.route('/songs/find', methods=['POST'])
 @login_required
@@ -236,13 +231,10 @@ def songs_find():
         song_list = None
     return render_template('snippet_song_find.html', song_list=song_list)
 
-
+"""
 @app.route('/songlist/<int:songlist_id>/add', methods=['POST'])
 @login_required
 def songlist_add(songlist_id):
-    """
-    Add a song to an existing song list.
-    """
     sl = SongList.query.get(songlist_id)
     song_id = int(request.form.get('song_id'))
     if not song_id:
@@ -266,9 +258,6 @@ def songlist_add(songlist_id):
 @app.route('/songlist/<int:songlist_id>/remove', methods=['DELETE'])
 @login_required
 def songlist_remove(songlist_id):
-    """
-    Remove a song to an existing song list.
-    """
     song_id = int(request.form.get('song_id'))
     if not song_id:
         return jsonify({'response': 'Error', 'message': "The 'song_id' must be supplied."})
@@ -284,9 +273,6 @@ def songlist_remove(songlist_id):
 @app.route('/songlist/<int:songlist_id>/list', methods=['GET', 'PUT'])
 @login_required
 def songlist_list(songlist_id):
-    """
-    Get the list of songs for the song list or update the order of the songs.
-    """
     #sl = SongList.query.get(songlist_id)
     links = SongListLink.query.filter_by(songlist_id=songlist_id).order_by(SongListLink.position).all()
     if request.method == 'GET':
@@ -303,7 +289,7 @@ def songlist_list(songlist_id):
             l.position = position
         db.session.commit()
         return jsonify({'response': 'Success'})
-
+"""
 
 @app.route('/song/<int:folder_id>/tags', methods=['GET', 'POST'])
 @login_required

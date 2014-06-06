@@ -306,6 +306,7 @@ function songCancel(ev, songId) {
 
 /* SONG LISTS */
 
+/*
 function songlistAddToggle(ev) {
     ev.preventDefault();
     // Show the add song list form
@@ -335,6 +336,7 @@ function songlistAdd(event) {
     });
 }
 
+
 function songlistEdit(listId) {
     var request = $.ajax({
       type: 'GET',
@@ -349,6 +351,7 @@ function songlistEdit(listId) {
         }
     });
 }
+
 
 function songlistCancel(ev, listId) {
     ev.preventDefault();
@@ -424,6 +427,7 @@ function songlistDelete(listId) {
     });
 }
 
+
 function songlistReorder(ev, listId) {
     ev.preventDefault();
 
@@ -459,6 +463,7 @@ function songlistReorderComplete(listId, new_order) {
         window.location.href = '/songlist/' + listId;
     });
 }
+*/
 
 /* -- SONG LISTS */
 
@@ -648,8 +653,10 @@ function onKeyPress(ev) {
 
 /* SONG TAGS */
 
-function songTags(ev, songId, songName) {
+function songTags(ev, songId) {
     ev.preventDefault();
+
+    var songName = $('#name' + songId).text();
 
     var request = $.ajax({
       type: 'GET',
@@ -748,7 +755,8 @@ function songTagNew(ev) {
     $('#selected').append('<option>' + tagName + '</option>');
 }
 
-function songTagSelect(ev, tagName, tagsSelected) {
+
+function songTagFilter(ev, tagName, tagsSelected) {
     ev.preventDefault();
 
     var selected = tagsSelected.split('|');

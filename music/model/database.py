@@ -10,13 +10,13 @@ tags = db.Table('tags',
                 db.Column('folder_id', db.Integer, db.ForeignKey('folder.id'))
                 )
 
-
+"""
 class SongListLink(db.Model):
     songlist_id = db.Column(db.Integer, db.ForeignKey('song_list.id'), primary_key=True)
     song_id = db.Column(db.Integer, db.ForeignKey('folder.id'), primary_key=True)
     position = db.Column(db.Integer, default=0)
     folder = db.relationship('Folder', backref='songlist_link')
-
+"""
 
 class Person(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -132,7 +132,7 @@ class SongList(db.Model):
     name = db.Column(db.String(255))
     event_date = db.Column(db.Date)
     person_id = db.Column(db.Integer, db.ForeignKey('person.id'))
-    folders = db.relationship('SongListLink', backref='songlist')
+    #folders = db.relationship('SongListLink', backref='songlist')
     songs = db.relationship('Song', backref='songlist', lazy='dynamic', order_by=lambda:Song.position,
                             cascade="save-update, merge, delete")
 

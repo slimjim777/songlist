@@ -11,10 +11,7 @@ from music.authorize import login_required
 from music.model.database import Person
 from music.model.database import Folder
 from music.model.database import File
-from music.model.database import SongList
-from music.model.database import SongListLink
 from music.model.database import Tag
-import datetime
 
 
 PAGE_SIZE = int(app.config['PAGE_SIZE'])
@@ -104,7 +101,7 @@ def admin():
     users = Person.query.order_by('lastname', 'firstname').all()
     return render_template('admin.html', users=users)
 
-
+"""
 @app.route('/songlist')
 @login_required
 def songlist():
@@ -120,7 +117,8 @@ def songlist_view(songlist_id):
     sl = SongList.query.get(songlist_id)
     songs = [s.folder.dict() for s in links]
     return render_template('songlist_view.html', songlinks=links, songlist=sl, songs=songs)
+"""
 
-@app.route('/metronome')
-def metronome():
+@app.route('/songlist')
+def songlist():
     return render_template('metronome.hbs')

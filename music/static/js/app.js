@@ -22,6 +22,10 @@ App.SonglistsRoute = Ember.Route.extend({
     model: function() {
         return App.Songlist.getAll().then( function(data) {
             return data.songlists.map( function(songlist) {
+                var songs = songlist.songs.map(function(song) {
+                    return App.Song.create(song);
+                });
+                songlist.songs = songs;
                 return App.Songlist.create(songlist);
             });
         });
@@ -31,6 +35,7 @@ App.SonglistsRoute = Ember.Route.extend({
 
 App.SonglistRoute = Ember.Route.extend({
     model: function(params) {
+        console.log('SonglistRoute');
         return App.Songlist.find(params.songlist_id).then( function(data) {
             var songs = data.songlist.songs.map(function(song) {
                 return App.Song.create(song);
