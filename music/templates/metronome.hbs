@@ -204,14 +204,16 @@
                 {{/if}}
             </div>
             <div>
-                <span class="left">{{#link-to 'song' model.previousSong class="btn btn-info"}}<span class="glyphicon glyphicon-arrow-left"></span> Previous{{/link-to}}</span>
-                <span class="right">{{#link-to 'song' model.nextSong class="btn btn-info"}}Next <span class="glyphicon glyphicon-arrow-right"></span>{{/link-to}}</span>
+                <span class="left"><button {{action 'previousSong'}} class="btn btn-info"><span class="glyphicon glyphicon-arrow-left"></span> Previous</button></span>
+                <span class="right"><button {{action 'nextSong'}} class="btn btn-info">Next <span class="glyphicon glyphicon-arrow-right"></span></button></span>
             </div>
 
         </div>
         <div class="panel-footer">
             <div class="center">
                 <button class="btn btn-info" {{action 'saveSong' model}}>Save Changes</button>
+                <br>
+                <p><em>Click on this panel to be able to use the keyboard shortcuts (space bar, up arrow, down arrow).</em></p>
             </div>
         </div>
     </div>
@@ -261,8 +263,9 @@
 <script src="/static/js/libs/pikaday.js"></script>
 <script src="/static/js/metronome.js"></script>
 <script src="/static/js/app.js"></script>
-<script src="/static/js/app/models.js"></script>
-<script src="/static/js/app/controllers.js"></script>
+<script src="/static/js/app/songlist/routes.js"></script>
+<script src="/static/js/app/songlist/models.js"></script>
+<script src="/static/js/app/songlist/controllers.js"></script>
 
 <script>
     $( document ).ready(function() {

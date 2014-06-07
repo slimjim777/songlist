@@ -124,7 +124,7 @@ function renderSong() {
 function userEdit(userId) {
     var request = $.ajax({
       type: 'GET',
-      url: '/admin/users/' + userId,
+      url: '/admin/users/' + userId
     }).done( function(data) { 
         if (data) {
             var row = $('#usr' + userId).hide();
@@ -148,7 +148,7 @@ function userSave(userId) {
         firstname: $("#usrfirst").val(),
         lastname: $("#usrlast").val(),
         email: $("#usremail").val(),
-        role: $("#usrrole option:selected").val(),
+        role: $("#usrrole option:selected").val()
     };
 
     var request = $.ajax({
@@ -178,7 +178,7 @@ function userAdd(event) {
         firstname: $("#usrnewfirst").val(),
         lastname: $("#usrnewlast").val(),
         email: $("#usrnewemail").val(),
-        role: $("#usrnewrole option:selected").val(),
+        role: $("#usrnewrole option:selected").val()
     };
 
     var request = $.ajax({
@@ -260,7 +260,7 @@ function songEdit(ev, songId) {
     // Get the song details
     var request = $.ajax({
       type: 'GET',
-      url: '/song/' + songId,
+      url: '/song/' + songId
     }).done( function(song) {
         if (song) {
             $(container).append(song);
@@ -710,7 +710,7 @@ function songTagsSave(ev) {
       url: '/song/' + songId + '/tags',
       data: JSON.stringify(postdata),
       contentType:"application/json",
-      dataType: "json",
+      dataType: "json"
     }).done( function(data) {
         if (data.response == 'Success') {
             $('#song-tags').modal('hide');

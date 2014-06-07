@@ -1,4 +1,9 @@
 // Controllers
+
+var MIN_TEMPO = 50;
+var MAX_TEMPO = 200;
+
+
 App.SonglistsController = Ember.ArrayController.extend({
     error: null,
     isEditing: false,
@@ -211,6 +216,32 @@ App.SongController = Ember.ObjectController.extend({
                     controller.get('songlist').get('songs').setObjects(songs);
                 }
             });
+        },
+
+        nextSong: function() {
+            var song = this.get('songlist').get('model').get('songs').findBy('id', this.get('model').get('id'));
+            var currentSongIndex = this.get('songlist').get('model').get('songs').indexOf(song);
+            var next;
+            if (this.get('songlist').get('model').get('songs').length > currentSongIndex + 1) {
+                next = this.get('songlist').get('model').get('songs')[currentSongIndex + 1];
+            } else {
+                next = this.get('songlist').get('model').get('songs')[0];
+            }
+
+            this.transitionToRoute('song', next.id);
+        },
+
+        previousSong: function() {
+            var song = this.get('songlist').get('model').get('songs').findBy('id', this.get('model').get('id'));
+            var currentSongIndex = this.get('songlist').get('model').get('songs').indexOf(song);
+            var prev;
+            if (currentSongIndex - 1 >= 0) {
+                prev = this.get('songlist').get('model').get('songs')[currentSongIndex - 1];
+            } else {
+                prev = this.get('songlist').get('model').get('songs')[this.get('songlist').get('model').get('songs').length - 1];
+            }
+
+            this.transitionToRoute('song', prev.id);
         }
     },
 
@@ -285,6 +316,44 @@ App.AddSongController = Ember.ObjectController.extend({
             this.set('folders', []);
             this.set('search', '');
             this.transitionToRoute('songlist', this.get('model').get('id'));
+        }
+    }
+});
+
+
+// Views
+
+App.SongView = Ember.View.extend({
+    didInsertElement: function() {
+        // Make sure this view has focus
+        return this.$().attr({tabindex: 1}), this.$().focus();
+    },
+
+    keyDown: function(event, view) {
+        if (event.keyCode === 32) {
+            // Space: toggle the metronome
+            if (this.get('controller').get('isMetroStarted')) {
+                this.get('controller').send('stopMetronome');
+            } else {
+                this.get('controller').send('startMetronome');
+            }
+            return false;
+        } else if (event.keyCode === 38) {
+            // Up Arrow: increase metronome speed
+            this.get('controller').send('metroPlus');
+            return false;
+        } else if (event.keyCode === 40) {
+            // Down Arrow: decrease metronome speed
+            this.get('controller').send('metroMinus');
+            return false;
+        } else if (event.keyCode === 39) {
+            // Right Arrow: next song
+            this.get('controller').send('nextSong');
+            return false;
+        } else if (event.keyCode === 37) {
+            // Left Arrow: previous song
+            this.get('controller').send('previousSong');
+            return false;
         }
     }
 });

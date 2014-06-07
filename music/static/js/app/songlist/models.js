@@ -24,7 +24,6 @@ function ajax (url, options) {
 App.CalendarDatePicker = Ember.TextField.extend({
     _picker: null,
 
-
     modelChangedValue: function(){
         var picker = this.get("_picker");
         if (picker){

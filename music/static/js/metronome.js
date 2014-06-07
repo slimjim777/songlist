@@ -120,11 +120,9 @@ function resetMetronome() {
 
 // Getters and Setters to provide access from other files
 function setMetronomeTempo(bpm) {
-    console.log("setMetronomeTempo: " + bpm);
     tempo = bpm;
 }
 
 function setBPB(beatsPerBarValue) {
-    console.log("setBPB: " + beatsPerBarValue);
     bpb = beatsPerBarValue;
 }
