@@ -8,11 +8,11 @@
     <tr>
         <td>
             <input type="text" id="select-folder_id" name="folder_id" hidden value="{{ folder_id }}">
-            <select multiple id="unselected" class="form-control tag-select">
-            {% for u in unselected %}
-            <option id="tag{{ u.id }}" value="{{ u.id }}">{{ u.name }}</option>
-            {% endfor %}
-            </select>
+            <ul id="unselected" class="list-group">
+                {% for u in unselected %}
+                <li id="tag{{ u.id }}" class="list-group-item" onclick="selectTagListItem(event, this)">{{ u.name }}</li>
+                {% endfor %}
+            </ul>
         </td>
         <td>
             <center>
@@ -22,11 +22,11 @@
             </center>
         </td>
         <td>
-            <select multiple id="selected" class="form-control tag-select">
-            {% for u in selected %}
-            <option id="tag{{ u.id }}" value="{{ u.id }}">{{ u.name }}</option>
-            {% endfor %}
-            </select>
+            <ul id="selected" class="list-group">
+                {% for u in selected %}
+                <li id="tag{{ u.id }}" class="list-group-item" onclick="selectTagListItem(event, this)">{{ u.name }}</li>
+                {% endfor %}
+            </ul>
             <input type="text" id="new_tag" name="new_tag" value="" placeholder="create a new tag" />&nbsp;<button class="btn btn-info" onclick="songTagNew(event)"><span class="glyphicon glyphicon-plus"></span></button>
         </td>
     </tr>

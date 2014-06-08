@@ -88,7 +88,7 @@
     float: right;
 }
 
-tr.selected td {
+tr.selected td, li.selected {
     background-color: #39b3d7 !important;
 }
 

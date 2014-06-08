@@ -34,7 +34,6 @@
                 <li id="nav-songlist"><a href="/songlist">Song Lists</a></li>
                 <li><a href="{{ config.NAV_rota }}?search={{ session.name|urlencode }}">Rota</a></li>
                 <li><a href="{{ config.NAV_rehearsal }}">Rehearsals</a></li>
-                <li><a href="{{ config.NAV_spotify }}">Spotify</a></li>
                 {% if 'admin' in session.role %}
                 <li id="nav-admin"><a href="/admin">Admin</a></li>
                 {% endif %}
@@ -106,7 +105,10 @@
 </script>
 
 <script type="text/x-handlebars" id="songlist-songs" data-template-name="songlist">
+    {{#if isEditing}}
+    {{else}}
     {{#link-to 'songlists' }}&laquo; Back to Song Lists{{/link-to}}
+    {{/if}}
 
     {{#if error }}
     <div class="alert box alert-danger">
@@ -234,7 +236,10 @@
             </tr>
             {{/each}}
           </table>
+          <button {{action 'addUnlistedSong'}} class="btn btn-success">Add Unlisted Song</button>
+          <span class="right">
           <button {{action 'closeFind'}} class="btn btn-info">Close</button>
+          </span>
       </div>
     </div>
 </script>

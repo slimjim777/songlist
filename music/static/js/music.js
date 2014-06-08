@@ -673,14 +673,14 @@ function songTags(ev, songId) {
 
 function songTagSelect(ev) {
     ev.preventDefault();
-    $('#unselected option:selected').each( function(index) {
+    $('#unselected li.selected').each( function(index) {
         $(this).remove().appendTo('#selected');
     });
 }
 
 function songTagDeselect(ev) {
     ev.preventDefault();
-    $('#selected option:selected').each( function(index) {
+    $('#selected li.selected').each( function(index) {
         $(this).remove().appendTo('#unselected');
     });
 }
@@ -692,9 +692,9 @@ function songTagsSave(ev) {
 
     // Get the tags from the selected list
     var selected = [];
-    $('#selected option').each(function() {
-        if ($(this).val()) {
-            selected.push($(this).val());
+    $('#selected li').each(function() {
+        if ($(this).attr('id')) {
+            selected.push($(this).attr('id').replace('tag', ''));
         } else {
             selected.push($(this).text());
         }
@@ -736,14 +736,14 @@ function songTagNew(ev) {
     }
 
     // Check that the tag does not exist
-    var unsel = $('#unselected option').filter( function() {
+    var unsel = $('#unselected li').filter( function() {
         return $(this).text().toLowerCase() === tagName.toLowerCase();
     });
     if (unsel[0]) {
         showMessage('The tag already exists', $('#r-message'));
         return;
     }
-    var sel = $('#selected option').filter( function() {
+    var sel = $('#selected li').filter( function() {
         return $(this).text().toLowerCase() === tagName.toLowerCase();
     });
     if (sel[0]) {
@@ -752,7 +752,7 @@ function songTagNew(ev) {
     }
 
     // Add the tag to the selected list
-    $('#selected').append('<option>' + tagName + '</option>');
+    $('#selected').append('<li class="list-group-item">' + tagName + '</li>');
 }
 
 
@@ -768,6 +768,12 @@ function songTagFilter(ev, tagName, tagsSelected) {
         selected.push(tagName);
     }
     window.location.href = '/songs?tags_selected=' + selected.toString().replace(/\,/g, '|');
+}
+
+
+function selectTagListItem(ev, tag) {
+    ev.preventDefault();
+    $(tag).toggleClass('selected');
 }
 
 /* --SONG TAGS */

@@ -120,5 +120,6 @@ def songlist_view(songlist_id):
 """
 
 @app.route('/songlist')
+@login_required
 def songlist():
     return render_template('metronome.hbs')

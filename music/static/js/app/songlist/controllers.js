@@ -158,7 +158,7 @@ App.SongController = Ember.ObjectController.extend({
     metronome: null,
 
     time_signatures: ['', '4/4', '3/4', '6/8'],
-    keys: ['','C','Db','D','Eb','E','F','Gb','G','Ab','A','Bb','B'],
+    keys: ['','C','C#','Db','D','D#','Eb','E','F','F#','Gb','G','G#','Ab','A','A#','Bb','B'],
 
     actions: {
         metroMinus: function() {
@@ -304,6 +304,21 @@ App.AddSongController = Ember.ObjectController.extend({
                 controller.get('folders').removeObject(folder);
             });
 
+        },
+
+        addUnlistedSong: function() {
+            // Add an untitled song
+            var newSong = App.Song.create({
+                name: 'Untitled',
+                songlist: this.get('model').get('id')
+            });
+
+            var controller = this;
+            App.Song.saveRecord(newSong).then(function(value) {
+                // Add the song to the list of songs
+                var sng = App.Song.create(value.record);
+                controller.get('model').get('songs').addObject(sng);
+            });
         },
 
         closeFind: function() {

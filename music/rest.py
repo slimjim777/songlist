@@ -309,8 +309,7 @@ def song_tags(folder_id):
         app.logger.debug(selected)
 
         # Remove the existing tags for the song
-        for t in folder.tags:
-            folder.tags.remove(t)
+        folder.tags[:] = []
 
         # Add the updated list of song tags
         for sel in selected:

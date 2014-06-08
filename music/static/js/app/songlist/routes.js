@@ -32,6 +32,11 @@ App.SonglistRoute = Ember.Route.extend({
         reloadModel: function() {
             this.refresh();
         }
+    },
+
+    setupController: function(controller, model) {
+        this._super(controller, model);
+        controller.set('isEditing', false);
     }
 });
 
