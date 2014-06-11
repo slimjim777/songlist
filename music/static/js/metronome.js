@@ -93,6 +93,8 @@ function toggleMetronome() {
 }
 
 function initializeAudio() {
+    // Fix up for prefixing
+    window.AudioContext = window.AudioContext||window.webkitAudioContext;
     // Initialise the audio engine
     audioContext = new AudioContext();
 
