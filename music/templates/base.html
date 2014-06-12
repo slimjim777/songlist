@@ -31,6 +31,7 @@
             <li class="active"><a href="/songs">Home</a></li>
             <li id="nav-songlist"><a href="/songlist">Song Lists</a></li>
             <li><a href="{{ config.NAV_rota }}?search={{ session.name|urlencode }}">Rota</a></li>
+            <li><a href="{{ config.NAV_resource }}">Resources</a></li>
             <li><a href="{{ config.NAV_rehearsal }}">Rehearsals</a></li>
             {% if 'admin' in session.role %}
             <li id="nav-admin"><a href="/admin">Admin</a></li>
