@@ -209,7 +209,7 @@ function userDelete(userId) {
         buttons: {
             success: {
                 label: 'Yes',
-                className: 'btn-info',
+                className: 'btn-primary',
                 callback: function() {
                     var request = $.ajax({
                       type: 'DELETE',
@@ -397,7 +397,7 @@ function songlistDelete(listId) {
         buttons: {
             success: {
                 label: 'Yes',
-                className: 'btn-info',
+                className: 'btn-primary',
                 callback: function() {
                     var request = $.ajax({
                       type: 'DELETE',

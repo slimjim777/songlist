@@ -1,6 +1,27 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <link rel="apple-touch-icon" sizes="57x57" href="/static/images/favicons/apple-touch-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/static/images/favicons/apple-touch-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/static/images/favicons/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/static/images/favicons/apple-touch-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/static/images/favicons/apple-touch-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/static/images/favicons/apple-touch-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/static/images/favicons/apple-touch-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/static/images/favicons/apple-touch-icon-152x152.png">
+    <meta name="apple-mobile-web-app-title" content="Life Church Music">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <link rel="icon" type="image/png" href="/static/images/favicons/favicon-196x196.png" sizes="196x196">
+    <link rel="icon" type="image/png" href="/static/images/favicons/favicon-160x160.png" sizes="160x160">
+    <link rel="icon" type="image/png" href="/static/images/favicons/favicon-96x96.png" sizes="96x96">
+    <link rel="icon" type="image/png" href="/static/images/favicons/favicon-16x16.png" sizes="16x16">
+    <link rel="icon" type="image/png" href="/static/images/favicons/favicon-32x32.png" sizes="32x32">
+    <meta name="msapplication-TileColor" content="#2f9966">
+    <meta name="msapplication-TileImage" content="/static/images/favicons/mstile-144x144.png">
+    <meta name="application-name" content="Life Church Music">
+    <link href='http://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Roboto+Condensed:300' rel='stylesheet' type='text/css'>
+
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -63,7 +84,7 @@
     </div>
     {{/if}}
 
-    <h2>Song Lists <span title="Add Song List"><button class="btn btn-info" {{action 'newSonglist'}}><span class="glyphicon glyphicon-plus"></span></button></span></h2>
+    <h2>Song Lists <span title="Add Song List"><button class="btn btn-primary" {{action 'newSonglist'}}><span class="glyphicon glyphicon-plus"></span></button></span></h2>
     {{#if isDeleting}}
         <div class="panel panel-danger">
             <div class="panel-heading">
@@ -85,7 +106,7 @@
         {{#if isEditing}}
         <tr class="grid-row">
             <td>
-                <button class="btn btn-info" {{action 'saveSonglist'}}>Save</button>&nbsp;
+                <button class="btn btn-primary" {{action 'saveSonglist'}}>Save</button>&nbsp;
                 <a {{action 'cancelSonglistEdit'}}>Cancel</a>
             </td>
             <td>{{view App.CalendarDatePicker value=newSonglist.event_date class="form-control" placeholder="event date"}}</td>
@@ -128,14 +149,14 @@
             <label>Event Date</label>
             {{view App.CalendarDatePicker name=model.event_date value=model.event_date class="form-control" placeholder="event date"}}
             <br/>
-            <button type="submit" class="btn btn-info">Save</button> <button {{action "cancelSonglistEdit"}} class="btn btn-warning">Cancel</button>
+            <button type="submit" class="btn btn-primary">Save</button> <button {{action "cancelSonglistEdit"}} class="btn btn-default">Cancel</button>
         </form>
     {{else}}
-        <h2>{{model.name}} on {{model.event_date}} <button {{action 'editSonglist'}} class="btn btn-info"><span class="glyphicon glyphicon-edit"></span></button></h2>
+        <h2>{{model.name}} on {{model.event_date}} <button {{action 'editSonglist'}} class="btn btn-primary"><span class="glyphicon glyphicon-edit"></span></button></h2>
         <em>{{model.owner}}</em>
         <br />
 
-        <h4>Songs {{#link-to 'addSong' model class="btn btn-info" title="Add a Song"}}<span class="glyphicon glyphicon-plus"></span>{{/link-to}}</h4>
+        <h4>Songs {{#link-to 'addSong' model class="btn btn-primary" title="Add a Song"}}<span class="glyphicon glyphicon-plus"></span>{{/link-to}}</h4>
         <div>
             {{outlet addSong}}
         </div>
@@ -194,9 +215,9 @@
                 {{/if}}
             </div>
             <div class="center">
-                <button {{action 'metroMinus'}} class="btn btn-info"><span class="badge"><span class="glyphicon glyphicon-arrow-down"></span></span>&nbsp;<span class="glyphicon glyphicon-minus"></span></button>
+                <button {{action 'metroMinus'}} class="btn btn-primary"><span class="badge"><span class="glyphicon glyphicon-arrow-down"></span></span>&nbsp;<span class="glyphicon glyphicon-minus"></span></button>
                 {{input id="metro_tempo" name="metro_tempo" type="number" value=model.tempo min=50 max=200 placeholder="tempo"}}
-                <button {{action 'metroPlus'}} class="btn btn-info"><span class="glyphicon glyphicon-plus"></span>&nbsp;<span class="badge"><span class="glyphicon glyphicon-arrow-up"></span></span></button>
+                <button {{action 'metroPlus'}} class="btn btn-primary"><span class="glyphicon glyphicon-plus"></span>&nbsp;<span class="badge"><span class="glyphicon glyphicon-arrow-up"></span></span></button>
             </div>
             <br />
             <div class="center">
@@ -207,14 +228,14 @@
                 {{/if}}
             </div>
             <div>
-                <span class="left"><button {{action 'previousSong'}} class="btn btn-info"><span class="glyphicon glyphicon-arrow-left"></span> Previous</button></span>
-                <span class="right"><button {{action 'nextSong'}} class="btn btn-info">Next <span class="glyphicon glyphicon-arrow-right"></span></button></span>
+                <span class="left"><button {{action 'previousSong'}} class="btn btn-primary"><span class="glyphicon glyphicon-arrow-left"></span> Previous</button></span>
+                <span class="right"><button {{action 'nextSong'}} class="btn btn-primary">Next <span class="glyphicon glyphicon-arrow-right"></span></button></span>
             </div>
 
         </div>
         <div class="panel-footer">
             <div class="center">
-                <button class="btn btn-info" {{action 'saveSong' model}}>Save Changes</button>
+                <button class="btn btn-primary" {{action 'saveSong' model}}>Save Changes</button>
                 <br>
                 <p><em>Click on this panel to be able to use the keyboard shortcuts (space bar, up arrow, down arrow).</em></p>
             </div>
@@ -223,7 +244,7 @@
 </script>
 
 <script type="text/x-handlebars" data-template-name="addSong">
-    <div class="panel panel-info">
+    <div class="panel panel-primary">
       <div class="panel-heading">
         <h3 class="panel-title">Add Song to Songlist</h3>
       </div>
@@ -233,13 +254,13 @@
             {{#each folder in folders}}
             <tr>
                 <td>{{ folder.name }}</td>
-                <td><button {{action 'selectSong' folder}} class="btn btn-info">Add</button></td>
+                <td><button {{action 'selectSong' folder}} class="btn btn-primary">Add</button></td>
             </tr>
             {{/each}}
           </table>
-          <button {{action 'addUnlistedSong'}} class="btn btn-success">Add Unlisted Song</button>
+          <button {{action 'addUnlistedSong'}} class="btn btn-default">Add Unlisted Song</button>
           <span class="right">
-          <button {{action 'closeFind'}} class="btn btn-info">Close</button>
+          <button {{action 'closeFind'}} class="btn btn-primary">Close</button>
           </span>
       </div>
     </div>

@@ -101,14 +101,14 @@
               <div class="form-group">
                 <input name="q" type="text" class="form-control" placeholder="search for songs" value="{{ q }}" />
               </div>
-              <button type="submit" class="btn btn-info">Find</button>
+              <button type="submit" class="btn btn-primary">Find</button>
             </form>
         </div>
         <div class="container">
             {% for t in tags %}
             <a href="" onclick="songTagFilter(event, '{{ t.name }}', '{{ '|'.join(tags_selected) }}')" class="tag">
                 {% if t.name in tags_selected %}
-                <span class="label label-info">{{ t.name }}</span>
+                <span class="label label-primary">{{ t.name }}</span>
                 {% else %}
                 <span class="label label-default">{{ t.name }}</span>
                 {% endif %}

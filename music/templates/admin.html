@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block body %}
-<h3>Users <span title="Add Person"><a href="#" class="btn btn-info" onclick="userAddToggle(event)"><span class="glyphicon glyphicon-plus"></span></a></span></h3>
+<h3>Users <span title="Add Person"><a href="#" class="btn btn-primary" onclick="userAddToggle(event)"><span class="glyphicon glyphicon-plus"></span></a></span></h3>
 <table class="table table-striped">
     <thead>
         <tr>
@@ -9,7 +9,7 @@
     </thead>
     <tbody>
         <tr id="usrnew" class="hidden">
-            <td><button id="usrnewsave" class="btn btn-info" title="Save" onclick="userAdd(event)">Save</button> <a href="#"  onclick="userAddToggle(event)">Cancel</a></td>
+            <td><button id="usrnewsave" class="btn btn-primary" title="Save" onclick="userAdd(event)">Save</button> <a href="#"  onclick="userAddToggle(event)">Cancel</a></td>
             <td><input id="usrnewfirst" name="firstname" placeholder="firstname" type="text" class="form-control" /></td>
             <td><input id="usrnewlast" name="lastname" placeholder="lastname" type="text" class="form-control" /></td>
             <td><input id="usrnewemail" name="email" placeholder="email" type="email" class="form-control" /></td>
@@ -50,7 +50,7 @@
         <h2 class="sub-header">Site Admin</h2>
 
           <div class="btn-group">
-            <div type="button" class="btn btn-info">Users</div>
+            <div type="button" class="btn btn-primary">Users</div>
           </div>
       </div>
     </div>
