@@ -9,7 +9,8 @@ class Song(object):
     Base Parser class for all song formats
     """
     NOT_SECTIONS = ['Title', 'Artist', 'Copyright', 'CCLI', 'Key', 'Capo', 'Tempo', 'Time',
-                    'Duration', 'Flow', 'Book', 'Number', 'Keywords', 'Topic', 'Restrictions']
+                    'Duration', 'Flow', 'Book', 'Number', 'Keywords', 'Topic', 'Restrictions',
+                    'OriginalKey']
 
     # Regular expression patterns
     NEWLINE = re.compile(r'[\r\n]')
@@ -135,7 +136,7 @@ class ChordPro(Song):
                     'eot', 'define', 'copyright', 'footer', 'book', 'number', 'keywords', 'ccli', 'restrictions',
                     'textsize', 'textfont', 'chordsize', 'chordfont', 'zoom-android', 'metronome',
                     'Title', 'Artist', 'Copyright', 'CCLI', 'Key', 'Capo', 'Tempo', 'Time',
-                    'Duration', 'Flow', 'Book', 'Number', 'Keywords', 'Topic', 'Restrictions'
+                    'Duration', 'Flow', 'Book', 'Number', 'Keywords', 'Topic', 'Restrictions', 'OriginalKey'
                     ]
     MAPPING = {
         'title': 'Title', 't': 'Title',

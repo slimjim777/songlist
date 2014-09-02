@@ -12,6 +12,7 @@ from music.model.database import Person
 from music.model.database import Folder
 from music.model.database import File
 from music.model.database import Tag
+from music.model.transpose import Transpose
 
 
 PAGE_SIZE = int(app.config['PAGE_SIZE'])
@@ -84,6 +85,11 @@ def song():
         song_pro = ChordPro(contents)
         song_chart = song_pro.parsed
 
+    # Transpose to 'OriginalKey' if it is provided
+    if song_chart.get('OriginalKey'):
+        t = Transpose(song_chart, song_chart['OriginalKey'])
+        song_chart = t.song
+
     return render_template('song.html', song=song_chart)
 
 
@@ -101,23 +107,6 @@ def admin():
     users = Person.query.order_by('lastname', 'firstname').all()
     return render_template('admin.html', users=users)
 
-"""
-@app.route('/songlist')
-@login_required
-def songlist():
-    songlists = SongList.query.order_by('event_date desc').all()
-    return render_template('songlist.html', songlists=songlists, today=datetime.date.today().strftime('%d/%m/%Y'))
-
-
-@app.route('/songlist/<int:songlist_id>')
-@login_required
-def songlist_view(songlist_id):
-    # Get the songlist link records so we can sort songs in the display order
-    links = SongListLink.query.filter_by(songlist_id=songlist_id).order_by(SongListLink.position).all()
-    sl = SongList.query.get(songlist_id)
-    songs = [s.folder.dict() for s in links]
-    return render_template('songlist_view.html', songlinks=links, songlist=sl, songs=songs)
-"""
 
 @app.route('/songlist')
 @login_required
