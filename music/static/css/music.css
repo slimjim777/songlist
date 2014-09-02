@@ -150,6 +150,9 @@ ul.nav a, a.navbar-brand {
     font-weight: 300;
 }
 
-
+.container-fluid {
+    padding-left: 0px;
+    padding-right: 0px;
+}
 
  /* Start of JLS Css */
