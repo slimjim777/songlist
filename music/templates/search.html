@@ -16,37 +16,52 @@
   <tbody>
     {% for song in files %}
     <tr class="collapse-group">
-        <td><button class="btn btn-default" data-toggle="collapse" data-target="#viewdetails{{ song.id }}">{{ song.highlight(q)|safe }} <span class="badge">{{ song.files|length }}</span> &raquo;</button>
-            <a id="songedit{{ song.id }}" href="#" onclick="songEdit(event, {{ song.id }})" style="float:right;"><span class="glyphicon glyphicon-edit"></span></a>
-            <span id="youtube{{ song.id }}"></span>
-            {% if song.url %}
-            <a href="{{ song.url }}" title="Youtube"><img src="/static/images/YouTube-social-icon_red_24px.png" /></a>
-            {% endif %}
-            {% if song.tempo and song.tempo > 0  %}
-            <span title="Tempo">{{ song.tempo }} bpm <!--button id="metroStart{{ song.id }}" class="btn btn-success" onclick="metroStart({{ song.tempo or 0 }}, {{ song.id }})">Start</button>&nbsp;<button id="metroStop{{ song.id }}" class="btn btn-danger" onclick="metroStop({{ song.id }})">Stop</button--></span>
-            {% endif %}
-            {% if song.time_signature  %}
-            <span title="Time Signature">&nbsp;{{ song.time_signature }}</span>
-            {% endif %}
-            <div id="viewdetails{{ song.id }}" class="collapse"><br />
-            {% for f in song.files %}
-            <p>
-                <a href="{{ f.url }}?dl=1" title="Download">{{ f.highlight(q)|safe }} ({{ f.size }})</a>
-                <button class="btn btn-default" title="View">
-                    {% if f.extension in ['onsong','pro','chordpro','chdpro','chopro'] %}
-                    <a href="/song?file_path={{ f.path }}"><span class="glyphicon glyphicon-music"></span></a>
-                    {% else %}
-                    <a href="{{ f.url }}">
-                        {% if 'audio' in f.mime_type or 'video' in f.mime_type %}
-                        <span class="glyphicon glyphicon-play"></span>
-                        {% else %}
-                        <span class="glyphicon glyphicon-eye-open"></span>
-                        {% endif %}
-                    </a>
+        <td>
+            <div>
+                <div class="col-xs-12 col-sm-12 col-md-12 text-left">
+                    <button class="btn btn-default" data-toggle="collapse" data-target="#viewdetails{{ song.id }}">&raquo;</button> {{ song.highlight(q)|safe }} <span class="badge">{{ song.files|length }}</span>
+                </div>
+                <div class="col-xs-3 col-sm-3 col-md-3 text-right">
+                    <span id="youtube{{ song.id }}"></span>
+                    {% if song.url %}
+                    <a href="{{ song.url }}" title="Youtube"><img src="/static/images/YouTube-social-icon_red_24px.png" /></a>
                     {% endif %}
-                </button>
-            </p>
-            {% endfor %}
+                </div>
+                <div class="col-xs-2 col-xs-2 col-sm-2 col-md-2">
+                    {% if song.tempo and song.tempo > 0  %}
+                    <span title="Tempo">{{ song.tempo }} bpm <!--button id="metroStart{{ song.id }}" class="btn btn-success" onclick="metroStart({{ song.tempo or 0 }}, {{ song.id }})">Start</button>&nbsp;<button id="metroStop{{ song.id }}" class="btn btn-danger" onclick="metroStop({{ song.id }})">Stop</button--></span>
+                    {% endif %}
+                </div>
+                <div class="col-xs-3 col-sm-3 col-md-3">
+                    {% if song.time_signature  %}
+                    <span title="Time Signature">&nbsp;{{ song.time_signature }}</span>
+                    {% endif %}
+                </div>
+                <div class="col-xs-4 col-sm-4 col-md-4 text-right">
+                    <a id="songedit{{ song.id }}" href="#" onclick="songEdit(event, {{ song.id }})"><span class="glyphicon glyphicon-edit"></span></a>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-12">
+                    <div id="viewdetails{{ song.id }}" class="collapse"><br />
+                    {% for f in song.files %}
+                    <p class="text-left">
+                        <a href="{{ f.url }}?dl=1" title="Download">{{ f.highlight(q)|safe }} ({{ f.size }})</a>
+                        <button class="btn btn-default" title="View">
+                            {% if f.extension in ['onsong','pro','chordpro','chdpro','chopro'] %}
+                            <a href="/song?file_path={{ f.path }}"><span class="glyphicon glyphicon-music"> Chart</span></a>
+                            {% else %}
+                            <a href="{{ f.url }}">
+                                {% if 'audio' in f.mime_type or 'video' in f.mime_type %}
+                                <span class="glyphicon glyphicon-play"></span>
+                                {% else %}
+                                <span class="glyphicon glyphicon-eye-open"></span>
+                                {% endif %}
+                            </a>
+                            {% endif %}
+                        </button>
+                    </p>
+                    {% endfor %}
+                    </div>
+                </div>
             </div>
         </td>
     </tr>

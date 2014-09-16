@@ -156,3 +156,117 @@ ul.nav a, a.navbar-brand {
 }
 
  /* Start of JLS Css */
+ .rota, .rota th{
+ 	text-align: center;
+ }
+ .container {
+ 	margin: 0 auto;
+ 	display: block;
+ 	position: relative;
+ 	width: 100%;
+ }
+ .jumbotron .container {
+ 	padding: 16px 8px;
+ }
+ .navbar .container {
+ 	margin: 0;
+ }
+ .btn {
+ 	font-family: Roboto Condensed;
+ 	border-color: #dcdcdc;
+ 	background-color: #92278F;
+ 	color: white;
+ }
+ .btn:hover {
+ 	background-color: #a5bfb2;
+ 	color: white;
+ }
+ .btn.active {
+ 	-webkit-box-shadow: none;
+ 	box-shadow: none;
+ }
+ .glyphicon {
+ 	color: white;
+ }
+ .glyphicon-edit {
+ 	color:  white;
+ }
+ .glyphicon-ok {
+ 	color: #404040;
+ }
+ .jumbotron {
+ 	margin: 50px 0 0px;
+ 	padding: 0;
+ 	width: 100%;
+ }
+ .jumbotron h1, .jumbotron h2 {
+ 	margin: 0;
+ 	padding: 0;
+ }
+ .jumbotron .btn {
+ 	margin: 16px auto 0;
+ 	display: block;
+ }
+ .sub-heading {
+ 	margin: 16px 8px;
+ 	text-align: left;
+ }
+ .label, label, .table th {
+ 	font-family: Roboto Condensed;
+ 	font-weight: 400;
+ }
+ .label-default {
+ 	background-color: #606060;
+ 	margin-bottom: 10px;
+ 	position: relative;
+	line-height: 2.25em
+ }
+ .panel-heading, #main, .form-group {
+ 	padding: 8px;
+ }
+ .panel-body, .panel-default {
+ 	padding: 0;
+ 	margin: 0;
+ }
+ .panel-body>div {
+ 	padding: 8px;
+ }
+ .panel-body .table-reponsive {
+ 	padding: 0;
+ }
+ .panel {
+ 	margin-bottom: 8px;
+ }
+ .table-responsive {
+ 	border: 0;
+ 	margin: 0;
+ 	padding: 0 !important;
+ }
+ .table>thead>tr>th {
+ 	padding: 8px;
+ 	border: 0;
+ }
+ form {
+ 	margin: 0;
+ }
+ .col-xs-1, .col-sm-1, .col-md-1, .col-lg-1, .col-xs-2, .col-sm-2, .col-md-2, .col-lg-2, .col-xs-3, .col-sm-3, .col-md-3, .col-lg-3, .col-xs-4, .col-sm-4, .col-md-4, .col-lg-4, .col-xs-5, .col-sm-5, .col-md-5, .col-lg-5, .col-xs-6, .col-sm-6, .col-md-6, .col-lg-6, .col-xs-7, .col-sm-7, .col-md-7, .col-lg-7, .col-xs-8, .col-sm-8, .col-md-8, .col-lg-8, .col-xs-9, .col-sm-9, .col-md-9, .col-lg-9, .col-xs-10, .col-sm-10, .col-md-10, .col-lg-10, .col-xs-11, .col-sm-11, .col-md-11, .col-lg-11, .col-xs-12, .col-sm-12, .col-md-12, .col-lg-12 {
+ 	padding: 4px ;
+ }
+ .pager, .panel-form td {
+ 	padding: 0 8px;
+ 	margin: 8px 0 12px 0;
+ }
+ .panel-form {
+ 	margin: 8px 0;
+ }
+ .navbar-inverse, .navbar-collapse {
+ 	border: 0px solid #404040;
+ }
+ .navbar-brand {
+ 	padding: 16px;
+ 	font-size: 16px;
+ 	line-height: 1em;
+ }
+ .table-striped, .table-striped th {
+ 	text-align: center;
+ }
