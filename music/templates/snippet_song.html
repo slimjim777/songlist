@@ -1,15 +1,24 @@
 {% block body %}
-<span id="songsave{{ song.id }}" style="text-align: right">
-    <br />
-    <input id="url{{ song.id }}" type="text" value="{{ song.url if song.url or '' }}" class="form-control highlight" placeholder="Youtube URL" />
-    <input id="tempo{{ song.id }}" type="text" value="{{ song.tempo if song.tempo or '' }}" class="form-control highlight" placeholder="Tempo (BPM)" />
-    <select  id="time{{ song.id }}" class="form-control highlight" name="time_signature">
-        <option value="4/4" {{ 'selected' if song.time_signature == '4/4' else '' }}>4/4</option>
-        <option value="3/4" {{ 'selected' if song.time_signature == '3/4' else '' }}>3/4</option>
-        <option value="6/8" {{ 'selected' if song.time_signature == '6/8' else '' }}>6/8</option>
-    </select>
-    <button class="btn btn-primary" onclick="songSave({{ song.id }})">Save</button>
-    <a href="#" onclick="songCancel(event, {{ song.id }})">Cancel</a>
-    <br />
-</span>
+<div id="songsave{{ song.id }}" class="col-xs-12 col-sm-12 col-md-12 col-lg-6 song-form">
+    <div class="form-group">
+        <label for="url{{ song.id }}">URL:</label>
+        <input id="url{{ song.id }}" type="text" value="{{ song.url if song.url or '' }}" class="form-control" placeholder="Youtube URL" />
+    </div>
+    <div class="form-group">
+        <label for="tempo{{ song.id }}">Tempo:</label>
+        <input id="tempo{{ song.id }}" type="text" value="{{ song.tempo if song.tempo or '' }}" class="form-control" placeholder="Tempo (BPM)" />
+    </div>
+    <div class="form-group">
+        <label for="time{{ song.id }}">Time Signature:</label>
+        <select  id="time{{ song.id }}" class="form-control" name="time_signature">
+            <option value="4/4" {{ 'selected' if song.time_signature == '4/4' else '' }}>4/4</option>
+            <option value="3/4" {{ 'selected' if song.time_signature == '3/4' else '' }}>3/4</option>
+            <option value="6/8" {{ 'selected' if song.time_signature == '6/8' else '' }}>6/8</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <button class="btn btn-primary" onclick="songSave({{ song.id }})">Save</button>
+        <a href="#" onclick="songCancel(event, {{ song.id }})">Cancel</a>
+    </div>
+</div>
 {% endblock %}

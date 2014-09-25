@@ -185,11 +185,8 @@ ul.nav a, a.navbar-brand {
  	-webkit-box-shadow: none;
  	box-shadow: none;
  }
- .glyphicon {
+ button .glyphicon {
  	color: white;
- }
- .glyphicon-edit {
- 	color:  white;
  }
  .glyphicon-ok {
  	color: #404040;
@@ -203,10 +200,12 @@ ul.nav a, a.navbar-brand {
  	margin: 0;
  	padding: 0;
  }
+ /*
  .jumbotron .btn {
  	margin: 16px auto 0;
  	display: block;
  }
+ */
  .sub-heading {
  	margin: 16px 8px;
  	text-align: left;
@@ -270,3 +269,10 @@ ul.nav a, a.navbar-brand {
  .table-striped, .table-striped th {
  	text-align: center;
  }
+
+.song-form {
+    text-align: left;
+    background-color: #fcf8e3;
+    border-radius: 5px;
+    border: 1px dotted #cccccc;
+}
