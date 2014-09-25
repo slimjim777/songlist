@@ -345,6 +345,12 @@ App.SongView = Ember.View.extend({
     },
 
     keyDown: function(event, view) {
+        if (event.target.tagName=="INPUT") {
+            // Ignore keypress when we are on text elements
+            // ...otherwise we can't type spaces
+            return;
+        }
+
         if (event.keyCode === 32) {
             // Space: toggle the metronome
             if (this.get('controller').get('isMetroStarted')) {

@@ -210,11 +210,6 @@
             </div>
         </div>
         <div class="panel-body">
-            <div>
-                {{#if isMetroStarted}}
-                <div class="alert alert-info">Metronome is running at {{model.tempo}} bpm</div>
-                {{/if}}
-            </div>
             <div class="center">
                 <button {{action 'metroMinus'}} class="btn btn-primary"><span class="badge"><span class="glyphicon glyphicon-arrow-down"></span></span>&nbsp;<span class="glyphicon glyphicon-minus"></span></button>
                 {{input id="metro_tempo" name="metro_tempo" type="number" value=model.tempo min=50 max=200 placeholder="tempo"}}
