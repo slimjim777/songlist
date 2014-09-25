@@ -109,7 +109,7 @@
                 <button class="btn btn-primary" {{action 'saveSonglist'}}>Save</button>&nbsp;
                 <a {{action 'cancelSonglistEdit'}}>Cancel</a>
             </td>
-            <td>{{view App.CalendarDatePicker value=newSonglist.event_date class="form-control" placeholder="event date"}}</td>
+            <td>{{view App.CalendarDatePicker value=newSonglist.event_date class="form-control" placeholder="event date" readonly="true" title="Click to enter the date"}}</td>
             <td>{{input value=newSonglist.name class="form-control" placeholder="name of song list"}}</td>
             <td></td>
         </tr>
@@ -148,7 +148,7 @@
             <label>Songlist Name</label>
             {{input name=model.name value=model.name class="form-control" placeholder="songlist name"}}
             <label>Event Date</label>
-            {{view App.CalendarDatePicker name=model.event_date value=model.event_date class="form-control" placeholder="event date"}}
+            {{view App.CalendarDatePicker name=model.event_date value=model.event_date class="form-control" placeholder="event date" readonly="true" title="Click to enter the date"}}
             <br/>
             <button type="submit" class="btn btn-primary">Save</button> <button {{action "cancelSonglistEdit"}} class="btn btn-default">Cancel</button>
         </form>
