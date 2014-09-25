@@ -11,27 +11,26 @@
                 <button class="btn btn-default" data-toggle="collapse" data-target="#viewdetails{{ song.id }}" id="name{{ song.id }}"> &raquo;</button>
                 {{ song.name }} <span class="badge">{{ song.files|length }}</span>
             </div>
-            <div class="col-xs-3 col-xs-3 col-sm-3 col-md-3"></div>
-            <div class="col-xs-3 col-xs-3 col-sm-3 col-md-3">
+            <div class="col-xs-1 col-xs-1 col-sm-1 col-md-1">
                 {% if song.tempo and song.tempo > 0  %}
                 <span title="Tempo">{{ song.tempo }} bpm</span>
                 {% endif %}
             </div>
-            <div class="col-xs-3 col-sm-3 col-md-3">
+            <div class="col-xs-2 col-sm-2 col-md-2">
                 {% if song.time_signature  %}
                 <span title="Time Signature">&nbsp;{{ song.time_signature }}</span>
                 {% endif %}
             </div>
-            <div class="col-xs-1 col-sm-1 col-md-1">
+            <div class="col-xs-3 col-sm-3 col-md-3">
                 <span id="youtube{{ song.id }}"></span>
                 {% if song.url %}
                 <a class="btn" href="{{ song.url }}" title="YouTube">YouTube</a>
                 {% endif %}
             </div>
-            <div class="col-xs-1 col-sm-1 col-md-1">
+            <div class="col-xs-3 col-sm-3 col-md-3">
                 <button class="btn" onclick="songTags(event, {{ song.id }})" title="{{ song.tags|length }} tags">Tags <span class="glyphicon glyphicon-tags badge">{{ song.tags|length }}</span></button>
             </div>
-            <div class="col-xs-1 col-sm-1 col-md-1">
+            <div class="col-xs-3 col-sm-3 col-md-3">
                 <button class="btn" id="songedit{{ song.id }}" href="#" onclick="songEdit(event, {{ song.id }})" >Edit <span class="glyphicon glyphicon-edit"></span></button>
             </div>
             <div id="songedit_wrap{{ song.id }}"></div>
