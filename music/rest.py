@@ -41,7 +41,7 @@ def song_by_id(song_id):
         return render_template('snippet_song.html', song=song)
 
     song.url = request.json.get('url')
-    song.tempo = request.json.get('tempo')
+    song.tempo = request.json.get('tempo') or None
     song.time_signature = request.json.get('time_signature')
     db.session.commit()
     return jsonify({'response': 'Success'})
