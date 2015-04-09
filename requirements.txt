@@ -5,7 +5,6 @@ Jinja2==2.7.2
 MarkupSafe==0.19
 SQLAlchemy==0.9.4
 Werkzeug==0.9.4
-distribute==0.6.31
 dropbox==2.0.0
 gunicorn==18.0
 httplib2==0.8
