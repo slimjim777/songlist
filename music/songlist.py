@@ -29,7 +29,8 @@ def api_songlists():
 
 
 @app.route('/api/songlists', methods=['POST'])
-@app.route('/api/songlists/<int:songlist_id>', methods=['GET', 'POST', 'DELETE'])
+@app.route(
+    '/api/songlists/<int:songlist_id>', methods=['GET', 'POST', 'DELETE'])
 @login_required
 def api_songlist(songlist_id=None):
     """
@@ -52,28 +53,32 @@ def api_songlist(songlist_id=None):
         if songlist_id:
             try:
                 # Update an existing songlist
-                songlist = SongList.query.get(songlist_id);
+                songlist = SongList.query.get(songlist_id)
                 if not songlist:
                     raise Exception('Cannot find the songlist')
                 songlist.name = request.json.get('name')
                 songlist.event_date = request.json.get('event_date')
                 db.session.commit()
-                return jsonify({'response': 'Success', 'record': songlist.to_dict()})
+                return jsonify(
+                    {'response': 'Success', 'record': songlist.to_dict()})
             except Exception, v:
                 return jsonify({'response': 'Error', 'message': str(v)})
         else:
             # Create a new songlist
             try:
-                songlist = SongList(request.json.get('name'), request.json.get('event_date'), session['user_id'])
+                songlist = SongList(
+                    request.json.get('name'), request.json.get('event_date'),
+                    session['user_id'])
                 db.session.add(songlist)
                 db.session.commit()
-                return jsonify({'response': 'Success', 'record': songlist.to_dict()})
+                return jsonify(
+                    {'response': 'Success', 'record': songlist.to_dict()})
             except Exception, v:
                 return jsonify({'response': 'Error', 'message': str(v)})
     elif request.method == "DELETE":
         try:
             # Delete the songlist
-            songlist = SongList.query.get(songlist_id);
+            songlist = SongList.query.get(songlist_id)
             db.session.delete(songlist)
             db.session.commit()
             return jsonify({'response': 'Success'})
@@ -88,7 +93,8 @@ def api_song_find():
     q = request.json.get('q')
     if q:
         # Search for folders containing the query
-        song_query = Folder.query.filter(Folder.name.ilike('%%%s%%' % q)).order_by(Folder.name)
+        song_query = Folder.query.filter(
+            Folder.name.ilike('%%%s%%' % q)).order_by(Folder.name)
         song_list = [f.dict() for f in song_query.all()]
     else:
         song_list = []
@@ -111,7 +117,8 @@ def api_song(song_id=None):
                 song.tempo = request.json.get('tempo')
                 song.time_signature = request.json.get('time_signature')
                 db.session.commit()
-                return jsonify({'response': 'Success', 'record': song.to_dict()})
+                return jsonify(
+                    {'response': 'Success', 'record': song.to_dict()})
             except Exception, v:
                 return jsonify({'response': 'Error', 'message': str(v)})
         else:
@@ -125,7 +132,8 @@ def api_song(song_id=None):
                 song.time_signature = request.json.get('time_signature')
                 db.session.add(song)
                 db.session.commit()
-                return jsonify({'response': 'Success', 'record': song.to_dict()})
+                return jsonify(
+                    {'response': 'Success', 'record': song.to_dict()})
             except Exception, v:
                 return jsonify({'response': 'Error', 'message': str(v)})
 
@@ -135,11 +143,13 @@ def api_song(song_id=None):
                 song = Song.query.get(song_id)
                 if not song:
                     raise Exception('Cannot find the request song.')
-                return jsonify({'response': 'Success', 'record': song.to_dict()})
+                return jsonify(
+                    {'response': 'Success', 'record': song.to_dict()})
             except:
                 return jsonify({'response': 'Error', 'message': str(v)})
         else:
-            return jsonify({'response': 'Error', 'message': 'No song requested.'})
+            return jsonify(
+                {'response': 'Error', 'message': 'No song requested.'})
 
 
 @app.route('/api/songlists/<int:songlist_id>/song_order', methods=['POST'])

@@ -3,7 +3,6 @@ from flask import redirect
 from flask import request
 from flask import url_for
 from flask import session
-from flask import render_template
 from flask_oauthlib.client import OAuth
 from functools import wraps
 from music.model.database import Person
@@ -77,14 +76,16 @@ def check_user(email):
     Check we have a valid app user for the Google user.
     """
     session.pop('messages', None)
-    
+
     user = Person.user_by_email(email)
     if not user:
         # Reset the Google token and forbid access
         session.pop('google_token', None)
-        session['messages'] = """Your Email address (%s) is not registered with this site. 
-                If you know you have an account here, please logout of your Google Account 
-                and login with the account that has been registered with this site.""" % email
+        session['messages'] = """
+        Your Email address (%s) is not registered with this site.
+        If you know you have an account here, please logout of your
+        Google Account and login with the account that has been
+        registered with this site.""" % email
         return False
     else:
         # Save the user details in the session

@@ -8,9 +8,10 @@ class Song(object):
     """
     Base Parser class for all song formats
     """
-    NOT_SECTIONS = ['Title', 'Artist', 'Copyright', 'CCLI', 'Key', 'Capo', 'Tempo', 'Time',
-                    'Duration', 'Flow', 'Book', 'Number', 'Keywords', 'Topic', 'Restrictions',
-                    'OriginalKey']
+    NOT_SECTIONS = [
+        'Title', 'Artist', 'Copyright', 'CCLI', 'Key', 'Capo', 'Tempo', 'Time',
+        'Duration', 'Flow', 'Book', 'Number', 'Keywords', 'Topic',
+        'Restrictions', 'OriginalKey']
 
     # Regular expression patterns
     NEWLINE = re.compile(r'[\r\n]')
@@ -29,7 +30,7 @@ class Song(object):
     @property
     def song_sections(self):
         """
-        Get the unique sections (verse1, chorus...) of the song from the 'flow'.
+        Get the unique sections (verse1, chorus...) of the song from the 'flow'
         """
         sections = []
         for section in self.song['Flow']:
@@ -43,8 +44,8 @@ class Song(object):
 
     def song_line(self, line):
         """
-        Parse the chords and lyrics into separate lists. The even elements are the lyrics
-        and the odd elements are the chords.
+        Parse the chords and lyrics into separate lists. The even elements are
+        the lyrics and the odd elements are the chords.
         """
         # Split the line on the start of each chord
         parts = self.CHORD_LINE.split(line)
@@ -57,7 +58,8 @@ class Song(object):
             else:
                 lyrics.append(self.NEWLINE.sub('', p))
 
-        # If the line doesn't start with a chord, then prefix chord list with a blank chords
+        # If the line doesn't start with a chord, then prefix chord list with a
+        # blank chords
         if line[0] != '[':
             chords.insert(0, '')
 
@@ -131,17 +133,19 @@ class ChordPro(Song):
     """
     Parser for the ChordPro Chord Chart file format.
     """
-    NOT_SECTIONS = ['title', 't', 'artist', 'subtitle', 'st', 'su', 'album', 'a', 'key', 'capo', 'tempo', 'time',
-                    'duration', 'flow', 'comment', 'c', 'guitar_comment', 'gc', 'start_of_tab', 'sot', 'end_of_tab',
-                    'eot', 'define', 'copyright', 'footer', 'book', 'number', 'keywords', 'ccli', 'restrictions',
-                    'textsize', 'textfont', 'chordsize', 'chordfont', 'zoom-android', 'metronome',
-                    'Title', 'Artist', 'Copyright', 'CCLI', 'Key', 'Capo', 'Tempo', 'Time',
-                    'Duration', 'Flow', 'Book', 'Number', 'Keywords', 'Topic', 'Restrictions', 'OriginalKey'
-                    ]
+    NOT_SECTIONS = [
+        'title', 't', 'artist', 'subtitle', 'st', 'su', 'album', 'a', 'key',
+        'capo', 'tempo', 'time', 'duration', 'flow', 'comment', 'c',
+        'guitar_comment', 'gc', 'start_of_tab', 'sot', 'end_of_tab', 'eot',
+        'define', 'copyright', 'footer', 'book', 'number', 'keywords', 'ccli',
+        'restrictions', 'textsize', 'textfont', 'chordsize', 'chordfont',
+        'zoom-android', 'metronome', 'Title', 'Artist', 'Copyright', 'CCLI',
+        'Key', 'Capo', 'Tempo', 'Time', 'Duration', 'Flow', 'Book', 'Number',
+        'Keywords', 'Topic', 'Restrictions', 'OriginalKey']
     MAPPING = {
         'title': 'Title', 't': 'Title',
-        'artist': 'Artist', 'subtitle': 'Artist', 'su': 'Artist', 'st': 'Artist',
-        'key': 'Key',
+        'artist': 'Artist', 'subtitle': 'Artist', 'su': 'Artist',
+        'st': 'Artist', 'key': 'Key',
     }
 
     # Get the text in curly brackets e.g. {title: ALIVE} => title: ALIVE
@@ -215,24 +219,17 @@ class ChordPro(Song):
 
         # The 'flow' is a comma-separated list of items
         if key == 'Flow':
-            # Don't use the provided flow from ChordPro files as they don't match the section names
-            #    self.song[key] = self.song[key].split(',')
+            # Don't use the provided flow from ChordPro files as they don't
+            # match the section names
             self.song['Flow'] = []
 
         return key
 
 
 if __name__ == '__main__':
-    f = file('/Users/jjesudason/Dropbox/Songs/Fill This Place/Fill This Place.onsong')
+    f = file('/Users/jjesudason/Dropbox/Songs/Alive/Alive.onsong')
     s = f.read()
     f.close()
     o = Onsong(s)
     s = o.parsed
     app.logger.debug(s)
-
-    #f = file('/Users/jjesudason/Downloads/Alive (ChordPro).pro')
-    #s = f.read()
-    #f.close()
-    #o = ChordPro(s)
-    #s = o.parsed
-    #app.logger.debug(s)

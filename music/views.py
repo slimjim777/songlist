@@ -37,12 +37,17 @@ def index():
 
     # Get the folders for the page
     if len(tags_selected) == 0:
-        folders = Folder.query.order_by(Folder.name).paginate(page, PAGE_SIZE, False)
+        folders = Folder.query.order_by(Folder.name).paginate(
+            page, PAGE_SIZE, False)
     else:
-        folders = Folder.query.filter(Folder.tags.any(Tag.name.in_(tags_selected))).order_by(Folder.name).paginate(page, PAGE_SIZE, False)
+        folders = Folder.query.filter(Folder.tags.any(
+            Tag.name.in_(tags_selected))).order_by(Folder.name).paginate(
+            page, PAGE_SIZE, False)
     tags = Tag.query.all()
 
-    return render_template('index.html', folders=folders, page=page, pages=folders.pages, tags=tags, tags_selected=tags_selected)
+    return render_template(
+        'index.html', folders=folders, page=page, pages=folders.pages,
+        tags=tags, tags_selected=tags_selected)
 
 
 @app.route('/songs/search')
@@ -52,10 +57,13 @@ def song_search():
     q = request.args.get('q')
     if q:
         # Search for folders containing the query
-        song_list_folders = Folder.query.filter(Folder.name.ilike('%%%s%%' % q))
+        song_list_folders = Folder.query.filter(
+            Folder.name.ilike('%%%s%%' % q))
         song_list_files = File.query.filter(File.name.ilike('%%%s%%' % q))
-        song_list_file_folders = Folder.query.filter(Folder.id.in_([fil.folder_id for fil in song_list_files]))
-        song_list = song_list_file_folders.union(song_list_folders).order_by(Folder.name)
+        song_list_file_folders = Folder.query.filter(
+            Folder.id.in_([fil.folder_id for fil in song_list_files]))
+        song_list = song_list_file_folders.union(song_list_folders).order_by(
+            Folder.name)
     else:
         song_list = None
 

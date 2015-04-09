@@ -10,20 +10,14 @@ tags = db.Table('tags',
                 db.Column('folder_id', db.Integer, db.ForeignKey('folder.id'))
                 )
 
-"""
-class SongListLink(db.Model):
-    songlist_id = db.Column(db.Integer, db.ForeignKey('song_list.id'), primary_key=True)
-    song_id = db.Column(db.Integer, db.ForeignKey('folder.id'), primary_key=True)
-    position = db.Column(db.Integer, default=0)
-    folder = db.relationship('Folder', backref='songlist_link')
-"""
 
 class Person(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(255))
     firstname = db.Column(db.String(100))
     lastname = db.Column(db.String(100))
-    role = db.Column(db.Enum('admin', 'standard', name='role_types'), default='standard')
+    role = db.Column(
+        db.Enum('admin', 'standard', name='role_types'), default='standard')
     last_login = db.Column(db.DateTime())
     songlists = db.relationship('SongList', backref='person', lazy='dynamic')
 
@@ -64,17 +58,22 @@ class Person(db.Model):
 class Folder(db.Model):
     """
     Cache the folder details in the database.
-    The URL and description allow users to enter extra metadata against a song e.g. Youtube link.
+    The URL and description allow users to enter extra metadata against a song
+    e.g. Youtube link.
     """
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(255), unique=True, index=True)
     active = db.Column(db.Boolean, default=True)
     url = db.Column(db.String(255))
     notes = db.Text()
-    files = db.relationship('File', backref='folder', lazy='joined', cascade="save-update, merge, delete")
+    files = db.relationship(
+        'File', backref='folder', lazy='joined',
+        cascade="save-update, merge, delete")
     tempo = db.Column(db.Integer)
-    time_signature = db.Column(db.Enum('4/4', '3/4', '6/8', name='time_signatures'), default='4/4')
-    tags = db.relationship('Tag', secondary=tags, backref=db.backref('folders', lazy='dynamic'))
+    time_signature = db.Column(
+        db.Enum('4/4', '3/4', '6/8', name='time_signatures'), default='4/4')
+    tags = db.relationship(
+        'Tag', secondary=tags, backref=db.backref('folders', lazy='dynamic'))
 
     def highlight(self, q):
         """
@@ -126,15 +125,16 @@ class File(db.Model):
 
 class SongList(db.Model):
     """
-    Song List to be able to create play lists of songs. This has a many-to-many relationship with the Folder.
+    Song List to be able to create play lists of songs. This has a many-to-many
+    relationship with the Folder.
     """
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(255))
     event_date = db.Column(db.Date)
     person_id = db.Column(db.Integer, db.ForeignKey('person.id'))
-    #folders = db.relationship('SongListLink', backref='songlist')
-    songs = db.relationship('Song', backref='songlist', lazy='dynamic', order_by=lambda:Song.position,
-                            cascade="save-update, merge, delete")
+    songs = db.relationship(
+        'Song', backref='songlist', lazy='dynamic',
+        order_by=lambda: Song.position, cascade="save-update, merge, delete")
 
     def __init__(self, name, event_date, owner_id):
         self.name = name
@@ -160,7 +160,8 @@ class SongList(db.Model):
                     time.strptime(value, '%Y-%m-%d')
                     return value
                 except:
-                    raise ValueError('The field `%s` is not a valid date' % key)
+                    raise ValueError(
+                        'The field `%s` is not a valid date' % key)
         elif isinstance(value, datetime):
             return value
         else:
@@ -189,7 +190,8 @@ class Song(db.Model):
     name = db.Column(db.String(255))
     songlist_id = db.Column(db.Integer, db.ForeignKey('song_list.id'))
     tempo = db.Column(db.Integer)
-    time_signature = db.Column(db.Enum('4/4', '3/4', '6/8', name='time_signatures'), default='4/4')
+    time_signature = db.Column(
+        db.Enum('4/4', '3/4', '6/8', name='time_signatures'), default='4/4')
     key = db.Column(db.String(10))
     url = db.Column(db.String(255))
     position = db.Column(db.Integer, default=0)

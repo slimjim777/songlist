@@ -9,35 +9,45 @@ class Transpose(object):
     INVALID_NOTE = -1
     KEY_COUNT = 21
     SEMITONE_COUNT = 12
-    KEY_TABLE = [["A", "A#", "B", "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#"],
-                 # theoretical
-                 ["A#", "A", "B#", "C#", "C##", "D#", "D##", "E#", "F#", "F##", "G#", "G##"],
-                 ["Bb", "B", "C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A"],
-                 ["B", "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#"],
-                 # theoretical
-                 ["B#", "B##", "C##", "C###", "D##", "E#", "E##", "F##", "G#", "G##", "G###", "A##"],
-                 # theoretical
-                 ["Cb", "Dbb", "Db", "Ebb", "Eb", "Fb", "Gbb", "Gb", "Ab", "Ab", "Bbb", "Bb"],
-                 # Key of C uses popular flats/sharps
-                 ["C", "C#", "D", "Eb", "E", "F", "F#", "G", "G#", "A", "Bb", "B"],
-                 ["C#", "C##", "D#", "D##", "E#", "F#", "F##", "G#", "G##", "A#", "A##", "B#"],
-                 ["Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B", "C"],
-                 ["D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B", "C", "C#"],
-                 # theoretical
-                 ["D#", "D##", "E#", "E##", "F##", "G#", "G##", "A#", "A##", "B#", "B##", "C##"],
-                 ["Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B", "C", "Db", "D"],
-                 ["E", "F", "F#", "G", "G#", "A", "A#", "B", "C", "C#", "D", "D#"],
-                 # theoretical
-                 ["E#", "E##", "F##", "F###", "G##", "A#", "A##", "B#", "B##", "C##", "C###", "D##"],
-                 # theoretical
-                 ["Fb", "Gbb", "Gb", "Abb", "Ab", "Bbb", "Cbb", "Cb", "Dbb", "Db", "Ebb", "Eb"],
-                 ["F", "Gb", "G", "Ab", "A", "Bb", "B", "C", "Db", "D", "Eb", "E"],
-                 ["F#", "G", "G#", "A", "A#", "B", "C", "C#", "D", "D#", "E", "E#"],
-                 ["Gb", "Abb", "Ab", "Bbb", "Bb", "Cb", "Dbb", "Db", "Ebb", "Eb", "Fb", "F"],
-                 ["G", "G#", "A", "A#", "B", "C", "C#", "D", "D#", "E", "F", "F#"],
-                 # theoretical
-                 ["G#", "G##", "A#", "A##", "B#", "C#", "C##", "D#", "D##", "E#", "E##", "F##"],
-                 ["Ab", "A", "Bb", "B", "C", "Db", "D", "Eb", "E", "F", "Gb", "G"]]
+    KEY_TABLE = [
+        ["A", "A#", "B", "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#"],
+        # theoretical
+        ["A#", "A", "B#", "C#", "C##", "D#", "D##", "E#", "F#", "F##", "G#",
+            "G##"],
+        ["Bb", "B", "C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A"],
+        ["B", "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#"],
+        # theoretical
+        ["B#", "B##", "C##", "C###", "D##", "E#", "E##", "F##", "G#", "G##",
+            "G###", "A##"],
+        # theoretical
+        ["Cb", "Dbb", "Db", "Ebb", "Eb", "Fb", "Gbb", "Gb", "Ab", "Ab", "Bbb",
+            "Bb"],
+        # Key of C uses popular flats/sharps
+        ["C", "C#", "D", "Eb", "E", "F", "F#", "G", "G#", "A", "Bb", "B"],
+        ["C#", "C##", "D#", "D##", "E#", "F#", "F##", "G#", "G##", "A#", "A##",
+            "B#"],
+        ["Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B", "C"],
+        ["D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B", "C", "C#"],
+        # theoretical
+        ["D#", "D##", "E#", "E##", "F##", "G#", "G##", "A#", "A##", "B#",
+            "B##", "C##"],
+        ["Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B", "C", "Db", "D"],
+        ["E", "F", "F#", "G", "G#", "A", "A#", "B", "C", "C#", "D", "D#"],
+        # theoretical
+        ["E#", "E##", "F##", "F###", "G##", "A#", "A##", "B#", "B##", "C##",
+            "C###", "D##"],
+        # theoretical
+        ["Fb", "Gbb", "Gb", "Abb", "Ab", "Bbb", "Cbb", "Cb", "Dbb", "Db",
+            "Ebb", "Eb"],
+        ["F", "Gb", "G", "Ab", "A", "Bb", "B", "C", "Db", "D", "Eb", "E"],
+        ["F#", "G", "G#", "A", "A#", "B", "C", "C#", "D", "D#", "E", "E#"],
+        ["Gb", "Abb", "Ab", "Bbb", "Bb", "Cb", "Dbb", "Db", "Ebb", "Eb", "Fb",
+            "F"],
+        ["G", "G#", "A", "A#", "B", "C", "C#", "D", "D#", "E", "F", "F#"],
+        # theoretical
+        ["G#", "G##", "A#", "A##", "B#", "C#", "C##", "D#", "D##", "E#", "E##",
+            "F##"],
+        ["Ab", "A", "Bb", "B", "C", "Db", "D", "Eb", "E", "F", "Gb", "G"]]
 
     def __init__(self, song, new_key):
         self.song = song
@@ -93,8 +103,8 @@ class Transpose(object):
 
     def transpose_chord(self, chord):
         """
-        Takes the chord e.g. Gbmaj7 and transposes the note part of the chord, whilst
-        preserving the chord type.
+        Takes the chord e.g. Gbmaj7 and transposes the note part of the chord,
+        whilst preserving the chord type.
         """
         if len(chord) == 0:
             return chord
@@ -111,13 +121,14 @@ class Transpose(object):
 
     def transpose_note(self, note):
         """
-        The main transposition method that takes a note in one key and converts it to the
-        equivalent in another key.
+        The main transposition method that takes a note in one key and converts
+        it to the equivalent in another key.
         """
         semi_no = self.semitone_number(note)
 
         if semi_no != self.INVALID_NOTE:
-            # Use the noteSemitoneNumber to look up the new note from the transpose table.
+            # Use the noteSemitoneNumber to look up the new note from the
+            # transpose table.
             new_note = self.KEY_TABLE[self.new_key_value][semi_no]
 
             # Return double sharps as "x" if there are an even number of them
@@ -133,7 +144,8 @@ class Transpose(object):
     def chord_type(chord):
         """
         Retrieve the type of chord e.g. maj7, aug4 etc.
-        This method assumes that the chord has at most, one sharp, one double-sharp or flat.
+        This method assumes that the chord has at most, one sharp, one
+        double-sharp or flat.
         """
         end_note_part = max(chord.rfind('b'), chord.rfind('#'))
         if end_note_part > -1:
@@ -155,8 +167,10 @@ class Transpose(object):
 
     def key_number(self, key):
         """
-        Find the key from the transpose table using the first entry from each row as the key name and return the row
-        number. We don't simplify the key string - if we don't have it in the transpose table, we don't support it.
+        Find the key from the transpose table using the first entry from each
+        row as the key name and return the row number. We don't simplify the
+        key string - if we don't have it in the transpose table, we don't
+        support it.
         """
         for k in range(self.KEY_COUNT):
             if self.KEY_TABLE[k][0] == key:
