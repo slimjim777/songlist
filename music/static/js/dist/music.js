@@ -26,7 +26,24 @@ App.SonglistsController = Ember.ArrayController.extend({
     title: null,
     message: null,
     toDelete: null,
+    currentPage: 1,
 
+    getPage: function(page) {
+        var controller = this;
+
+        App.Songlist.getAll(page).then( function(results) {
+            var model = results.data.map( function(songlist) {
+                var songs = songlist.songs.map(function(song) {
+                    return App.Song.create(song);
+                });
+                songlist.songs = songs;
+                return App.Songlist.create(songlist);
+            });
+            controller.set('model', model);
+            controller.set('meta', results.meta);
+        });
+    },
+    
     actions: {
         newSonglist: function() {
             // Display the new Songlist form
@@ -54,7 +71,6 @@ App.SonglistsController = Ember.ArrayController.extend({
         },
 
         removeSonglist: function(songlist) {
-            console.log('Remove songlist: ' + songlist.name);
             this.set('title', 'Confirm Deletion');
             this.set('message', 'Delete song list "' + songlist.name + '"?');
             this.set('toDelete', songlist);
@@ -82,8 +98,15 @@ App.SonglistsController = Ember.ArrayController.extend({
                 controller.set('message', null);
                 controller.set('toDelete', null);
             });
-        }
+        },
 
+        nextPage: function(page) {
+            this.getPage(page);
+        },
+
+        previousPage: function(page) {
+            this.getPage(page);
+        }
     }
 });
 
@@ -475,9 +498,14 @@ App.Songlist.reopenClass({
         });
     },
 
-    getAll: function() {
+    getAll: function(page) {
+        var data = {};
+        if (page) {
+            data = {page: page};
+        }
         return ajax(this.url, {
             type: 'GET',
+            data: data,
             contentType: "application/json; charset=utf-8",
             dataType: "json"
         });
@@ -574,15 +602,24 @@ App.Song.reopenClass({
 App.SonglistsRoute = Ember.Route.extend({
     model: function() {
         console.log('SonglistsRoute');
-        return App.Songlist.getAll().then( function(data) {
-            return data.songlists.map( function(songlist) {
-                var songs = songlist.songs.map(function(song) {
-                    return App.Song.create(song);
-                });
-                songlist.songs = songs;
-                return App.Songlist.create(songlist);
-            });
+        return App.Songlist.getAll().then( function(results) {
+            // Paginated results
+            return results;
         });
+    },
+
+    setupController: function(controller, results) {
+
+        var model = results.data.map( function(songlist) {
+            var songs = songlist.songs.map(function(song) {
+                return App.Song.create(song);
+            });
+            songlist.songs = songs;
+            return App.Songlist.create(songlist);
+        });
+
+        controller.set('content', model);
+        controller.set('meta', results.meta);
     }
 });
 

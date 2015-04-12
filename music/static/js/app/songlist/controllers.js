@@ -12,7 +12,24 @@ App.SonglistsController = Ember.ArrayController.extend({
     title: null,
     message: null,
     toDelete: null,
+    currentPage: 1,
 
+    getPage: function(page) {
+        var controller = this;
+
+        App.Songlist.getAll(page).then( function(results) {
+            var model = results.data.map( function(songlist) {
+                var songs = songlist.songs.map(function(song) {
+                    return App.Song.create(song);
+                });
+                songlist.songs = songs;
+                return App.Songlist.create(songlist);
+            });
+            controller.set('model', model);
+            controller.set('meta', results.meta);
+        });
+    },
+    
     actions: {
         newSonglist: function() {
             // Display the new Songlist form
@@ -40,7 +57,6 @@ App.SonglistsController = Ember.ArrayController.extend({
         },
 
         removeSonglist: function(songlist) {
-            console.log('Remove songlist: ' + songlist.name);
             this.set('title', 'Confirm Deletion');
             this.set('message', 'Delete song list "' + songlist.name + '"?');
             this.set('toDelete', songlist);
@@ -68,8 +84,15 @@ App.SonglistsController = Ember.ArrayController.extend({
                 controller.set('message', null);
                 controller.set('toDelete', null);
             });
-        }
+        },
 
+        nextPage: function(page) {
+            this.getPage(page);
+        },
+
+        previousPage: function(page) {
+            this.getPage(page);
+        }
     }
 });
 

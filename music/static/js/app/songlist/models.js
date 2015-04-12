@@ -81,9 +81,14 @@ App.Songlist.reopenClass({
         });
     },
 
-    getAll: function() {
+    getAll: function(page) {
+        var data = {};
+        if (page) {
+            data = {page: page};
+        }
         return ajax(this.url, {
             type: 'GET',
+            data: data,
             contentType: "application/json; charset=utf-8",
             dataType: "json"
         });

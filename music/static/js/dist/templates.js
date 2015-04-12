@@ -1664,6 +1664,308 @@ Ember.TEMPLATES["songlists"] = Ember.HTMLBars.template((function() {
     };
   }());
   var child1 = (function() {
+    var child0 = (function() {
+      return {
+        isHTMLBars: true,
+        revision: "Ember@1.11.1",
+        blockParams: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        build: function build(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createTextNode("    ");
+          dom.appendChild(el0, el1);
+          var el1 = dom.createElement("li");
+          dom.setAttribute(el1,"class","previous");
+          var el2 = dom.createTextNode("\n      ");
+          dom.appendChild(el1, el2);
+          var el2 = dom.createElement("button");
+          dom.setAttribute(el2,"class","btn btn-link");
+          var el3 = dom.createElement("span");
+          dom.setAttribute(el3,"class","glyphicon glyphicon-chevron-left");
+          dom.appendChild(el2, el3);
+          dom.appendChild(el1, el2);
+          var el2 = dom.createTextNode("\n    ");
+          dom.appendChild(el1, el2);
+          dom.appendChild(el0, el1);
+          var el1 = dom.createTextNode("\n");
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        render: function render(context, env, contextualElement) {
+          var dom = env.dom;
+          var hooks = env.hooks, get = hooks.get, element = hooks.element;
+          dom.detectNamespace(contextualElement);
+          var fragment;
+          if (env.useFragmentCache && dom.canClone) {
+            if (this.cachedFragment === null) {
+              fragment = this.build(dom);
+              if (this.hasRendered) {
+                this.cachedFragment = fragment;
+              } else {
+                this.hasRendered = true;
+              }
+            }
+            if (this.cachedFragment) {
+              fragment = dom.cloneNode(this.cachedFragment, true);
+            }
+          } else {
+            fragment = this.build(dom);
+          }
+          var element11 = dom.childAt(fragment, [1, 1]);
+          element(env, element11, context, "action", ["previousPage", get(env, context, "meta.prev_num")], {});
+          return fragment;
+        }
+      };
+    }());
+    var child1 = (function() {
+      return {
+        isHTMLBars: true,
+        revision: "Ember@1.11.1",
+        blockParams: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        build: function build(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createTextNode("      ");
+          dom.appendChild(el0, el1);
+          var el1 = dom.createElement("li");
+          dom.setAttribute(el1,"class","previous hidden");
+          var el2 = dom.createElement("span");
+          dom.setAttribute(el2,"class","glyphicon glyphicon-chevron-right");
+          dom.appendChild(el1, el2);
+          dom.appendChild(el0, el1);
+          var el1 = dom.createTextNode("\n");
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        render: function render(context, env, contextualElement) {
+          var dom = env.dom;
+          dom.detectNamespace(contextualElement);
+          var fragment;
+          if (env.useFragmentCache && dom.canClone) {
+            if (this.cachedFragment === null) {
+              fragment = this.build(dom);
+              if (this.hasRendered) {
+                this.cachedFragment = fragment;
+              } else {
+                this.hasRendered = true;
+              }
+            }
+            if (this.cachedFragment) {
+              fragment = dom.cloneNode(this.cachedFragment, true);
+            }
+          } else {
+            fragment = this.build(dom);
+          }
+          return fragment;
+        }
+      };
+    }());
+    var child2 = (function() {
+      return {
+        isHTMLBars: true,
+        revision: "Ember@1.11.1",
+        blockParams: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        build: function build(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createTextNode("    ");
+          dom.appendChild(el0, el1);
+          var el1 = dom.createElement("li");
+          dom.setAttribute(el1,"class","next");
+          var el2 = dom.createTextNode("\n      ");
+          dom.appendChild(el1, el2);
+          var el2 = dom.createElement("button");
+          dom.setAttribute(el2,"class","btn btn-link");
+          var el3 = dom.createElement("span");
+          dom.setAttribute(el3,"class","glyphicon glyphicon-chevron-right");
+          dom.appendChild(el2, el3);
+          dom.appendChild(el1, el2);
+          var el2 = dom.createTextNode("\n    ");
+          dom.appendChild(el1, el2);
+          dom.appendChild(el0, el1);
+          var el1 = dom.createTextNode("\n");
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        render: function render(context, env, contextualElement) {
+          var dom = env.dom;
+          var hooks = env.hooks, get = hooks.get, element = hooks.element;
+          dom.detectNamespace(contextualElement);
+          var fragment;
+          if (env.useFragmentCache && dom.canClone) {
+            if (this.cachedFragment === null) {
+              fragment = this.build(dom);
+              if (this.hasRendered) {
+                this.cachedFragment = fragment;
+              } else {
+                this.hasRendered = true;
+              }
+            }
+            if (this.cachedFragment) {
+              fragment = dom.cloneNode(this.cachedFragment, true);
+            }
+          } else {
+            fragment = this.build(dom);
+          }
+          var element10 = dom.childAt(fragment, [1, 1]);
+          element(env, element10, context, "action", ["nextPage", get(env, context, "meta.next_num")], {});
+          return fragment;
+        }
+      };
+    }());
+    var child3 = (function() {
+      return {
+        isHTMLBars: true,
+        revision: "Ember@1.11.1",
+        blockParams: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        build: function build(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createTextNode("    ");
+          dom.appendChild(el0, el1);
+          var el1 = dom.createElement("li");
+          dom.setAttribute(el1,"class","next hidden");
+          var el2 = dom.createElement("span");
+          dom.setAttribute(el2,"class","glyphicon glyphicon-chevron-right");
+          dom.appendChild(el1, el2);
+          dom.appendChild(el0, el1);
+          var el1 = dom.createTextNode("\n");
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        render: function render(context, env, contextualElement) {
+          var dom = env.dom;
+          dom.detectNamespace(contextualElement);
+          var fragment;
+          if (env.useFragmentCache && dom.canClone) {
+            if (this.cachedFragment === null) {
+              fragment = this.build(dom);
+              if (this.hasRendered) {
+                this.cachedFragment = fragment;
+              } else {
+                this.hasRendered = true;
+              }
+            }
+            if (this.cachedFragment) {
+              fragment = dom.cloneNode(this.cachedFragment, true);
+            }
+          } else {
+            fragment = this.build(dom);
+          }
+          return fragment;
+        }
+      };
+    }());
+    return {
+      isHTMLBars: true,
+      revision: "Ember@1.11.1",
+      blockParams: 0,
+      cachedFragment: null,
+      hasRendered: false,
+      build: function build(dom) {
+        var el0 = dom.createDocumentFragment();
+        var el1 = dom.createElement("ul");
+        dom.setAttribute(el1,"class","pager");
+        var el2 = dom.createTextNode("                                                                 \n  ");
+        dom.appendChild(el1, el2);
+        var el2 = dom.createElement("li");
+        dom.setAttribute(el2,"class","previous");
+        var el3 = dom.createTextNode("\n    ");
+        dom.appendChild(el2, el3);
+        var el3 = dom.createElement("button");
+        dom.setAttribute(el3,"class","btn btn-link");
+        var el4 = dom.createElement("span");
+        dom.setAttribute(el4,"class","glyphicon glyphicon-step-backward");
+        dom.appendChild(el3, el4);
+        dom.appendChild(el2, el3);
+        var el3 = dom.createTextNode("\n  ");
+        dom.appendChild(el2, el3);
+        dom.appendChild(el1, el2);
+        var el2 = dom.createTextNode("\n");
+        dom.appendChild(el1, el2);
+        var el2 = dom.createComment("");
+        dom.appendChild(el1, el2);
+        var el2 = dom.createTextNode("    ");
+        dom.appendChild(el1, el2);
+        var el2 = dom.createElement("li");
+        var el3 = dom.createTextNode("Page ");
+        dom.appendChild(el2, el3);
+        var el3 = dom.createComment("");
+        dom.appendChild(el2, el3);
+        var el3 = dom.createTextNode(" of ");
+        dom.appendChild(el2, el3);
+        var el3 = dom.createComment("");
+        dom.appendChild(el2, el3);
+        dom.appendChild(el1, el2);
+        var el2 = dom.createTextNode("                                  \n");
+        dom.appendChild(el1, el2);
+        var el2 = dom.createComment("");
+        dom.appendChild(el1, el2);
+        var el2 = dom.createTextNode("  ");
+        dom.appendChild(el1, el2);
+        var el2 = dom.createElement("li");
+        dom.setAttribute(el2,"class","next");
+        var el3 = dom.createTextNode("\n    ");
+        dom.appendChild(el2, el3);
+        var el3 = dom.createElement("button");
+        dom.setAttribute(el3,"class","btn btn-link");
+        var el4 = dom.createElement("span");
+        dom.setAttribute(el4,"class","glyphicon glyphicon-step-forward");
+        dom.appendChild(el3, el4);
+        dom.appendChild(el2, el3);
+        var el3 = dom.createTextNode("\n  ");
+        dom.appendChild(el2, el3);
+        dom.appendChild(el1, el2);
+        var el2 = dom.createTextNode("\n");
+        dom.appendChild(el1, el2);
+        dom.appendChild(el0, el1);
+        var el1 = dom.createTextNode("                                                                              \n");
+        dom.appendChild(el0, el1);
+        return el0;
+      },
+      render: function render(context, env, contextualElement) {
+        var dom = env.dom;
+        var hooks = env.hooks, element = hooks.element, get = hooks.get, block = hooks.block, content = hooks.content;
+        dom.detectNamespace(contextualElement);
+        var fragment;
+        if (env.useFragmentCache && dom.canClone) {
+          if (this.cachedFragment === null) {
+            fragment = this.build(dom);
+            if (this.hasRendered) {
+              this.cachedFragment = fragment;
+            } else {
+              this.hasRendered = true;
+            }
+          }
+          if (this.cachedFragment) {
+            fragment = dom.cloneNode(this.cachedFragment, true);
+          }
+        } else {
+          fragment = this.build(dom);
+        }
+        var element12 = dom.childAt(fragment, [0]);
+        var element13 = dom.childAt(element12, [1, 1]);
+        var element14 = dom.childAt(element12, [5]);
+        var element15 = dom.childAt(element12, [9, 1]);
+        var morph0 = dom.createMorphAt(element12,3,3);
+        var morph1 = dom.createMorphAt(element14,1,1);
+        var morph2 = dom.createMorphAt(element14,3,3);
+        var morph3 = dom.createMorphAt(element12,7,7);
+        element(env, element13, context, "action", ["previousPage", 1], {});
+        block(env, morph0, context, "if", [get(env, context, "meta.has_prev")], {}, child0, child1);
+        content(env, morph1, context, "meta.page");
+        content(env, morph2, context, "meta.total");
+        block(env, morph3, context, "if", [get(env, context, "meta.has_next")], {}, child2, child3);
+        element(env, element15, context, "action", ["nextPage", get(env, context, "meta.total")], {});
+        return fragment;
+      }
+    };
+  }());
+  var child2 = (function() {
     return {
       isHTMLBars: true,
       revision: "Ember@1.11.1",
@@ -1758,7 +2060,7 @@ Ember.TEMPLATES["songlists"] = Ember.HTMLBars.template((function() {
       }
     };
   }());
-  var child2 = (function() {
+  var child3 = (function() {
     return {
       isHTMLBars: true,
       revision: "Ember@1.11.1",
@@ -1847,7 +2149,7 @@ Ember.TEMPLATES["songlists"] = Ember.HTMLBars.template((function() {
       }
     };
   }());
-  var child3 = (function() {
+  var child4 = (function() {
     var child0 = (function() {
       return {
         isHTMLBars: true,
@@ -2076,6 +2378,10 @@ Ember.TEMPLATES["songlists"] = Ember.HTMLBars.template((function() {
       dom.appendChild(el2, el3);
       dom.appendChild(el1, el2);
       dom.appendChild(el0, el1);
+      var el1 = dom.createTextNode("\n\n");
+      dom.appendChild(el0, el1);
+      var el1 = dom.createComment("");
+      dom.appendChild(el0, el1);
       var el1 = dom.createTextNode("\n");
       dom.appendChild(el0, el1);
       var el1 = dom.createComment("");
@@ -2149,18 +2455,20 @@ Ember.TEMPLATES["songlists"] = Ember.HTMLBars.template((function() {
       } else {
         fragment = this.build(dom);
       }
-      var element10 = dom.childAt(fragment, [2, 1, 0]);
-      var element11 = dom.childAt(fragment, [5, 3]);
+      var element16 = dom.childAt(fragment, [2, 1, 0]);
+      var element17 = dom.childAt(fragment, [7, 3]);
       var morph0 = dom.createMorphAt(fragment,0,0,contextualElement);
       var morph1 = dom.createMorphAt(fragment,4,4,contextualElement);
-      var morph2 = dom.createMorphAt(element11,1,1);
-      var morph3 = dom.createMorphAt(element11,2,2);
+      var morph2 = dom.createMorphAt(fragment,6,6,contextualElement);
+      var morph3 = dom.createMorphAt(element17,1,1);
+      var morph4 = dom.createMorphAt(element17,2,2);
       dom.insertBoundary(fragment, 0);
       block(env, morph0, context, "if", [get(env, context, "error")], {}, child0, null);
-      element(env, element10, context, "action", ["newSonglist"], {});
-      block(env, morph1, context, "if", [get(env, context, "isDeleting")], {}, child1, null);
-      block(env, morph2, context, "if", [get(env, context, "isEditing")], {}, child2, null);
-      block(env, morph3, context, "each", [get(env, context, "model")], {"keyword": "item"}, child3, null);
+      element(env, element16, context, "action", ["newSonglist"], {});
+      block(env, morph1, context, "if", [get(env, context, "meta")], {}, child1, null);
+      block(env, morph2, context, "if", [get(env, context, "isDeleting")], {}, child2, null);
+      block(env, morph3, context, "if", [get(env, context, "isEditing")], {}, child3, null);
+      block(env, morph4, context, "each", [get(env, context, "model")], {"keyword": "item"}, child4, null);
       return fragment;
     }
   };

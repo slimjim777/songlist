@@ -15,17 +15,26 @@ def api_songlists():
     """
     Get the list of songlists, returned as JSON
     """
-    songlists = SongList.query.order_by('event_date desc').all()
-    json_songlists = []
-    for sl in songlists:
-        json_songlists.append(sl.to_dict())
+    from_page = int(request.args.get('page', 1))
+    songlists = SongList.query.order_by('event_date desc').paginate(
+        from_page, 10, False)
 
-    result = {
-        'response': 'Success',
-        'songlists': json_songlists,
-    }
-
+    result = paginate_rows(songlists)
     return jsonify(result)
+
+
+def paginate_rows(paginate):
+    rows = paginate.items
+    meta = {
+        'total': paginate.pages,
+        'page': paginate.page,
+        'has_next': paginate.has_next,
+        'has_prev': paginate.has_prev,
+        'next_num': paginate.next_num,
+        'prev_num': paginate.prev_num,
+    }
+    data = [p.to_dict() for p in rows]
+    return {'response': 'Success', 'data': data, 'meta': meta}
 
 
 @app.route('/api/songlists', methods=['POST'])

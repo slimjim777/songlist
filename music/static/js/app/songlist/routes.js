@@ -3,15 +3,24 @@
 App.SonglistsRoute = Ember.Route.extend({
     model: function() {
         console.log('SonglistsRoute');
-        return App.Songlist.getAll().then( function(data) {
-            return data.songlists.map( function(songlist) {
-                var songs = songlist.songs.map(function(song) {
-                    return App.Song.create(song);
-                });
-                songlist.songs = songs;
-                return App.Songlist.create(songlist);
-            });
+        return App.Songlist.getAll().then( function(results) {
+            // Paginated results
+            return results;
         });
+    },
+
+    setupController: function(controller, results) {
+
+        var model = results.data.map( function(songlist) {
+            var songs = songlist.songs.map(function(song) {
+                return App.Song.create(song);
+            });
+            songlist.songs = songs;
+            return App.Songlist.create(songlist);
+        });
+
+        controller.set('content', model);
+        controller.set('meta', results.meta);
     }
 });
 

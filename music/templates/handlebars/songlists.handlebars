@@ -8,6 +8,33 @@
 {{/if}}
 
 <h2>Song Lists <span title="Add Song List"><button class="btn btn-primary" {{action 'newSonglist'}}><span class="glyphicon glyphicon-plus"></span></button></span></h2>
+
+{{#if meta}}                                                                       
+<ul class="pager">                                                                 
+  <li class="previous">
+    <button {{action 'previousPage' 1}} class="btn btn-link"><span class="glyphicon glyphicon-step-backward"></span></button>
+  </li>
+  {{#if meta.has_prev}}                                                          
+    <li class="previous">
+      <button {{action 'previousPage' meta.prev_num}} class="btn btn-link"><span class="glyphicon glyphicon-chevron-left"></span></button>
+    </li>
+  {{else}}                                                                       
+      <li class="previous hidden"><span class="glyphicon glyphicon-chevron-right"></span></li>
+  {{/if}}                                                                        
+    <li>Page {{meta.page}} of {{meta.total}}</li>                                  
+  {{#if meta.has_next}}                                                          
+    <li class="next">
+      <button {{action 'nextPage' meta.next_num}} class="btn btn-link"><span class="glyphicon glyphicon-chevron-right"></span></button>
+    </li>
+  {{else}}                                                                       
+    <li class="next hidden"><span class="glyphicon glyphicon-chevron-right"></span></li>
+  {{/if}}                                                                        
+  <li class="next">
+    <button {{action 'nextPage' meta.total}} class="btn btn-link"><span class="glyphicon glyphicon-step-forward"></span></button>
+  </li>
+</ul>                                                                              
+{{/if}}
+
 {{#if isDeleting}}
     <div class="panel panel-danger">
         <div class="panel-heading">
