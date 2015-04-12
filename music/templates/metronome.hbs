@@ -30,6 +30,7 @@
     <link rel="stylesheet" href="/static/css/bootstrap.min.css" />
     <link rel="stylesheet" href="/static/css/pikaday.css" />
     <link rel="stylesheet" href="/static/css/music.css" />
+    <script src="/static/js/dist/jquery.min.js"></script>
 </head>
 <body>
 
@@ -67,228 +68,13 @@
 
 <br />
 
-{% raw %}
-<script type="text/x-handlebars">
-<div id="main" class="container-fluid" role="main">
-    {{outlet}}
-</div>
-</script>
-
-<script type="text/x-handlebars" id="songlists" data-template-name="songlists">
-    {{#if error }}
-    <div class="alert box alert-danger">
-      <h4>Application Error</h4>
-      <div>
-      {{ error }}
-      </div>
-    </div>
-    {{/if}}
-
-    <h2>Song Lists <span title="Add Song List"><button class="btn btn-primary" {{action 'newSonglist'}}><span class="glyphicon glyphicon-plus"></span></button></span></h2>
-    {{#if isDeleting}}
-        <div class="panel panel-danger">
-            <div class="panel-heading">
-                <h4>{{title}}</h4>
-            </div>
-            <div class="panel-body">{{message}}</div>
-            <div class="panel-footer">
-                <button {{action 'confirmDelete'}} class="btn btn-success">OK</button>&nbsp;<button {{action 'cancelDelete'}} class="btn btn-danger">Cancel</button>
-            </div>
-        </div>
-    {{/if}}
-    <table class="table table-striped">
-        <thead>
-        <tr>
-            <th></th><th>Event Date</th><th>List Name</th><th>Owner</th>
-        </tr>
-        </thead>
-        <tbody>
-        {{#if isEditing}}
-        <tr class="grid-row">
-            <td>
-                <button class="btn btn-primary" {{action 'saveSonglist'}}>Save</button>&nbsp;
-                <a {{action 'cancelSonglistEdit'}}>Cancel</a>
-            </td>
-            <td>{{view App.CalendarDatePicker value=newSonglist.event_date class="form-control" placeholder="event date" readonly="true" title="Click to enter the date"}}</td>
-            <td>{{input value=newSonglist.name class="form-control" placeholder="name of song list"}}</td>
-            <td></td>
-        </tr>
-        {{/if}}
-        {{#each item in model}}
-        <tr class="grid-row">
-            <td><button {{action 'removeSonglist' item}} class="btn btn-default"><span class="glyphicon glyphicon-remove"></span></button></td>
-            <td>{{#link-to 'songlist' item}}{{item.event_date}}{{/link-to}}</td>
-            <td>{{#link-to 'songlist' item}}{{item.name}}{{/link-to}}</td>
-            <td>{{#link-to 'songlist' item}}{{item.owner}}{{/link-to}}</td>
-        </tr>
-        {{/each}}
-        </tbody>
-    </table>
-</script>
-
-<script type="text/x-handlebars" id="songlist-songs" data-template-name="songlist">
-    {{#if isEditing}}
-    {{else}}
-    <br>
-    {{#link-to 'songlists' }}&laquo; Back to Song Lists{{/link-to}}
-    {{/if}}
-
-    {{#if error }}
-    <div class="alert box alert-danger">
-      <h4>Application Error</h4>
-      <div>
-      {{ error }}
-      </div>
-    </div>
-    {{/if}}
-
-    {{#if isEditing}}
-        <h2>{{model.name}} on {{model.event_date}}</h2>
-        <form {{action 'saveSonglist' on="submit"}}>
-            <label>Songlist Name</label>
-            {{input name=model.name value=model.name class="form-control" placeholder="songlist name"}}
-            <label>Event Date</label>
-            {{view App.CalendarDatePicker name=model.event_date value=model.event_date class="form-control" placeholder="event date" readonly="true" title="Click to enter the date"}}
-            <br/>
-            <button type="submit" class="btn btn-primary">Save</button> <button {{action "cancelSonglistEdit"}} class="btn btn-default">Cancel</button>
-        </form>
-    {{else}}
-        <h2>{{model.name}} on {{model.event_date}} <button {{action 'editSonglist'}} class="btn btn-primary"><span class="glyphicon glyphicon-edit"></span></button></h2>
-        <em>{{model.owner}}</em>
-        <br />
-
-        <h4>Songs {{#link-to 'addSong' model class="btn btn-primary" title="Add a Song"}}<span class="glyphicon glyphicon-plus"></span>{{/link-to}}</h4>
-        <div>
-            {{outlet addSong}}
-        </div>
-        {{#if model.songs}}
-        <div class="panel panel-default">
-            <div class="panel-body table-responsive">
-                <table class="table table-striped">
-                    <tr>
-                        <th>Order</th><th>Name</th><th>Tempo</th><th>Key</th><th>Time Signature</th><th></th>
-                    </tr>
-                    {{#each song in model.songs}}
-                    <tr class="grid-row">
-                        <td><button {{action 'songOrder' song 'up'}} class="btn btn-default"><span class="glyphicon glyphicon-arrow-up"></span></button><button {{action 'songOrder' song 'down'}} class="btn btn-default"><span class="glyphicon glyphicon-arrow-down"></span></button></td>
-                        <td>{{#link-to 'song' song}}{{song.name}}{{/link-to}}</td>
-                        <td>{{#link-to 'song' song}}{{song.tempo}}{{/link-to}}</td>
-                        <td>{{#link-to 'song' song}}{{song.key}}{{/link-to}}</td>
-                        <td>{{#link-to 'song' song}}{{song.time_signature}}{{/link-to}}</td>
-                        <td><button {{action 'removeSong' song}} class="btn btn-default"><span class="glyphicon glyphicon-remove"></span></button></td>
-                    </tr>
-                    {{/each}}
-                </table>
-            </div>
-        </div>
-        <div>
-            {{outlet}}
-        </div>
-        {{else}}
-        <div class="alert alert-warning">No songs in the list.</div>
-        <div>
-            {{outlet}}
-        </div>
-        {{/if}}
-    {{/if}}
-</script>
-
-<script type="text/x-handlebars" id="song" data-template-name="song">
-    <div class="panel panel-primary">
-        <div class="panel-heading">
-            <div class="panel-title">
-                <div class="row">
-                    <div class="col-md-4"><label>Song Name</label></div>
-                    <div class="col-md-4"><label>Key</label></div>
-                    <div class="col-md-4"><label>Time Signature</label></div>
-                </div>
-                <div class="row">
-                    <div class="col-md-4">{{input type="text" name="model.name" value=model.name placeholder="song name" class="form-control"}}</div>
-                    <div class="col-md-4">{{view Ember.Select content=keys value=model.key class="form-control"}}</div>
-                    <div class="col-md-4">{{view Ember.Select content=time_signatures value=model.time_signature class="form-control"}}</div>
-                </div>
-            </div>
-        </div>
-        <div class="panel-body">
-            <div class="center">
-                <button {{action 'metroMinus'}} class="btn btn-primary"><span class="badge"><span class="glyphicon glyphicon-arrow-down"></span></span>&nbsp;<span class="glyphicon glyphicon-minus"></span></button>
-                {{input id="metro_tempo" name="metro_tempo" type="number" value=model.tempo min=50 max=200 placeholder="tempo"}}
-                <button {{action 'metroPlus'}} class="btn btn-primary"><span class="glyphicon glyphicon-plus"></span>&nbsp;<span class="badge"><span class="glyphicon glyphicon-arrow-up"></span></span></button>
-            </div>
-            <br />
-            <div class="center">
-                {{#if isMetroStarted}}
-                <button id="metro_start_stop" class="btn btn-danger btn-lg " {{action 'stopMetronome'}}>&nbsp;Stop&nbsp;</button></center>
-                {{else}}
-                <button id="metro_start_stop" class="btn btn-success btn-lg" {{action 'startMetronome'}}>&nbsp;Start&nbsp;</button></center>
-                {{/if}}
-            </div>
-            <div>
-                <span class="left"><button {{action 'previousSong'}} class="btn btn-primary"><span class="glyphicon glyphicon-arrow-left"></span> Previous</button></span>
-                <span class="right"><button {{action 'nextSong'}} class="btn btn-primary">Next <span class="glyphicon glyphicon-arrow-right"></span></button></span>
-            </div>
-
-        </div>
-        <div class="panel-footer">
-            <div class="center">
-                <button class="btn btn-primary" {{action 'saveSong' model}}>Save Changes</button>
-                <br>
-                <p><em>Click on this panel to be able to use the keyboard shortcuts (space bar, up arrow, down arrow).</em></p>
-            </div>
-        </div>
-    </div>
-</script>
-
-<script type="text/x-handlebars" data-template-name="addSong">
-    <div class="panel panel-primary">
-      <div class="panel-heading">
-        <h3 class="panel-title">Add Song to Songlist</h3>
-      </div>
-      <div class="panel-body">
-          {{input type="search" name="search" value=search placeholder="find existing song" action="findSong" class="form-control"}}
-          <table class="table table-striped">
-            {{#each folder in folders}}
-            <tr>
-                <td>{{ folder.name }}</td>
-                <td><button {{action 'selectSong' folder}} class="btn btn-primary">Add</button></td>
-            </tr>
-            {{/each}}
-          </table>
-          <button {{action 'addUnlistedSong'}} class="btn btn-default">Add Unlisted Song</button>
-          <span class="right">
-          <button {{action 'closeFind'}} class="btn btn-primary">Close</button>
-          </span>
-      </div>
-    </div>
-</script>
-
-<script type="text/x-handlebars" data-template-name="loading">
-    <img src="/static/images/ajax-loader.gif" alt="Loading..." class="center" />
-</script>
-
-<script type="text/x-handlebars" data-template-name="error">
-    <div class="alert box alert-danger">
-        <h3>Application Error</h3>
-        <div>{{model}}</div>
-        <div>(Normally, this is caused by accessing a resource that has been deleted)</div>
-    </div>
-</script>
-
-
-{% endraw %}
-
-<script src="/static/js/libs/jquery-1.10.2.js"></script>
-<script src="/static/js/libs/bootstrap.min.js"></script>
-<script src="/static/js/libs/handlebars-1.1.2.js"></script>
 <script src="/static/js/libs/moment.min.js"></script>
-<script src="/static/js/libs/ember.js"></script>
 <script src="/static/js/libs/buffer-loader.js"></script>
-<script src="/static/js/libs/pikaday.js"></script>
 <script src="/static/js/metronome.js"></script>
-<script src="/static/js/app.js"></script>
-<script src="/static/js/app/songlist/routes.js"></script>
-<script src="/static/js/app/songlist/models.js"></script>
-<script src="/static/js/app/songlist/controllers.js"></script>
+
+<script src="/static/js/dist/vendor.min.js"></script>
+<script src="/static/js/dist/templates.min.js"></script>
+<script src="/static/js/dist/music.min.js"></script>
 
 <script>
     $( document ).ready(function() {
@@ -301,7 +87,5 @@
     });
 </script>
 
-<!-- to activate the test runner, add the "?test" query string parameter -->
-<!--script src="/static/tests/runner.js"></script-->
 </body>
 </html>

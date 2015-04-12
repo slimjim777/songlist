@@ -1,0 +1,20 @@
+<div class="panel panel-primary">
+  <div class="panel-heading">
+    <h3 class="panel-title">Add Song to Songlist</h3>
+  </div>
+  <div class="panel-body">
+      {{input type="search" name="search" value=search placeholder="find existing song" action="findSong" class="form-control"}}
+      <table class="table table-striped">
+        {{#each folder in folders}}
+        <tr>
+            <td>{{ folder.name }}</td>
+            <td><button {{action 'selectSong' folder}} class="btn btn-primary">Add</button></td>
+        </tr>
+        {{/each}}
+      </table>
+      <button {{action 'addUnlistedSong'}} class="btn btn-default">Add Unlisted Song</button>
+      <span class="right">
+      <button {{action 'closeFind'}} class="btn btn-primary">Close</button>
+      </span>
+  </div>
+</div>

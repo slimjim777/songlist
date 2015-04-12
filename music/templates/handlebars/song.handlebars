@@ -1,0 +1,43 @@
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <div class="panel-title">
+            <div class="row">
+                <div class="col-md-4"><label>Song Name</label></div>
+                <div class="col-md-4"><label>Key</label></div>
+                <div class="col-md-4"><label>Time Signature</label></div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">{{input type="text" name="model.name" value=model.name placeholder="song name" class="form-control"}}</div>
+                <div class="col-md-4">{{view Ember.Select content=keys value=model.key class="form-control"}}</div>
+                <div class="col-md-4">{{view Ember.Select content=time_signatures value=model.time_signature class="form-control"}}</div>
+            </div>
+        </div>
+    </div>
+    <div class="panel-body">
+        <div class="center">
+            <button {{action 'metroMinus'}} class="btn btn-primary"><span class="badge"><span class="glyphicon glyphicon-arrow-down"></span></span>&nbsp;<span class="glyphicon glyphicon-minus"></span></button>
+            {{input id="metro_tempo" name="metro_tempo" type="number" value=model.tempo min=50 max=200 placeholder="tempo"}}
+            <button {{action 'metroPlus'}} class="btn btn-primary"><span class="glyphicon glyphicon-plus"></span>&nbsp;<span class="badge"><span class="glyphicon glyphicon-arrow-up"></span></span></button>
+        </div>
+        <br />
+        <div class="center">
+            {{#if isMetroStarted}}
+            <button id="metro_start_stop" class="btn btn-danger btn-lg " {{action 'stopMetronome'}}>&nbsp;Stop&nbsp;</button>
+            {{else}}
+            <button id="metro_start_stop" class="btn btn-success btn-lg" {{action 'startMetronome'}}>&nbsp;Start&nbsp;</button>
+            {{/if}}
+        </div>
+        <div>
+            <span class="left"><button {{action 'previousSong'}} class="btn btn-primary"><span class="glyphicon glyphicon-arrow-left"></span> Previous</button></span>
+            <span class="right"><button {{action 'nextSong'}} class="btn btn-primary">Next <span class="glyphicon glyphicon-arrow-right"></span></button></span>
+        </div>
+
+    </div>
+    <div class="panel-footer">
+        <div class="center">
+            <button class="btn btn-primary" {{action 'saveSong' model}}>Save Changes</button>
+            <br>
+            <p><em>Click on this panel to be able to use the keyboard shortcuts (space bar, up arrow, down arrow).</em></p>
+        </div>
+    </div>
+</div>
