@@ -30,7 +30,7 @@
 
     <h4>Songs {{#link-to 'addSong' model class="btn btn-primary" title="Add a Song"}}<span class="glyphicon glyphicon-plus"></span>{{/link-to}}</h4>
     <div>
-        {{outlet addSong}}
+        {{outlet 'addSong'}}
     </div>
     {{#if model.songs}}
     <div class="panel panel-default">

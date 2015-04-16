@@ -2,7 +2,7 @@ module.exports = function(grunt) {
 
   // Project configuration.
   grunt.initConfig({
-    pkg: grunt.file.readJSON('package.json'),
+    pkg: {name: 'music'},
 
     emberTemplates: {
         compile: {
@@ -27,7 +27,7 @@ module.exports = function(grunt) {
         dest: 'music/static/js/dist/<%= pkg.name %>.js'
       },
       vendor: {
-        src: ['bower_components/ember/*.prod.js', 
+        src: ['bower_components/ember/*.prod.js',
               'bower_components/bootstrap/dist/js/**/*.min.js', 'bower_components/moment/min/moment.min.js',
               'bower_components/pikaday/pikaday.js'],
         dest: 'music/static/js/dist/vendor.js'

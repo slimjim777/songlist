@@ -1543,7 +1543,7 @@ Ember.TEMPLATES["songlist"] = Ember.HTMLBars.template((function() {
         element(env, element6, context, "action", ["editSonglist"], {});
         content(env, morph2, context, "model.owner");
         block(env, morph3, context, "link-to", ["addSong", get(env, context, "model")], {"class": "btn btn-primary", "title": "Add a Song"}, child0, null);
-        inline(env, morph4, context, "outlet", [get(env, context, "addSong")], {});
+        inline(env, morph4, context, "outlet", ["addSong"], {});
         block(env, morph5, context, "if", [get(env, context, "model.songs")], {}, child1, child2);
         return fragment;
       }
